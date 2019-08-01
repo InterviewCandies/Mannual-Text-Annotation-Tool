@@ -7,7 +7,7 @@ module.exports ={
             return  bcrypt.hashSync(password, salt);
             
         },
-        compare(a,b){
+        isMatched(a,b){
             return bcrypt.compareSync(a,b);
         } 
 }

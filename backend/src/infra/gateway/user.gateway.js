@@ -7,7 +7,7 @@ class UserGateway {
     async findByUsername(userInfo){
         const {username,password} = userInfo;
         const result = await UserModal.findOne({username:username});
-        if(!PasswordHasher.compare(password,result.password)) return {};
+        if(!PasswordHasher.isMatched(password,result.password)) return {};
         const user = new User(result._id,result.username,result.password,result.created_at,result.updated_at);
         return user;
       
