@@ -1,6 +1,7 @@
 const UserModal = require('../database/user.modal');
 const User = require('../../domain/User')
 const PasswordHasher = require('../util/PasswordHasher')
+const IDChecker = require('./IDChecker')
 const mongoose = require('mongoose');
 class UserGateway {
     
@@ -25,7 +26,7 @@ class UserGateway {
     }
     async deleteUser(userInfo){
         const {id} = userInfo;
-        if( !mongoose.Types.ObjectId.isValid(id)) return Error('Invalid id');
+        if ( IDChecker(id) ) return {};
         const result =await UserModal.deleteOne({_id:id});
         return result;
     }

@@ -42,7 +42,9 @@ UserController= {
             this.deleteUser = new DeleteUser();
             const result = await this.deleteUser.execute({id});
             try {
-                  res.status(200).json('User is deleted');
+                 if(result) res.status(200).json('User is deleted');
+                 else res.status(200).json('User does not exist');
+                 
             } catch (error) {
                   res.status(400).send('Failed');
             }

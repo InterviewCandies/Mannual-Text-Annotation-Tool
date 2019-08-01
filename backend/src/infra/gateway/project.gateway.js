@@ -1,6 +1,6 @@
 const ProjectModel = require('../database/project.modal');
 const Project = require('../../domain/Project');
-const mongoose = require('mongoose');
+const IDCheck = require('./IDChecker')
 
 class ProjectGateway{
     
@@ -13,7 +13,6 @@ class ProjectGateway{
            });
 
            const result = await ProjectModel.insertMany(project);
-           console.log(result);
            return result;
     }
 
@@ -21,7 +20,7 @@ class ProjectGateway{
     async updateProject(data){
            const {id,project_name,project_description} = data;
 
-           if( !mongoose.Types.ObjectId.isValid(id)) return Error('Invalid id');
+           if ( IDChecker(id) ) return {};
 
            const project = {
                project_name:project_name,
@@ -33,7 +32,7 @@ class ProjectGateway{
     }
     async deleteProject(data){
         const {id} = data;
-        if( !mongoose.Types.ObjectId.isValid(id)) return Error('Invalid id');
+        if ( IDChecker(id) ) return {};
         const result = await ProjectModel.deleteOne({_id:id});
         return result;
 

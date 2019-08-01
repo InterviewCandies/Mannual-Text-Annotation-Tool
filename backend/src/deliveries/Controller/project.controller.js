@@ -19,10 +19,10 @@ module.exports = {
 
           const result = await this.createProject.execute({project_name,project_description});
           try{
-               res.status(200).json(1);  
+               res.status(200).json("OK");  
 
           } catch(e){
-               res.status(400).send(0);
+               res.status(400).send(error);
           }
 
      },
@@ -34,9 +34,9 @@ module.exports = {
 
            const result = await this.updateProject.execute({id,project_name,project_description});
            try {
-                res.status(200).json(1); 
+                   res.status(200).json(result);
            } catch (error) {
-                res.status(400).json(0);
+                res.status(400).json(error);
            }
      },
      async deleteProject(req,res){
@@ -44,11 +44,10 @@ module.exports = {
            this.deleteProject = new DeleteProject();
            const result = await this.deleteProject.execute({id});
            try{
-               res.status(200).json(1);
-
+               res.status(200).json(result);
            }
            catch(error){
-               res.status(400).json(0);
+               res.status(400).json(error);
            }
      }
 }
