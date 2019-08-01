@@ -8,3 +8,5 @@ class Project {
         this.update_at = update_at;
     }
 } 
+
+module.exports = Project;
