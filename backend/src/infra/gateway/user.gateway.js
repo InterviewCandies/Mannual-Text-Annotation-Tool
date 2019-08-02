@@ -2,7 +2,6 @@ const UserModel = require('../database/user.model');
 const User = require('../../domain/User')
 const PasswordHasher = require('../util/PasswordHasher')
 const IDChecker = require('./IDChecker')
-const mongoose = require('mongoose');
 class UserGateway {
     
     async findByUsername(userInfo){
