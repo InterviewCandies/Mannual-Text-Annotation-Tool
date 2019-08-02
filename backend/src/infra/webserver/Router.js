@@ -8,5 +8,6 @@ module.exports = ()=>{
         router.use(bodyParser.json());
         router.use('/textAnnotation',require('./User')());
         router.use('/textAnnotation',require('./Project')());
+        router.use('/textAnnotation',require('./Label')());
         return router;
 }

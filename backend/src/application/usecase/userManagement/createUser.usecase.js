@@ -5,8 +5,7 @@ class CreateUser {
             this.userGateway = new UserGateway();
        }
        async execute(data){
-            const {username,password,role} = data;
-            const result = await this.userGateway.createUser({username,password,role});
+            const result = await this.userGateway.createUser(data);
             return result;      
        }
 }

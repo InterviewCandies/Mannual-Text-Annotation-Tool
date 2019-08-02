@@ -5,9 +5,8 @@ class CreateProject{
               this.projectGateway = new ProjectGateway();
      }
 
-     async execute(projectInfo){
-        const {project_name,project_description} = projectInfo;
-        const result = await  this.projectGateway.createProject({project_name,project_description});
+     async execute(data){
+        const result = await  this.projectGateway.createProject(data);
         return result;
      }
 }

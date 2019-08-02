@@ -3,6 +3,7 @@ const Login = require ('../../application/usecase/login.usecase')
 const UserPresenter = require("../Presenter/user.presenter")
 const CreateUser = require('../../application/usecase/userManagement/createUser.usecase')
 const DeleteUser = require('../../application/usecase/userManagement/deleteUser.usecase')
+const EditUser = require ('../../application/usecase/userManagement/editUser.usecase')
 UserController= {
      
      
@@ -42,11 +43,21 @@ UserController= {
             this.deleteUser = new DeleteUser();
             const result = await this.deleteUser.execute({id});
             try {
-                 if(result) res.status(200).json('User is deleted');
-                 else res.status(200).json('User does not exist');
+                res.status(200).json(result);
                  
             } catch (error) {
-                  res.status(400).send('Failed');
+                  res.status(400).send(error);
+            }
+      },
+      async editUser(req,res){
+            const id = req.params.id;
+            const {username,password,role} = req.body;
+            this.editUser = new EditUser();
+            const result = await this.editUser.execute({id,username,password,role});
+            try {
+                   res.status(200).json(result);
+            } catch (error) {
+                   res.status(400).send(error);
             }
       }
       
