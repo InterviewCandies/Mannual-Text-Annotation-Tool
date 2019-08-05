@@ -6,7 +6,7 @@ const UserDocument = React.lazy(()=> import('../views/Document/UserDocument'))  
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/:id', exact: true, name: 'Home', component: UserDashboard },
+  { path: '/dashboard', exact: true, name: 'Home', component: UserDashboard },
   { path: '/document/:id',  name: 'Document', component: UserDocument },
 
 ];

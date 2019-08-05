@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Alert, Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
+import {login} from '../../functions/user.function'
 class Login extends Component {
   _isMounted = false;
   constructor(props){
@@ -33,30 +35,26 @@ class Login extends Component {
   componentWillUnmount(){
      this._isMounted= false;
   }
-  onSubmit(e){
+  async onSubmit(e){
     e.preventDefault();
     const newLogin = {
         username: this.state.username,
         password: this.state.password
     }
-    
-    axios.post('http://localhost:4000/textAnnotation/user/login/',newLogin)
-         .then(res=>{
-              if(res.data){
-                       
-                        this.props.onUserChange(res.data);
-                        console.log(res.data.username);
-                        this.props.history.push('/');
-              }
-              else {
-                 console.log('Invalid');
-                 document.getElementById('error').style.display='block';
-                 this.setState({
-                    username:'',
-                    password:''
-                 })
-              }
-         })
+     
+    const result = await login(newLogin);
+    if(result.username){   
+          this.props.history.push('/');
+    }
+    else {
+    console.log('Invalid');
+      document.getElementById('error').style.display='block';
+      this.setState({
+        username:'',
+        password:''
+      })
+    }
+        
   }
   render() {
     return (

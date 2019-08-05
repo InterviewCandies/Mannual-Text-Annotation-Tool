@@ -4,6 +4,7 @@ class Server {
         this.config=config;
         this.express=express();
         this.express.use(router);
+        process.env.SECRET_KEY = config.SECRET_KEY;
     }
     start(){
         this.express.listen(this.config.PORT,()=>{

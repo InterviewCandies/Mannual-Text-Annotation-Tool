@@ -7,12 +7,14 @@ class UserGateway {
     async findByUsername(userInfo){
         const {username,password} = userInfo;
         const result = await UserModel.findOne({username:username});
-        if(!result) return {};
-        if(!PasswordHasher.isMatched(password,result.password)) return {};
-        const user = new User(result._id,result.username,result.password,result.created_at,result.updated_at);
-        return user;
-      
+        let obj={};
+        if(result && PasswordHasher.isMatched(password,result.password) ) {
+               const user = new User(result._id,result.username,result.password,result.role);
+               obj = user.getObj();
+        }
+        return obj;
     }
+
     async createUser(userInfo) {
         let {username,password,role} = userInfo;
         password = PasswordHasher.hash(password);

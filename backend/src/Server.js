@@ -1,6 +1,4 @@
-const Server = require('./infra/webserver/Server');
-const config = require('./config');
-const router = require('./infra/webserver/Router')();
+const container = require('./Container')
 
-const app = new Server({config:config,router:router});
-app.start();
+container.resolve('app').start();
+

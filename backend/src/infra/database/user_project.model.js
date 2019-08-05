@@ -20,4 +20,4 @@ const UserProject = new Schema({
       }
 })
 
-module.exports = UserProject;
+module.exports = mongoose.model('UserProject',UserProject);

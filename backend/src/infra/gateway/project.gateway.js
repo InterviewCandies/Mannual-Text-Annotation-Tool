@@ -1,8 +1,13 @@
-const ProjectModel = require('../database/project.model');
 const Project = require('../../domain/Project');
-const IDChecker = require('./IDChecker')
+const ProjectModel = require('../database/project.model');
+const UserProjectModel = require('../database/user_project.model')
 
 class ProjectGateway{
+    
+    constructor(){
+       // this.projectModel = new ProjectModel()
+       
+    }
     
     async createProject(data){
            const {project_name,project_description} = data;
@@ -20,7 +25,6 @@ class ProjectGateway{
     async updateProject(data){
            const {id,project_name,project_description} = data;
 
-           if ( !IDChecker(id) ) return {};
 
            const project = {
                project_name:project_name,
@@ -32,7 +36,6 @@ class ProjectGateway{
     }
     async deleteProject(data){
         const {id} = data;
-        if ( !IDChecker(id) ) return {};
         const result = await ProjectModel.deleteOne({_id:id});
         return result;
 
@@ -40,6 +43,14 @@ class ProjectGateway{
     async listProject(){
         const result = await ProjectModel.find();
         return result;   
+    }
+    async addUser(data){
+        const {user_id,project_id}=data;
+        const result = await UserProjectModel.insertMany({
+                user_id : user_id,
+                project_id: project_id
+        })
+        return result;
     }
 }
 

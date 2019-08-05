@@ -1,10 +1,7 @@
-const CreateProject = require('../../application/usecase/projectManagement/createProject.usecase') 
-const UpdateProject = require('../../application/usecase/projectManagement/updateProject.usecase')
-const DeleteProject = require('../../application/usecase/projectManagement/deleteProject.usecase')
-const ListProject = require('../../application/usecase/projectManagement/listProject.usecase')
+const Project = require('../../application/usecase/projectManagement')
 module.exports = {
      async list(req,res){
-           this.listProject = new ListProject();
+           this.listProject = new Project.ListProject();
            const result  = await this.listProject.execute();
            try {
                 res.status(200).json(result);
@@ -15,7 +12,7 @@ module.exports = {
      async createProject(req,res){
           const {project_name,project_description} = req.body;
 
-          this.createProject  = new CreateProject();
+          this.createProject  = new Project.CreateProject();
 
           const result = await this.createProject.execute({project_name,project_description});
           try{
@@ -30,7 +27,7 @@ module.exports = {
           const id = req.params.id;
           const {project_name,project_description} = req.body;
             
-           this.updateProject = new UpdateProject();
+           this.updateProject = new Project.UpdateProject();
 
            const result = await this.updateProject.execute({id,project_name,project_description});
            try {
@@ -41,13 +38,24 @@ module.exports = {
      },
      async deleteProject(req,res){
            const id = req.params.id;
-           this.deleteProject = new DeleteProject();
+           this.deleteProject = new Project.DeleteProject();
            const result = await this.deleteProject.execute({id});
            try{
                res.status(200).json(result);
            }
            catch(error){
                res.status(400).json(error);
+           }
+     },
+     async addUser(req,res){
+           const project_id = req.params.id;
+           const {user_id} = req.body;
+           this.addUser = new Project.AddUser();
+           const result =await this.addUser.execute({user_id,project_id});
+           try {
+                res.status(200).json(result);
+           } catch (error) {
+                res.status(400).json(error);
            }
      }
 }

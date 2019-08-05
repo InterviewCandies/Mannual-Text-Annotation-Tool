@@ -1,5 +1,6 @@
 import React, { Component} from 'react';
 import faker from 'faker'
+import jwt_decode from 'jwt-decode'
 import {
   Alert,
   
@@ -11,7 +12,9 @@ import {
 class UserDashboard extends Component {
   constructor(props) {
     super(props);
-
+    const token = localStorage.getItem('userToken')
+    const decoder = jwt_decode(token);
+    this.username = decoder.username;
     this.state = {
         visible: true,
       };
@@ -30,9 +33,9 @@ class UserDashboard extends Component {
 
     return (
       <div className="animated fadeIn">
-       
+      
        <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
-              {`Hi  ${this.props.index.username} ! Welcome to text annotation.  Hope you have a nice day`}
+              {`Hi  ${this.username} ! Welcome to text annotation.  Hope you have a nice day`}
         </Alert>
            
 

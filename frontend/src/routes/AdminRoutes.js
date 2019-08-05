@@ -5,7 +5,7 @@ const Users = React.lazy(() => import('../views/Users/Users'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/:id', exact: true, name: 'Home',component:AdminDashboard },  
+  { path: '/dashboard', exact: true, name: 'Home',component:AdminDashboard },  
   { path: '/users',  exact: true, name: 'Users', component: Users },
 
 ];

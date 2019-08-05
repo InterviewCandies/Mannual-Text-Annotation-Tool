@@ -30,6 +30,7 @@ class UserLayout extends Component {
 
   signOut(e) {
     e.preventDefault()
+    localStorage.removeItem('userToken');
     this.props.history.push('/login')
   }
 
@@ -60,11 +61,11 @@ class UserLayout extends Component {
                         exact={route.exact}
                         name={route.name}
                         render={props => (
-                          <route.component {...props} index = {this.props.index} />
+                          <route.component {...props}  />
                         )} />
                     ) : (null);
                   })}
-                  <Redirect from="/" to={`/${this.props.index.id}`}></Redirect>
+                  <Redirect from="/" to='/dashboard'></Redirect>
                 </Switch>
               </Suspense>
             </Container>

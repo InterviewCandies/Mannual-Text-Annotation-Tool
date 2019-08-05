@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, Switch,Redirect } from 'react-router-dom';
 import './App.scss';
+import jwt_decode from 'jwt-decode'
 
 const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
 
@@ -15,32 +16,27 @@ const Login = React.lazy(() => import('./views/Login/Login'));
 class App extends Component {
   constructor(props){
     super(props);
-    this.state={
-        user:{}
-    }
-    this.onUserChange = this.onUserChange.bind(this);
+    
   }
  
-   onUserChange = (user)=>{
-       this.setState({
-         user:user
-       })
-   }
+   
 
   render() {
     return (
       <HashRouter>
           <React.Suspense fallback={loading()}>
             <Switch>
-              <Route exact path="/login" name="Login Page" render={props => <Login  {...props} onUserChange={this.onUserChange}/>} />
+              <Route exact path="/login" name="Login Page" render={props => <Login {...props} />} />
               <Route  path="/" name="Home" 
                      render={props =>
                          { 
-                            if(!this.state.user.username) 
+                            const token = localStorage.getItem('userToken');
+                            const decoder = jwt_decode(token);
+                            if(!decoder.role) 
                                 return (<Redirect to="/login" ></Redirect>)
                                 
-                            else if(this.state.user.role==0) return <UserLayout {...props} index={this.state.user}/>
-                            else return <AdminLayout {...props} index={this.state.user}></AdminLayout>
+                            else if(decoder.role==0) return <UserLayout {...props} />
+                            else return <AdminLayout {...props} ></AdminLayout>
                          }
                       } />
             </Switch>

@@ -1,4 +1,4 @@
-const UserGateway = require('../../infra/gateway/user.gateway')
+const UserGateway = require('../../../infra/gateway/user.gateway')
 class Login{
     constructor(){
           this.userGateway = new UserGateway();
