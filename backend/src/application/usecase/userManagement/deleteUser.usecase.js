@@ -1,12 +1,10 @@
-const UserGateway = require('../../../infra/gateway/user.gateway');
 
 class DeleteUser{
-      constructor(){
-            this.userGateway = new UserGateway();
+      constructor({userGateway}){
+            this.userGateway = userGateway
       } 
       async execute(data){
-            const {id} = data;
-            const result = this.userGateway.deleteUser({id});
+            const result = await this.userGateway.deleteUser(data);
             return result;
       }
 }

@@ -1,11 +1,9 @@
-const ProjectGateway = require('../../../infra/gateway/project.gateway');
 class DeleteProject {
-      constructor(){
-            this.deleteProject = new ProjectGateway();
+      constructor({projectGateway}){
+            this.deleteProject =projectGateway;
       }
       async execute(data){
-          const {id} = data;
-          const  result = this.deleteProject.deleteProject({id});
+          const  result = this.deleteProject.deleteProject(data);
           return result;
       }
 }

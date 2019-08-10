@@ -3,18 +3,26 @@
 
 class User {
     constructor(id,username,password,role,created_at,updated_at){  
-        this.user ={
-            id : id,
-            username : username,
-            password : password,
-            role : role,
-            created_at : created_at,
-            updated_at : updated_at
+        this.id =id
+        this.username=username,
+        this.password=password,
+        this.role=role,
+        this.created_at=created_at,
+        this.updated_at=updated_at
+    }
+    toJSON(){
+        return {
+                id : this.id,
+                username : this.username,
+                password : this.password,
+                role : this.role,
+                created_at : this.created_at,
+                updated_at : this.updated_at
+          
         }
     }
-    getObj(){
-        return this.user;
-    }
+    
+   
 }
 
 module.exports = User; 

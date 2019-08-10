@@ -1,49 +1,53 @@
-const UserModel = require('../database/user.model');
-const User = require('../../domain/User')
-const PasswordHasher = require('../util/PasswordHasher')
-const IDChecker = require('./IDChecker')
+
 class UserGateway {
-    
-    async findByUsername(userInfo){
-        const {username,password} = userInfo;
-        const result = await UserModel.findOne({username:username});
-        let obj={};
-        if(result && PasswordHasher.isMatched(password,result.password) ) {
-               const user = new User(result._id,result.username,result.password,result.role);
-               obj = user.getObj();
-        }
-        return obj;
+    constructor({UserModel,UserProjectModel,authentication,userSequelizer,userProjectSequelizer}){
+        this.UserModel = UserModel
+        this.UserProjectModel = UserProjectModel
+        this.authentication = authentication
+        this.userSequelizer = userSequelizer
+        this.userProjectSequelizer = userProjectSequelizer
     }
 
-    async createUser(userInfo) {
-        let {username,password,role} = userInfo;
-        password = PasswordHasher.hash(password);
-        const user = {
-             username : username,
-             password : password,
-             role: role
-        }
-        const result = await UserModel.insertMany(user);
+    async findByUsername(user){
+        const {username} = user;
+        const result = await this.UserModel.findOne({username:username});
         return result;
     }
-    async deleteUser(userInfo){
-        const {id} = userInfo;
-        if ( ! IDChecker(id) ) return {};
-        const result =await UserModel.deleteOne({_id:id});
-        return result;
-    }
-    async editUser(userInfo){
-        let {id,username,password,role} = userInfo;
-        password = PasswordHasher.hash(password);
-        if( !IDChecker(id) ) return {};
-        const user = {
-            username:username,
-            password:password,
-            role : role,
-            updated_at: Date.now()
+    async login(user) {
+        let result = await this.findByUsername(user)
+        if(result && this.userSequelizer.isMatched(user.password,result)) {
+            result = this.userSequelizer.toEntity(result).toJSON();     
+            return this.authentication.sign(result);  
         }
-        const result = await UserModel.updateOne({_id:id},user);
-        return result;
+        return { message: 'User does not exist' }
+    }
+    
+    async createUser(user) {
+        const check = await this.findByUsername(user)
+        if(check) return { message: 'User is existed' }
+        const result = await this.UserModel.insertMany(await this.userSequelizer.toDatabase(user));
+        return result.map(this.userSequelizer.toEntity);         
+    }
+    async deleteUser(user){
+        const result =await this.UserModel.deleteOne( this.userSequelizer.getById(user));
+        return this.userSequelizer.toEntity(result);         
+    }
+    async editUser(user){
+        const result = await this.UserModel.updateOne(this.userSequelizer.getById(user),await this.userSequelizer.toDatabase(user));
+        return this.userSequelizer.toEntity(user);       
+    }
+    async list(user){
+        const result = await this.UserModel.find();
+        return result.map(this.userSequelizer.toEntity)
+    }
+    async get(user) {
+        const result = await this.findByUsername(user);
+        if(result) return this.userSequelizer.toEntity(result);
+        return { message: 'User does not exist' }
+    }
+    async getUserByProject(data){
+        const result = await this.UserProjectModel.aggregate(this.userProjectSequelizer.joinUser(data));   
+        return result.map(this.userSequelizer.toEntity);
     }
 }
 

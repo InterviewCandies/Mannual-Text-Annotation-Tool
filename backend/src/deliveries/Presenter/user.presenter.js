@@ -1,12 +1,15 @@
 
 
-module.exports = class UserPresenter{
-       present(user){
+module.exports=  class UserPresenter{
+       present({id,username,password,role,created_at,updated_at}){
            return {
-               id: user._id,
-               username: user.username,
-               password: user.password,
-               role: user.role
+               id: id,
+               username: username,
+               password: password,
+               role: role,
+               created_at : created_at,
+               updated_at : updated_at
            }
        }
 }
+

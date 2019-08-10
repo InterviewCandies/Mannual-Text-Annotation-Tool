@@ -1,12 +1,14 @@
 
 const express = require('express');
-const UserController = require('../../deliveries/Controller/user.controller')
-module.exports= ()=>{
-        const router = express.Router();
-        router.post('/user/login',UserController.login);
-        router.post('/user/create',UserController.createUser);
-        router.post('/user/delete/:id',UserController.deleteUser);
-        router.post('/user/update/:id',UserController.editUser);
+module.exports= ({userController,authentication})=>{
+       const router = express.Router();
+        router.post('/user/login',userController.login);
+        router.post('/user/create',authentication.verify,userController.createUser);
+        router.post('/user/delete',authentication.verify,userController.deleteUser);
+        router.post('/user/update',authentication.verify,userController.editUser);
+        router.get('/user/list',authentication.verify,userController.list);
+        router.post('/user/get',authentication.verify,userController.get);
+        router.post('/user/getUserByProject',authentication.verify,userController.getUserByProject);
         return router;
      }
 

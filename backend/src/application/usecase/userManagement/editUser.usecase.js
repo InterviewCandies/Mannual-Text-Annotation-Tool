@@ -1,7 +1,6 @@
-const UserGateway = require('../../../infra/gateway/user.gateway')
 class EditUser{
-   constructor(){
-       this.userGateway = new UserGateway();
+   constructor({userGateway}){
+       this.userGateway = userGateway;
    }
    async execute(data){
          const result =await this.userGateway.editUser(data);

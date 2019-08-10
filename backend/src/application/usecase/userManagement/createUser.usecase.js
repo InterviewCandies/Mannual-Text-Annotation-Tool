@@ -1,8 +1,7 @@
-const UserGateway = require('../../../infra/gateway/user.gateway');
 
 class CreateUser {
-       constructor(){
-            this.userGateway = new UserGateway();
+       constructor({userGateway}){
+            this.userGateway = userGateway
        }
        async execute(data){
             const result = await this.userGateway.createUser(data);

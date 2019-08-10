@@ -20,7 +20,7 @@ export default {
       },
       {
         name: 'Logout',
-        url: '/Login',
+        url: '/login',
         icon: 'icon-speedometer',
         
       }

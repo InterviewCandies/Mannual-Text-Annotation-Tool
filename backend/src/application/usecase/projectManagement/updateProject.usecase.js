@@ -1,8 +1,7 @@
-const ProjectGateway = require('../../../infra/gateway/project.gateway');
 
 class UpdateProject{
-     constructor(){
-            this.projectGateway= new ProjectGateway();
+     constructor({projectGateway}){
+            this.projectGateway= projectGateway;
      }
      async execute(data){
           const result = await this.projectGateway.updateProject(data);

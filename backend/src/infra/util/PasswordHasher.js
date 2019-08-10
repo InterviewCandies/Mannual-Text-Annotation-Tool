@@ -1,13 +1,17 @@
 const bcrypt = require('bcryptjs');
 
-module.exports ={
-        hash(password){
+module.exports =class PasswordHaser{
+        constructor(){
+            this.hash = this.hash.bind(this)
+            this.isMatched = this.isMatched.bind(this)
+        }
+        async hash(password){
            
-            let salt = bcrypt.genSaltSync(10);
-            return  bcrypt.hashSync(password, salt);
+            let salt =await  bcrypt.genSalt(10);
+            return await bcrypt.hash(password, salt);
             
-        },
-        isMatched(a,b){
-            return bcrypt.compareSync(a,b);
+        }
+        async isMatched(a,b){
+            return await bcrypt.compare(a,b);
         } 
 }

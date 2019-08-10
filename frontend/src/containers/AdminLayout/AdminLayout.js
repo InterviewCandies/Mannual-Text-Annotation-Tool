@@ -19,6 +19,8 @@ import {
 import navigation from '../../navRoutes/AdminNav';
 // routes config
 import routes from '../../routes/AdminRoutes';
+import AdminHeader from './AdminHeader';
+import SearchBar from '../../component/Searchbar/SearchBar';
 
 
 class AdminLayout extends Component {
@@ -37,16 +39,22 @@ class AdminLayout extends Component {
   render() {
     return (
       <div className="app">
-         
+        <AppHeader fixed>
+          <Suspense  fallback={this.loading()}>
+            <AdminHeader onLogout={e=>this.signOut(e)}/>
+          </Suspense>
+        </AppHeader>
         <div className="app-body">
           <AppSidebar fixed display="lg">
-              <AppSidebarHeader />
+              <AppSidebarHeader/>
+            
               <AppSidebarForm />
               <Suspense>
-                   <AppSidebarNav navConfig={navigation} {...this.props} router={router}/>
+                   
+                   <SearchBar></SearchBar>
               </Suspense>
               <AppSidebarFooter />
-              <AppSidebarMinimizer />
+            
             </AppSidebar>
           <main className="main">
            

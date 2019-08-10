@@ -47,7 +47,6 @@ class Login extends Component {
           this.props.history.push('/');
     }
     else {
-    console.log('Invalid');
       document.getElementById('error').style.display='block';
       this.setState({
         username:'',

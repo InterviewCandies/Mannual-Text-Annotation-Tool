@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.mongo.ObjectId
 const Schema = mongoose.Schema;
-
 const UserProject = new Schema({
       user_id:{
-          type:String,
+          type:ObjectId,
           required:true
       },
       project_id:{
-          type:String,
+          type:ObjectId,
           required:true
       },
       created_at:{

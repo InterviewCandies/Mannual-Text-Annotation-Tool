@@ -4,9 +4,15 @@ import {
   Alert,
   Col,
   Row,
+  Button
 } from 'reactstrap';
 import jwt_decode  from 'jwt-decode';
 import AdminProjectCard from '../../component/Card/AdminProjectCard';
+import SearchBar from '../../component/Searchbar/SearchBar';
+import InfoModal from '../../component/Modal/Info.modal'
+import CreateProjectForm from '../../component/Form/CreateProjectForm'
+import { list } from '../../functions/project.function';
+import ProjectTable from '../../component/Table/Project/ProjectTable';
 
 
 
@@ -19,27 +25,29 @@ class AdminDashboard extends Component {
     this.username = decoder.username;
     this.state = {
         visible: true,
-        projectList: []
+        createProject: false
       };
     
       this.onDismiss = this.onDismiss.bind(this);
   }
 
-  componentDidMount(){
-       axios.get('http://localhost:4000/textAnnotation/project/list')
-            .then((res)=>{
-                console.log(res.data);
-                this.setState({
-                    projectList:res.data
-                })
-            })
+  
+  
+ 
+  
+ 
+  onClick=async(e)=>{
+     this.setState({
+       createProject : !this.state.createProject,
+     })
+
   }
 
   onDismiss() {
     this.setState({ visible: false });
   }
 
-
+  
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
 
@@ -50,17 +58,17 @@ class AdminDashboard extends Component {
        
        <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
               {`Hi ${this.username} !  Welcome to text annotation.  Hope you have a nice day`}
+              <div class="d-flex justify-content-center ">
+                  <Button className="btn-large bg-primary m-2" type="button" onClick={this.onClick}  > CREATE A NEW PROJECT</Button>
+                  <InfoModal  trigger={this.state.createProject} title='Create project' toggle={this.onClick} >
+                    <CreateProjectForm action ={this.onChangeProject}> </CreateProjectForm>
+                   
+                  </InfoModal>
+                  <Button className="btn-large m-2" type="button" > GO TO STATISTIC</Button>
+              </div>
         </Alert>
-           
-        <Row>
-
-             <Col xs="12" sm="6" lg="4">
-                    {this.state.projectList.map((project, index) =>
-                        <AdminProjectCard key={index} project={project}/>
-                    )}
-             </Col>
-             
-        </Row>
+       
+        <ProjectTable></ProjectTable>
         
        
     

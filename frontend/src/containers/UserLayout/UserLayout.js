@@ -19,6 +19,7 @@ import {
 import navigation from '../../navRoutes/UserNav';
 // routes config
 import routes from '../../routes/UserRoutes';
+import UserHeader from './UserHeader';
 
 
 class UserLayout extends Component {
@@ -37,7 +38,11 @@ class UserLayout extends Component {
   render() {
     return (
       <div className="app">
-        
+         <AppHeader fixed>
+          <Suspense  fallback={this.loading()}>
+            <UserHeader onLogout={e=>this.signOut(e)}/>
+          </Suspense>
+        </AppHeader>
         <div className="app-body">
           <AppSidebar fixed display="lg">
               <AppSidebarHeader />

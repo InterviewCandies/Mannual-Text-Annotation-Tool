@@ -31,11 +31,11 @@ class App extends Component {
                      render={props =>
                          { 
                             const token = localStorage.getItem('userToken');
-                            const decoder = jwt_decode(token);
-                            if(!decoder.role) 
+                            if(!token) 
                                 return (<Redirect to="/login" ></Redirect>)
-                                
-                            else if(decoder.role==0) return <UserLayout {...props} />
+                            const decoder = jwt_decode(token);
+                            console.log(decoder);
+                            if(decoder.role==0) return <UserLayout {...props} />
                             else return <AdminLayout {...props} ></AdminLayout>
                          }
                       } />

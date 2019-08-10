@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
-
-import usersData from './UsersData'
+import dateformat from '../../../service/dateFormat'
+import { UserList } from '../../../functions/user.function';
 
 function UserRow(props) {
   const user = props.user
-  const userLink = `/users/${user.id}`
 
   const getBadge = (status) => {
     return status === 'Active' ? 'success' :
@@ -15,23 +14,36 @@ function UserRow(props) {
           status === 'Banned' ? 'danger' :
             'primary'
   }
+  const getRole = (role) =>{
+      return role == 0 ? "user" : "admin" 
+  }
 
   return (
-    <tr key={user.id.toString()}>
-      <th scope="row"><Link to={userLink}>{user.id}</Link></th>
-      <td><Link to={userLink}>{user.name}</Link></td>
-      <td>{user.registered}</td>
-      <td>{user.role}</td>
-      <td><Link to={userLink}><Badge color={getBadge(user.status)}>{user.status}</Badge></Link></td>
+    <tr >
+      <td >{user.id}</td>
+      <th scope="row">{user.username}</th>
+      <td>{dateformat(user.created_at)}</td>
+      <td>{getRole(user.role)}</td>
+      <td><Badge color={getBadge(user.status)}>{user.status}</Badge></td>
     </tr>
   )
 }
 
 class UsersTable extends Component {
+  constructor(props){
+    super(props)
+    this.state={
+      userList : []
+    }
+  }
+  async componentDidMount(){
+      const result =await  UserList();
+      this.setState({
+        userList: result
+      })
+  }
 
   render() {
-
-    const userList = usersData.filter((user) => user.id < 10)
 
     return (
       <div className="animated fadeIn">
@@ -53,7 +65,7 @@ class UsersTable extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {userList.map((user, index) =>
+                    {this.state.userList.map((user, index) =>
                       <UserRow key={index} user={user}/>
                     )}
                   </tbody>

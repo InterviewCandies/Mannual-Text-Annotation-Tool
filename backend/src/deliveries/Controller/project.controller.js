@@ -1,61 +1,84 @@
-const Project = require('../../application/usecase/projectManagement')
-module.exports = {
+module.exports = class ProjectController {
+     constructor({_listProject,_createProject,_deleteProject,_editProject,
+                  _addUser,_removeUser,_getProjectByUser}){
+
+          this._listProject = _listProject
+          this._createProject = _createProject
+          this._deleteProject = _deleteProject
+          this._editProject =_editProject
+          this._addUser = _addUser
+          this._removeUser = _removeUser
+          this._getProjectByUser = _getProjectByUser
+
+          this.list= this.list.bind(this)
+          this.createProject =this.createProject.bind(this)
+          this.deleteProject = this.deleteProject.bind(this)
+          this.updateProject = this.updateProject.bind(this)
+          this.addUser = this.addUser.bind(this)
+          this.removeUser = this.removeUser.bind(this)
+          this.getProjectByUser = this.getProjectByUser.bind(this)
+     }
      async list(req,res){
-           this.listProject = new Project.ListProject();
-           const result  = await this.listProject.execute();
+           const result  = await this._listProject.execute(req.body);
            try {
                 res.status(200).json(result);
            } catch (error) {
                 res.status(400).json(error);
            }
-     }, 
+     }
      async createProject(req,res){
-          const {project_name,project_description} = req.body;
 
-          this.createProject  = new Project.CreateProject();
 
-          const result = await this.createProject.execute({project_name,project_description});
+          const result = await this._createProject.execute(req.body);
           try{
-               res.status(200).json("OK");  
+               res.status(200).json(result);  
 
           } catch(e){
                res.status(400).send(error);
           }
 
-     },
+     }
      async updateProject(req,res) {
-          const id = req.params.id;
-          const {project_name,project_description} = req.body;
             
-           this.updateProject = new Project.UpdateProject();
 
-           const result = await this.updateProject.execute({id,project_name,project_description});
+           const result = await this._editProject.execute(req.body);
            try {
                    res.status(200).json(result);
            } catch (error) {
-                res.status(400).json(error);
+                  res.status(400).json(error);
            }
-     },
+     }
      async deleteProject(req,res){
-           const id = req.params.id;
-           this.deleteProject = new Project.DeleteProject();
-           const result = await this.deleteProject.execute({id});
+           const result = await this._deleteProject.execute(req.body);
            try{
                res.status(200).json(result);
            }
            catch(error){
                res.status(400).json(error);
            }
-     },
+     }
      async addUser(req,res){
-           const project_id = req.params.id;
-           const {user_id} = req.body;
-           this.addUser = new Project.AddUser();
-           const result =await this.addUser.execute({user_id,project_id});
+           const result =await this._addUser.execute(req.body);
            try {
                 res.status(200).json(result);
            } catch (error) {
                 res.status(400).json(error);
            }
+     }
+     async removeUser(req,res){
+          const result = await this._removeUser.execute(req.body);
+          try {
+               res.status(200).json(result);
+          } catch (error) {
+               res.status(400).json(error);
+          }
+     }
+     async getProjectByUser(req,res){
+          const result = await this._getProjectByUser.execute(req.body);
+          try {
+               res.status(200).json(result);
+          } catch (error) {
+               res.status(400).json(error);
+          }
      }
 }

@@ -1,57 +1,49 @@
-const Project = require('../../domain/Project');
-const ProjectModel = require('../database/project.model');
-const UserProjectModel = require('../database/user_project.model')
-
 class ProjectGateway{
     
-    constructor(){
-       // this.projectModel = new ProjectModel()
-       
+    constructor({ProjectModel,UserProjectModel,projectSequelizer,userProjectSequelizer}){
+       this.ProjectModel = ProjectModel
+       this.UserProjectModel = UserProjectModel
+       this.projectSequelizer = projectSequelizer
+       this.userProjectSequelizer = userProjectSequelizer
     }
     
     async createProject(data){
-           const {project_name,project_description} = data;
-           
-           const project = {
-                 project_name:project_name,
-                 project_description:project_description
-           };
-
-           const result = await ProjectModel.insertMany(project);
-           return result;
+           const result = await this.ProjectModel.insertMany(this.projectSequelizer.toDatabase(data));
+           return result.map(this.projectSequelizer.toEntity);
     }
 
     
     async updateProject(data){
-           const {id,project_name,project_description} = data;
-
-
-           const project = {
-               project_name:project_name,
-               project_description:project_description,
-               updated_at: Date.now()
-           }
-           const result = await ProjectModel.updateOne({_id:id},project);
-           return result;
+           const result = await this.ProjectModel.updateOne(this.projectSequelizer.getById(data),this.projectSequelizer.toDatabase(data));
+           return this.projectSequelizer.toEntity(result);
     }
     async deleteProject(data){
-        const {id} = data;
-        const result = await ProjectModel.deleteOne({_id:id});
-        return result;
+        const result = await this.ProjectModel.deleteOne(this.projectSequelizer.getById(data));
+        return this.projectSequelizer.toEntity(result);
 
     }
-    async listProject(){
-        const result = await ProjectModel.find();
-        return result;   
+    async listProject(data){
+        const result = await this.ProjectModel.find();
+        return result.map(this.projectSequelizer.toEntity);   
+    }
+    async findUserById(data){
+          return await this.UserProjectModel.findOne(this.userProjectSequelizer.toDatabase(data));
     }
     async addUser(data){
-        const {user_id,project_id}=data;
-        const result = await UserProjectModel.insertMany({
-                user_id : user_id,
-                project_id: project_id
-        })
+        const check = await this.findUserById(data);
+        if(check) return {message : 'User is existed'};
+        const result = await this.UserProjectModel.insertMany(this.userProjectSequelizer.toDatabase(data))
         return result;
     }
+    async removeUser(data){
+         const result = await this.UserProjectModel.deleteOne(this.userProjectSequelizer.toDatabase(data))
+         return result;
+    }
+    async getProjectByUser(data){
+        const result = await this.UserProjectModel.aggregate(this.userProjectSequelizer.joinProject(data));
+        return result.map(this.projectSequelizer.toEntity);
+    }
+  
 }
 
 module.exports = ProjectGateway;

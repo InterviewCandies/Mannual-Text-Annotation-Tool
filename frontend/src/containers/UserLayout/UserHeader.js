@@ -77,7 +77,7 @@ class UserHeader extends Component {
   }
 }
 
-MyHeader.propTypes = propTypes;
-MyHeader.defaultProps = defaultProps;
+UserHeader.propTypes = propTypes;
+UserHeader.defaultProps = defaultProps;
 
 export default UserHeader;

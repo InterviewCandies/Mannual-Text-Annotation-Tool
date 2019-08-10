@@ -1,8 +1,7 @@
-const ProjectGateway = require('../../../infra/gateway/project.gateway');
 
 class CreateProject{
-     constructor(){
-              this.projectGateway = new ProjectGateway();
+     constructor({projectGateway}){
+              this.projectGateway = projectGateway;
      }
 
      async execute(data){

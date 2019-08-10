@@ -9,7 +9,7 @@ class App{
           //Start server
           await this.server.start();        
           //Connect to database
-         // await this.database.configure();
+          //await this.database.connect();
     }
 }
 
