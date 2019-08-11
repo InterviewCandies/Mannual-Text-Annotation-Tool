@@ -1,15 +1,13 @@
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-import { list } from './project.function';
 
 export const login=newLogin=>{
         return axios.post('http://localhost:4000/textAnnotation/user/login/',newLogin)
         .then(res=>{
-             const token =res.data;   
+             const token =res.data
              localStorage.setItem('userToken',token);
-             const decoder = jwt_decode(token);
-             console.log(decoder)
-             return decoder;
+             const decorder = jwt_decode(token)
+             return decorder;
         })
 };
         

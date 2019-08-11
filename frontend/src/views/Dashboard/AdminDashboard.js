@@ -4,6 +4,8 @@ import {
   Alert,
   Col,
   Row,
+  Card,
+  CardBody,
   Button
 } from 'reactstrap';
 import jwt_decode  from 'jwt-decode';
@@ -20,9 +22,6 @@ import ProjectTable from '../../component/Table/Project/ProjectTable';
 class AdminDashboard extends Component {
   constructor(props) {
     super(props);
-    const token = localStorage.getItem('userToken');
-    const decoder = jwt_decode(token);
-    this.username = decoder.username;
     this.state = {
         visible: true,
         createProject: false
@@ -57,7 +56,6 @@ class AdminDashboard extends Component {
       <div className="animated fadeIn">
        
        <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
-              {`Hi ${this.username} !  Welcome to text annotation.  Hope you have a nice day`}
               <div class="d-flex justify-content-center ">
                   <Button className="btn-large bg-primary m-2" type="button" onClick={this.onClick}  > CREATE A NEW PROJECT</Button>
                   <InfoModal  trigger={this.state.createProject} title='Create project' toggle={this.onClick} >
@@ -68,7 +66,10 @@ class AdminDashboard extends Component {
               </div>
         </Alert>
        
-        <ProjectTable></ProjectTable>
+     
+          <ProjectTable></ProjectTable>
+         
+       
         
        
     

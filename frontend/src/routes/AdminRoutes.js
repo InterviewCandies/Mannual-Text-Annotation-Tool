@@ -1,7 +1,7 @@
 import React from 'react';
 
 const AdminDashboard = React.lazy(() => import('../views/Dashboard/AdminDashboard')); 
-const Users = React.lazy(() => import('../views/Users/Users')); 
+const Users = React.lazy(() => import('../views/Page/Users/Users')); 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [

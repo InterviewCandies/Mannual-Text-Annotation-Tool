@@ -10,7 +10,7 @@ const UserLayout = React.lazy(()=>import('./containers/UserLayout/UserLayout'));
 const AdminLayout = React.lazy(()=>import('./containers/AdminLayout/AdminLayout'));
 
 // Pages
-const Login = React.lazy(() => import('./views/Login/Login'));
+const Login = React.lazy(() => import('./views/Page/Login/Login'));
 
 
 class App extends Component {

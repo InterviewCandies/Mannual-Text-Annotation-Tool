@@ -1,12 +1,12 @@
 import React,{Component} from 'react'
-import UsersTable from '../../component/Table/Users/UsersTable';
-import {createUser} from '../../functions/user.function'
+import UsersTable from '../../../component/Table/Users/UsersTable';
+import {createUser} from '../../../functions/user.function'
 import {
     Alert,
     Button
 } from 'reactstrap'
-import InfoModal from '../../component/Modal/Info.modal'
-import CreateUserForm from '../../component/Form/CreateUserForm';
+import InfoModal from '../../../component/Modal/Info.modal'
+import CreateUserForm from '../../../component/Form/CreateUserForm';
 class Users extends Component{
     constructor(props){
         super(props)

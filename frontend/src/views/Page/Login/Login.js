@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { Alert, Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-import axios from 'axios'
-import jwt_decode from 'jwt-decode'
-import {login} from '../../functions/user.function'
+import {login} from '../../../functions/user.function'
 class Login extends Component {
-  _isMounted = false;
   constructor(props){
     super(props);
     this.state={
@@ -29,12 +26,7 @@ class Login extends Component {
         password:e.target.value
       })
   }
-  componentDidMount(){
-      this._isMounted = true;
-  }
-  componentWillUnmount(){
-     this._isMounted= false;
-  }
+  
   async onSubmit(e){
     e.preventDefault();
     const newLogin = {

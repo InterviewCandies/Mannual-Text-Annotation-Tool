@@ -1,5 +1,5 @@
 import React, { Component, lazy, Suspense } from 'react';
-import dateFormat from '../../service/dateFormat'
+import dateFormat from '../../util/dateFormat'
 import faker from 'faker'
 import {
   
