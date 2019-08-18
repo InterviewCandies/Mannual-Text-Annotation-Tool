@@ -4,7 +4,7 @@ class UpdateProject{
             this.projectGateway= projectGateway;
      }
      async execute(data){
-          const result = await this.projectGateway.updateProject(data);
+          const result = await this.projectGateway.update(data);
           return result;
             
      }

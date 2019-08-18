@@ -1,120 +1,146 @@
 import axios from "axios";
 
+axios.defaults.headers.common={
+    'auth-token' : localStorage.getItem('userToken')   
+}
 
 
 export const editProject = (id,name,description)=>{
-    const message ={
-        id : id,
+    const data ={
         project_name : name,
         project_description : description,
-        jwt : localStorage.getItem('userToken')
-
     }
-    return axios.post('http://localhost:4000/textAnnotation/project/update/',message)
-                .then(res=>{
-                      return res.data;
-                })
-                .catch(error=>{
-                     return error;
-                })
+  
+    return axios.post('http://localhost:4000/textAnnotation/project/update/'+id,data)
+        .then(res=>{
+                return res.data;
+        })
+        .catch(error=>{
+                return false;
+        })
 }
 
 
-export const list =()=>{
-    return  axios.get('http://localhost:4000/textAnnotation/project/list/',{
-                    headers:{
-                        'auth-token' : localStorage.getItem('userToken')
-                    }
-            })
+export const list =(page,perPage)=>{
+    const data ={
+        perPage : perPage
+    }
+    console.log(page);
+   return axios.post('http://localhost:4000/textAnnotation/project/list/'+page,data)
             .then((res)=>{
-                    console.log(res.data)
                     return res.data;
             })
+            .catch((err)=>{ return []} )
 }
+
+
+
+export const search=(page,perPage,value)=>{
+    const data ={
+        perPage : perPage,
+        value : value
+    }
+   return axios.post('http://localhost:4000/textAnnotation/project/search/'+page,data)
+            .then((res)=>{
+                    return res.data;
+            })
+            .catch((err)=>{ return []} )
+}
+
+
+export const userSearchProject=(user_id,page,perPage,value)=>{
+    const data ={
+        user_id: user_id,
+        perPage : perPage,
+        value : value
+    }
+   return axios.post('http://localhost:4000/textAnnotation/project/userSearchProject/'+page,data)
+            .then((res)=>{
+                    return res.data;
+            })
+            .catch((err)=>{ return []} )
+}
+
+
 
 
 export const deleteProject =(id)=>{
-    const message ={
-        id : id,
-        jwt : localStorage.getItem('userToken')
-    }
-    return  axios.post('http://localhost:4000/textAnnotation/project/delete/',message)
+   
+    return  axios.post('http://localhost:4000/textAnnotation/project/delete/'+id)
             .then((res)=>{
                     return res.data;
             })
             .catch(error=>{
-                return error;
+                return false;
            })
 }
 
 export const createProject= (name,description) =>{
-    const message ={
+    const data ={
         project_name : name,
-        project_description : description,
-        jwt : localStorage.getItem('userToken')
+        project_description : description
     }
-    return  axios.post('http://localhost:4000/textAnnotation/project/create/',message)
+    return  axios.post('http://localhost:4000/textAnnotation/project/create/',data)
             .then((res)=>{
                     return res.data;
             })
             .catch(error=>{
-                return error;
+                return false;
     })
 }
 
 export const addUser= (user_id,project_id) =>{
-    const message ={
+    const data ={
         user_id: user_id,
         project_id: project_id,
-        jwt : localStorage.getItem('userToken')
     }
-    return  axios.post('http://localhost:4000/textAnnotation/project/addUser/',message)
+    return  axios.post('http://localhost:4000/textAnnotation/project/addUser/',data)
             .then((res)=>{
                     return res.data;
             })
             .catch(error=>{
-                return error;
+                return false;
     })
 }
 
 export const listUser= (project_id) =>{
-    const message ={
+    const data ={
         project_id: project_id,
-        jwt : localStorage.getItem('userToken')
     }
-    return  axios.post('http://localhost:4000/textAnnotation/project/listUser',message)
+    return  axios.post('http://localhost:4000/textAnnotation/user/getUserByProject',data)
             .then((res)=>{
                     return res.data;
             })
             .catch(error=>{
-                return error;
+                return [];
     })
 }
 
 export const removeUser= (user_id,project_id) =>{
-    const message ={
+    const data ={
         user_id : user_id,
         project_id: project_id,
-        jwt : localStorage.getItem('userToken')
     }
-    return  axios.post('http://localhost:4000/textAnnotation/project/removeUser',message)
+    return  axios.post('http://localhost:4000/textAnnotation/project/removeUser',data)
             .then((res)=>{
                     return res.data;
             })
             .catch(error=>{
-                return error;
+                return false;
     })
 }
-export const getProject=(user_id)=>{
-    const message ={
+export const getProjectByUser=(user_id,page,perPage)=>{
+    const data ={
         user_id : user_id,
-        jwt : localStorage.getItem('userToken')
+        perPage : perPage
     }
-    return  axios.post('http://localhost:4000/textAnnotation/project/userProjectList',message)
+    return  axios.post('http://localhost:4000/textAnnotation/project/getProjectByUser/'+page,data)
             .then((res)=>{
                     return res.data;
+                    
             })
             .catch(error=>{
-                return error;
+                return [];
     })
 }
+

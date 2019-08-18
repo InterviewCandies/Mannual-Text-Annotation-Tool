@@ -20,7 +20,7 @@ class AdminHeader extends Component {
     const { children, ...attributes } = this.props;
 
     return (
-      <React.Fragment >
+      <React.Fragment id="navbar">
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
           full={{ src: logo, width: 89, height: 25, alt: 'CoreUI Logo' }}
@@ -29,7 +29,7 @@ class AdminHeader extends Component {
         <AppSidebarToggler className="d-md-down-none" display="lg" />
         <Nav className="d-md-down-none" navbar >
           <NavItem className="px-3">
-            <NavLink to="/dashboard" className="nav-link" >Dashboard</NavLink>
+            <NavLink to="/projects" className="nav-link" >Projects</NavLink>
           </NavItem>
           <NavItem className="px-3">
             <Link to="/users" className="nav-link">Users</Link>
@@ -37,7 +37,8 @@ class AdminHeader extends Component {
          
         </Nav>
         <Nav className="ml-auto" navbar>
-          <NavItem right onClick={e => this.props.onLogout(e)}>Logout
+          <NavItem right onClick={e => this.props.onLogout(e)}>
+                Sign out <i className="fa fa-sign-out mr-lg-2"></i>
           </NavItem>  
         </Nav>
        

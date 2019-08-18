@@ -6,9 +6,13 @@ const Label = new Schema({
         type:String,
         required:true
     },
-    color:{
+    backgroundColor:{
         type:String,
         default: "#FFFFFF"
+    },
+    textColor:{
+        type:String,
+        default: "#000000"
     },
     shortcut:{
         type:String

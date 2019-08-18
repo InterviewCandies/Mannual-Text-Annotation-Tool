@@ -5,8 +5,6 @@ import {
     Alert,
     Button
 } from 'reactstrap'
-import InfoModal from '../../../component/Modal/Info.modal'
-import CreateUserForm from '../../../component/Form/CreateUserForm';
 class Users extends Component{
     constructor(props){
         super(props)
@@ -26,9 +24,7 @@ class Users extends Component{
                 <Alert color="info" isOpen="true">
                     <div class="d-flex justify-content-center ">
                         <Button className="btn-large bg-primary m-2" type="button" onClick={this.onCreateUserClick}  > CREATE A NEW USER</Button>
-                        <InfoModal  trigger={this.state.createUser} title="Create a new user" toggle={this.onCreateUserClick}>
-                            <CreateUserForm></CreateUserForm>
-                        </InfoModal>
+                      
                         <Button className="btn-large m-2" type="button" > DELETE USER</Button>
                     </div>
                 </Alert>

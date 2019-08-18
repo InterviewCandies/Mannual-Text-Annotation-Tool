@@ -1,9 +1,9 @@
 class DeleteProject {
       constructor({projectGateway}){
-            this.deleteProject =projectGateway;
+            this.projectGateway =projectGateway;
       }
       async execute(data){
-          const  result = this.deleteProject.deleteProject(data);
+          const  result = this.projectGateway.delete(data);
           return result;
       }
 }

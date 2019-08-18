@@ -3,7 +3,7 @@ class EditUser{
        this.userGateway = userGateway;
    }
    async execute(data){
-         const result =await this.userGateway.editUser(data);
+         const result =await this.userGateway.edit(data);
          return result;
    }
 } 

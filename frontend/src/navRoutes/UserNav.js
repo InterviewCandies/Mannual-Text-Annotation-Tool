@@ -6,12 +6,7 @@ export default {
         icon: 'icon-speedometer',
         
       },
-      {
-        name: 'Logout',
-        url: '/login',
-        icon: 'icon-speedometer',
-        
-      },
+      
     
     ],
   };

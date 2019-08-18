@@ -1,38 +1,28 @@
-const Label = require('../../domain/Label')
 class LabelGateway {
-      constructor({LabelModel}){
+      constructor({LabelModel,labelMapper}){
              this.LabelModel = LabelModel;
+             this.labelMapper = labelMapper
       }
-      async createLabel(data){
-            const {content,color,shortcut,project_id} = data;
-            const label = {
-                content : content,
-                color: color,
-                shortcut: shortcut,
-                project_id: project_id
-            }
-            const result = await this.labelModel.insertMany(label);
-            return result;
+      async create(req){
+            const label =this.labelMapper.toDatabase(req.body)
+            const result = await this.LabelModel.insertMany(label);
+            return result.map( this.labelMapper.toEntity )
       }
-      async deleteLabel(data){
-          const {id} = data;
-          const result = await this.labelModel.deleteOne({_id:id});
-          return result;
+      async delete(req){
+          const id = req.params.id
+          const result = await this.LabelModel.deleteOne({_id:id});
+          return result.deletedCount==1;
       }
-      async editLabel(data){
-          const {id,content,color,shortcut,project_id} = data;
-          const label = {
-              content : content,
-              color : color,
-              shortcut : shortcut,
-              project_id : project_id
-          }
-          const result = await this.labelModel.updateOne({_id:id},label);
-          return result;
+      async edit(req){
+          const id =req.params.id
+          const label = this.labelMapper.toDatabase(req.body)
+          const result = await this.LabelModel.updateOne({_id:id},label);
+          return result.nModified==1;
       }
-      async listLabel(id){
-          const result = await this.labelModel.find({project_id:id});
-          return result;
+      async list(req){
+          const project_id = req.params.id
+          const result = await this.LabelModel.find({project_id:project_id});
+          return result.map( this.labelMapper.toEntity )
       }
 }
 

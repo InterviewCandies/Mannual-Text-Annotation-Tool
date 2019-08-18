@@ -5,7 +5,7 @@ class CreateProject{
      }
 
      async execute(data){
-        const result = await  this.projectGateway.createProject(data);
+        const result = await  this.projectGateway.create(data);
         return result;
      }
 }

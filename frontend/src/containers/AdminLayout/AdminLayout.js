@@ -16,11 +16,11 @@ import {
   AppSidebarNav2 as AppSidebarNav,
 } from '@coreui/react';
 // sidebar nav config
-import navigation from '../../navRoutes/AdminNav';
+import  navigation from '../../navRoutes/AdminNav';
+import  projectNav from '../../navRoutes/ProjectNav'
 // routes config
 import routes from '../../routes/AdminRoutes';
 import AdminHeader from './AdminHeader';
-import SearchBar from '../../component/Searchbar/SearchBar';
 
 
 class AdminLayout extends Component {
@@ -35,6 +35,8 @@ class AdminLayout extends Component {
     localStorage.removeItem('userToken');
     this.props.history.push('/login')
   }
+ 
+  
 
   render() {
     return (
@@ -44,42 +46,44 @@ class AdminLayout extends Component {
             <AdminHeader onLogout={e=>this.signOut(e)}/>
           </Suspense>
         </AppHeader>
+       
+          
         <div className="app-body">
-          <AppSidebar fixed display="lg">
+        <AppSidebar fixed display="lg">
               <AppSidebarHeader/>
             
               <AppSidebarForm />
               <Suspense>
-                   
-                   <SearchBar></SearchBar>
+                  <AppSidebarNav navConfig={navigation} router={router}/>
               </Suspense>
               <AppSidebarFooter />
-            
+              <AppSidebarMinimizer />
             </AppSidebar>
-          <main className="main">
-           
-            <Container fluid>
-              <Suspense fallback={this.loading()}>
-                <Switch>
-                  {routes.map((route, idx) => {
-                    return route.component ? (
-                      <Route
-                        key={idx}
-                        path={route.path}
-                        exact={route.exact}
-                        name={route.name}
-                        render={props => (
-                          <route.component {...props}  />
-                        )} />
-                    ) : (null);
-                  })}
-                  <Redirect from="/" to="/dashboard"></Redirect>
-                </Switch>
-              </Suspense>
-            </Container>
-          </main>
          
-        </div>
+              <main className="main">
+                <Container fluid>
+                <Suspense fallback={this.loading()}>
+                  <Switch>
+                    {routes.map((route, idx) => {
+                      return route.component ? (
+                        <Route
+                          key={idx}
+                          path={route.path}
+                          exact={route.exact}
+                          name={route.name}
+                          render={props => (
+                            <route.component {...props}  />
+                          )} />
+                      ) : (null);
+                    })}
+                  <Redirect from='/' to='/projects'></Redirect>
+                  </Switch>
+                </Suspense>
+              </Container>
+              </main>
+          </div>
+         
+       
         <AppFooter>
           <Suspense fallback={this.loading()}>
            

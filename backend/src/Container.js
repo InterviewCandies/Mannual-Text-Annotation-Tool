@@ -4,16 +4,18 @@ const Server = require('./infra/webserver/Server')
 const Router = require('./infra/webserver/Router')
 const userRouter = require('./infra/webserver/User')
 const projectRouter = require('./infra/webserver/Project')
+const labelRouter = require('./infra/webserver/Label')
 const Database = require('./infra/database')
 const config = require('./config')
 const Controller = require('./deliveries/Controller')
 const Gateway = require('./infra/gateway')
 const UserManagement = require('./application/usecase/userManagement')
 const ProjectManagement = require('./application/usecase/projectManagement')
+const LabelManagement = require('./application/usecase/labelManagement')
 const container = awilix.createContainer();
 const Authentication= require('./infra/util/authentication')
 const PasswordHasher = require('./infra/util/PasswordHasher')
-const Sequelizer = require('./infra/sequelizer')
+const Mapper = require('./infra/Mapper')
 // System
 container.register({
             app : awilix.asClass(App).singleton(),
@@ -22,7 +24,8 @@ container.register({
         .register({
             router : awilix.asFunction(Router).singleton(),
             userRouter: awilix.asFunction(userRouter).singleton(),
-            projectRouter: awilix.asFunction(projectRouter).singleton()
+            projectRouter: awilix.asFunction(projectRouter).singleton(),
+            labelRouter : awilix.asFunction(labelRouter).singleton()
         })
         .register({
             config : awilix.asValue(config)
@@ -31,7 +34,8 @@ container.register({
 //Controller 
 container.register({
         userController : awilix.asClass(Controller.UserController).singleton(),
-        projectController : awilix.asClass(Controller.ProjectController).singleton()
+        projectController : awilix.asClass(Controller.ProjectController).singleton(),
+        labelController : awilix.asClass(Controller.LabelController).singleton()
 })
 
 
@@ -47,11 +51,12 @@ container.register({
       SECRET_KEY : awilix.asValue('SECRET_KEY')
 })
 
-//Sequelizer 
+//Mapper
 container.register({
-        userSequelizer : awilix.asClass(Sequelizer.UserSequelizer).singleton(),
-        projectSequelizer : awilix.asClass(Sequelizer.ProjectSequelizer).singleton(),
-        userProjectSequelizer : awilix.asClass(Sequelizer.UserProjectSequelizer).singleton()
+        userMapper : awilix.asClass(Mapper.UserMapper).singleton(),
+        projectMapper : awilix.asClass(Mapper.ProjectMapper).singleton(),
+        userProjectMapper : awilix.asClass(Mapper.UserProjectMapper).singleton(),
+        labelMapper : awilix.asClass(Mapper.LabelMapper).singleton()
 })
 
 //Gateway
@@ -88,8 +93,16 @@ container.register({
         _editProject : awilix.asClass(ProjectManagement.UpdateProject),
         _listProject : awilix.asClass(ProjectManagement.ListProject),
         _addUser : awilix.asClass(ProjectManagement.AddUser),
+        searchProject : awilix.asClass(ProjectManagement.SearchProject),
+        _userSearchProject : awilix.asClass(ProjectManagement.UserSearchProject),
         _removeUser : awilix.asClass(ProjectManagement.RemoveUser),
         _getProjectByUser : awilix.asClass(ProjectManagement.GetProjectByUser)
 })
-
+// Label management
+container.register({
+        _createLabel : awilix.asClass(LabelManagement.CreateLabel),
+        _deleteLabel : awilix.asClass(LabelManagement.DeleteLabel),
+        _editLabel   : awilix.asClass(LabelManagement.EditLabel),
+        _listLabel   : awilix.asClass(LabelManagement.ListLabel)
+})
 module.exports = container;

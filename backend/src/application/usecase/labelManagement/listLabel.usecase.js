@@ -1,11 +1,10 @@
-const LabelGateway = require('../../../infra/gateway/label.gateway')
 
 class ListLabel {
-      constructor(){
-          this.labelGateway = new LabelGateway();
+      constructor({labelGateway}){
+          this.labelGateway = labelGateway
       }
-      async execute(id){
-          const result = this.labelGateway.listLabel(id);
+      async execute(data){
+          const result = this.labelGateway.list(data);
           return result;
       }
 }

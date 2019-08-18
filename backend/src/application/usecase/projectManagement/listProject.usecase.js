@@ -3,7 +3,7 @@ class ListProject {
               this.projectGateway = projectGateway;
       }
       async execute(data){
-          const result = this.projectGateway.listProject(data);
+          const result = this.projectGateway.list(data);
           return result;
       }
 }

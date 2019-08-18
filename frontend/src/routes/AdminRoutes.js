@@ -2,10 +2,13 @@ import React from 'react';
 
 const AdminDashboard = React.lazy(() => import('../views/Dashboard/AdminDashboard')); 
 const Users = React.lazy(() => import('../views/Page/Users/Users')); 
+const ImportData = React.lazy(() => import('../views/Page/Project/ImportData')); 
+const Labels = React.lazy(() => import('../views/Page/Project/Label')); 
+
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
-  { path: '/dashboard', exact: true, name: 'Home',component:AdminDashboard },  
+  { path: '/projects', exact: true, name: 'Home',component:AdminDashboard },  
   { path: '/users',  exact: true, name: 'Users', component: Users },
 
 ];

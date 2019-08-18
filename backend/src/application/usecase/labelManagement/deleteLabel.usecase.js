@@ -1,10 +1,9 @@
-const LabelGateway =require('../../../infra/gateway/label.gateway');
 class DeleteLabel {
-    constructor(){
-        this.labelGateway = new LabelGateway();
+    constructor({labelGateway}){
+        this.labelGateway = labelGateway
     }
     async execute(data){
-        const result = await this.labelGateway.deleteLabel(data);
+        const result = await this.labelGateway.delete(data);
         return result;
     }
 }

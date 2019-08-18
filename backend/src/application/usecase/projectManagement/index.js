@@ -5,5 +5,7 @@ module.exports = {
     UpdateProject : require('./updateProject.usecase'),
     AddUser       : require('./addUser.usecase'),
     RemoveUser    : require('./removeUser.usecase'),
+    SearchProject : require('./search.usescase'),
+    UserSearchProject : require('./userSearchProject.usecase'),
     GetProjectByUser : require('./getProjectByUser.usercase')
 }

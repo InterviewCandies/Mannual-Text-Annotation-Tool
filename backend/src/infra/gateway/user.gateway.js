@@ -1,11 +1,11 @@
 
 class UserGateway {
-    constructor({UserModel,UserProjectModel,authentication,userSequelizer,userProjectSequelizer}){
+    constructor({UserModel,UserProjectModel,authentication,userMapper,userProjectMapper}){
         this.UserModel = UserModel
         this.UserProjectModel = UserProjectModel
         this.authentication = authentication
-        this.userSequelizer = userSequelizer
-        this.userProjectSequelizer = userProjectSequelizer
+        this.userMapper = userMapper
+        this.userProjectMapper = userProjectMapper
     }
 
     async findByUsername(user){
@@ -15,39 +15,45 @@ class UserGateway {
     }
     async login(user) {
         let result = await this.findByUsername(user)
-        if(result && this.userSequelizer.isMatched(user.password,result)) {
-            result = this.userSequelizer.toEntity(result).toJSON();     
-            return this.authentication.sign(result);  
+        if(result && this.userMapper.isMatched(user.password,result)) {
+            result = this.userMapper.toEntity(result).toJSON();     
+           
         }
-        return { message: 'User does not exist' }
+        else result= { message: 'User does not exist' }
+        return this.authentication.sign(result)
     }
     
-    async createUser(user) {
-        const check = await this.findByUsername(user)
+    async create(data) {
+        const check = await this.findByUsername(data)
         if(check) return { message: 'User is existed' }
-        const result = await this.UserModel.insertMany(await this.userSequelizer.toDatabase(user));
-        return result.map(this.userSequelizer.toEntity);         
+
+        const user =await  this.userMapper.toDatabase(data)
+        const result = await this.UserModel.insertMany(user);
+        return result.map(this.userMapper.toEntity);         
     }
-    async deleteUser(user){
-        const result =await this.UserModel.deleteOne( this.userSequelizer.getById(user));
-        return this.userSequelizer.toEntity(result);         
+    async delete(data){
+        const {id} = data
+        const result =await this.UserModel.deleteOne({_id:id});
+        return result.deletedCount==1    
     }
-    async editUser(user){
-        const result = await this.UserModel.updateOne(this.userSequelizer.getById(user),await this.userSequelizer.toDatabase(user));
-        return this.userSequelizer.toEntity(user);       
+    async edit(data){
+        const {id} =data
+        const user = await this.userMapper.toDatabase(data)
+        const result = await this.UserModel.updateOne({_id:id},user);
+        return result.nModified==1;    
     }
     async list(user){
         const result = await this.UserModel.find();
-        return result.map(this.userSequelizer.toEntity)
+        return result.map(this.userMapper.toEntity)
     }
     async get(user) {
         const result = await this.findByUsername(user);
-        if(result) return this.userSequelizer.toEntity(result);
+        if(result) return this.userMapper.toEntity(result);
         return { message: 'User does not exist' }
     }
     async getUserByProject(data){
-        const result = await this.UserProjectModel.aggregate(this.userProjectSequelizer.joinUser(data));   
-        return result.map(this.userSequelizer.toEntity);
+        const result = await this.UserProjectModel.aggregate(this.userProjectMapper.joinUser(data));   
+        return result.map(this.userMapper.toEntity);
     }
 }
 

@@ -1,11 +1,10 @@
-const LabelGateway= require('../../../infra/gateway/label.gateway');
 
 class EditLabel{
-    constructor(){
-          this.labelGateway = new LabelGateway(); 
+    constructor({labelGateway}){
+          this.labelGateway = labelGateway
     }
     async execute(data){
-         const result = this.labelGateway.editLabel(data);  
+         const result = this.labelGateway.edit(data);  
          return result;
     }
 } 

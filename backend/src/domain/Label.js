@@ -1,9 +1,11 @@
 
 class Label {
-    constructor(id,content,color,shortcut,created_at,updated_at){
+    constructor(id,project_id,content,shortcut,backgroundColor,textColor,created_at,updated_at){
         this.id= id;
+        this.project_id = project_id
         this.content=content;
-        this.color=color;
+        this.backgroundColor=backgroundColor;
+        this.textColor=textColor;
         this.shortcut = shortcut;
         this.created_at=created_at;
         this.updated_at=updated_at;

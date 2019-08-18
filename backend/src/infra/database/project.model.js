@@ -1,6 +1,5 @@
 const moogose = require('mongoose');
 const Schema = moogose.Schema;
-
 const project = new Schema({
       project_name:{
           type:String,
@@ -10,13 +9,12 @@ const project = new Schema({
           type:String
       },
       created_at:{
-          type: Date,
-          default: Date.now()
+          type: String,
+          default: Date()
       },
       updated_at:{
-          type: Date,
-          default: Date.now()
+          type: String,
+          default: Date()
       }
 })
-
 module.exports = moogose.model('project',project);

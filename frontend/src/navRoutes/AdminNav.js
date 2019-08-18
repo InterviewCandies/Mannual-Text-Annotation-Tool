@@ -1,7 +1,7 @@
 export default {
     items: [
       {
-        name: 'Dashboard',
+        name: 'Projects',
         url: '/',
         icon: 'icon-speedometer',
         
@@ -9,18 +9,6 @@ export default {
       {
         name: 'Users',
         url: '/users',
-        icon: 'icon-speedometer',
-        
-      },
-      {
-        name: 'Label',
-        url: '/Labels',
-        icon: 'icon-speedometer',
-        
-      },
-      {
-        name: 'Logout',
-        url: '/login',
         icon: 'icon-speedometer',
         
       }

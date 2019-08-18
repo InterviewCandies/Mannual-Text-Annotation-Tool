@@ -1,6 +1,12 @@
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 
+
+axios.defaults.headers.common={
+     'auth-token' : localStorage.getItem('userToken')   
+ }
+
+ 
 export const login=newLogin=>{
         return axios.post('http://localhost:4000/textAnnotation/user/login/',newLogin)
         .then(res=>{
@@ -9,6 +15,7 @@ export const login=newLogin=>{
              const decorder = jwt_decode(token)
              return decorder;
         })
+        .catch(error=>{ return error})
 };
         
 export const createUser = (username,password,role)=>{
@@ -28,10 +35,8 @@ export const createUser = (username,password,role)=>{
 }
 
 export const UserList =()=>{
-       const message = {
-            jwt : localStorage.getItem('userToken')
-       }
-       return axios.post('http://localhost:4000/textAnnotation/user/list/',message)
+    
+       return axios.get('http://localhost:4000/textAnnotation/user/list/')
                     .then(res=>{
                               return res.data;
                     })

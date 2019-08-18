@@ -4,7 +4,7 @@ class DeleteUser{
             this.userGateway = userGateway
       } 
       async execute(data){
-            const result = await this.userGateway.deleteUser(data);
+            const result = await this.userGateway.delete(data);
             return result;
       }
 }

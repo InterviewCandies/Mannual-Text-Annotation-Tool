@@ -1,43 +1,42 @@
-const CreateLabel = require('../../application/usecase/labelManagement/createLabel.usecase')
-const DeleteLabel = require('../../application/usecase/labelManagement/deleteLabel.usecase')
-const EditLabel = require('../../application/usecase/labelManagement/editLabel.usecase')
-const ListLabel = require('../../application/usecase/labelManagement/listLabel.usecase')
-LabelController= {
-      async createLabel(req,res){
-            const {content,color,shortcut,project_id} = req.body;
-            this.createLabel = new CreateLabel();
-            const result = await this.createLabel.execute({content,color,shortcut,project_id});
+
+class LabelController {
+      constructor({_createLabel,_deleteLabel,_editLabel,_listLabel}){
+            this._createLabel = _createLabel
+            this._editLabel = _editLabel
+            this._deleteLabel = _deleteLabel
+            this._listLabel = _listLabel
+
+            this.create= this.create.bind(this)
+            this.edit= this.edit.bind(this)
+            this.delete = this.delete.bind(this)
+            this.list= this.list.bind(this)
+      }
+      async create(req,res){
+            const result = await this._createLabel.execute(req);
             try {
                 res.status(200).json(result);
             } catch (error) {
                 res.status(400).send(error);
             }
-      },
-      async deleteLabel(req,res){
-          const id = req.params.id;
-          this.deleteLabel = new DeleteLabel();
-          const result =await this.deleteLabel.execute({id});
+      }
+      async delete(req,res){
+          const result =await this._deleteLabel.execute(req);
           try {
               res.status(200).json(result);
           } catch (error) {
               res.status(400).send(error);
           }
-      },
-      async editLabel(req,res){
-          const id = req.params.id;
-          const {content,color,shortcut,project_id} = req.body;
-          this.editLabel = new EditLabel();
-          const result = await this.editLabel.execute({id,content,color,shortcut,project_id});
+      }
+      async edit(req,res){
+          const result = await this._editLabel.execute(req);
           try {
               res.status(200).json(result);
           } catch (error) {
               res.status(400).send(error);
           }
-      },
+      }
       async list(req,res){
-            const id = req.params.id;
-            this.listLabel = new ListLabel();
-            const result =await this.listLabel.execute(id);
+            const result =await this._listLabel.execute(req);
             try {
                 res.status(200).json(result);
             } catch (error) {
