@@ -7,8 +7,8 @@ Inspired by https://github.com/chakki-works/doccano, this app is an attempt to b
 Here is an overview of the CLEAN architecture from the author website: https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html 
 ![Clean Architecture overview](./images/CleanArchitecture.jpg)
 
-I strongly recommend you to read more details on Uncle Bob's website in order to get the whole picture. However, I'm going to give you some of my personal experiences by practicing it below: 
-* First, you may notice the arrows pointing inwards towards the middle of every circle. It represents something called `Dependency rules`.The rule tells us that changes in the outer layer do not affect the inner layer at any cost or the outer layer depends on the inner layer and not in return. It is worth noting that the further you go to the middle, the less likely changes happen in your application. Personally, the practice of CLEAN architecture is the practice of following `Dependency rules`. 
+I strongly recommend you to read more details on Uncle Bob's website in order to get the whole picture. However, I'm going to give you some of my personal experiences (which i gain through researching and practicing it) below: 
+* First, you may notice the arrows pointing inwards towards the middle of every circle. It represents something called `Dependency rules`.The rule tells us that changes in the outer layer do not affect the inner layer at any cost or the outer layer depends on the inner layer and not in return. It is worth noting that the further you go to the middle, the less likely changes happen in your application. Personally,i beleive the practice of CLEAN architecture is the practice of following `Dependency rules`. 
 * Second, about each layer: 
     * ###### Entities (or Domain):
         Business objects. for example, A dating app may have some entities such as user, message, comment,etc.. These are the core of your application (I like to think of these as your organs inside your body). They are also business policies, so they must be determined first and less likely to change, otherwise, it can cause damages to the whole system. 
