@@ -19,5 +19,5 @@ I strongly recommend you to read more details on Uncle Bob's website in order to
     * ###### Infrastructure: 
         Technologies details that you use. For instance: what framework, what database, what UI, etc. It is the most outer layer for a reason that it is the most likely to change over time since current technologies can be outdated someday,but guess what, your application will survive because the other layers do not care about what technologies you use, so the only thing you have to do is to take off the old technologies layer and put on the updated one without any changes to inner layers at all. How convenient and efficient it is.
         ##### Here is my schema about Clean architecture: 
-![Clean Schema](./images/myCleanSchema.PNG)
+![Clean Schema](./images/CleanSchema.PNG)
 
