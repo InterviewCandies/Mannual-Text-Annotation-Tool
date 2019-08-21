@@ -16,7 +16,9 @@ class DeleteProjectModal extends Component{
        this.toggle = this.props.toggle  
     }
     onClick =async (e)=>{
-        await deleteProject(this.state.id)
+        const result =await deleteProject(this.state.id)
+        if(result) alert('Project has been removed successsfully')
+        else alert('Failed to delete this project')
         this.toggle()
         this.props.action()
     }

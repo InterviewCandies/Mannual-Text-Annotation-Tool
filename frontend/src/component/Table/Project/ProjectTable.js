@@ -17,6 +17,7 @@ import ProjectData from './ProjectData'
 import CreateProjectModal from '../../Modal/CreateProject.modal';
 import { async } from 'q';
 import { listLabel } from '../../../functions/label.function';
+import CustomPagination from '../../Pagination/CustomPagination';
 class ProjectTable extends Component {
     constructor(props){
         super(props)
@@ -25,21 +26,23 @@ class ProjectTable extends Component {
             filteredProjects: [],
             size:0,
             query:'',
-            sort:0,
-            sortKey:'',
+            trend:1,
+            sortKey:'project_name',
             createProject:false,
             projectsPerPage : 10,
             currentPage : 1,
         }
     }
     async getUser(projects){
+        if(!projects)  return [];
         return Promise.all(projects.map(async (project)=>{project.users = await listUser(project.id); return project}))
     }
   
     async componentDidMount(){
-        let   projects = await  list(this.state.currentPage,this.state.projectsPerPage)
+        const {currentPage,projectsPerPage,sortKey,trend} = this.state
+        let   projects = await  list(currentPage,projectsPerPage,sortKey,trend)
         this.setState({
-            size : projects.size
+            size : projects.size?projects.size:0
         })
         projects = projects.projects
     
@@ -52,24 +55,25 @@ class ProjectTable extends Component {
     }
     
     onChange=async(e)=>{
-        let   projects = await  list(this.state.currentPage,this.state.projectsPerPage)
+        const {currentPage,projectsPerPage,sortKey,trend}  = this.state
+        let   projects = await  list(currentPage,projectsPerPage,sortKey,trend)
         this.setState({
               size : projects.size
         })
         projects = projects.projects
         
-        projects =await this.getUser(projects)
+       projects =await this.getUser(projects)
         this.setState({
             projects : projects,
             filteredProjects :projects
         })
-        if(this.state.sort>0) this.onAscendingSort( e,this.state.sortKey ) 
-        else if(this.state.sort<0) this.onDescendingSort(e,this.state.sortKey)
+       
     }
-    onDropDownChange = (e)=>{
-        this.setState({
+    onDropDownChange =async (e)=>{
+        await this.setState({
             projectsPerPage : Number(e.target.value)
         })
+        this.onChange(e)
     }
 
     onCreateProject = async(e)=>{
@@ -78,20 +82,14 @@ class ProjectTable extends Component {
         })
     }   
    
-    onAscendingSort=(e,sortKey)=>{
-        this.state.sort=1;
-        this.state.sortKey=sortKey
-        const filteredProjects = this.state.filteredProjects
-        filteredProjects.sort((a,b)=>a[sortKey].localeCompare(b[sortKey]))
-        this.setState({filteredProjects})
+    onSort=(e,sortKey,value)=>{
+         this.setState({
+               trend : value,
+               sortKey:sortKey  
+         })
+         this.onChange(e)
     }
-    onDescendingSort=(e,sortKey)=>{
-        this.state.sort=-1;
-        this.state.sortKey=sortKey
-        const filteredProjects = this.state.filteredProjects
-        filteredProjects.sort((a,b)=>b[sortKey].localeCompare(a[sortKey]))
-        this.setState({filteredProjects})
-    }
+   
     onSearchChange=async (e)=>{
         const query = e.target.value
         const {projectsPerPage} =this.state
@@ -107,30 +105,12 @@ class ProjectTable extends Component {
 
    
 
-    //FOR Pangination
-    onPreviousClick =async (e)=>{
-        if(this.state.currentPage!=1)
-            await this.setState({
-                currentPage : this.state.currentPage-1
-            })
-        this.onChange(e)
-        
-    }
-    onNextClick =async (e)=>{
-        const {size,projectsPerPage} = this.state
-        const lastPage=Math.ceil(size/projectsPerPage)
-        if(this.state.currentPage!=lastPage)
-            await this.setState({
-                currentPage : this.state.currentPage+1
-            })
-        this.onChange(e)
-    }
+    
     onPaginationClick = async(e)=>{
         await this.setState({
-            currentPage : Number(e.target.value)
+            currentPage :e
         })
-        console.log(this.state.currentPage)
-        await this.onChange(e)
+        this.onChange(e)
     }
 
 
@@ -165,7 +145,7 @@ class ProjectTable extends Component {
             <Card>
                 <CardBody>
                
-                <div className="d-flex flex-row justify-content-between">
+                <div className="d-flex flex-row justify-content-between my-sm-2">
                   <div className=" form-group form-inline">
                          <label  className="mr-sm-2">Show </label>
                          <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownChange} >
@@ -175,7 +155,7 @@ class ProjectTable extends Component {
                             <option value="100">100</option>
                         </select>
                         <label>entries</label>
-                        <Button className="btn-success ml-sm-2" onClick={this.onCreateProject}>Start a new Project</Button>
+                        <Button className="btn-success ml-sm-3" onClick={this.onCreateProject}>Start a new Project</Button>
                         <CreateProjectModal trigger={this.state.createProject}
                                             toggle={this.onCreateProject}
                                             action={this.onChange}></CreateProjectModal>
@@ -188,36 +168,36 @@ class ProjectTable extends Component {
                 </div>
                 <table className="table table-striped table-bordered">
                     <thead>
-                        <th scope="col">
+                        <th >
                             Name
                             <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onAscendingSort(e,"project_name")}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onDescendingSort(e,"project_name")} ></i>
+                                <i className="fa fa-arrow-up" onClick={e=>this.onSort(e,"project_name",1)}></i>
+                                <i className="fa fa-arrow-down" onClick={e=>this.onSort(e,"project_name",-1)} ></i>
                             </div>
                         </th>
-                        <th scope="col">
+                        <th >
                             Description
                             <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onAscendingSort(e,"project_description")}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onDescendingSort(e,"project_description")} ></i>
+                                <i className="fa fa-arrow-up" onClick={e=>this.onSort(e,"project_description",1)}></i>
+                                <i className="fa fa-arrow-down" onClick={e=>this.onSort(e,"project_description",-1)} ></i>
                             </div>
                         </th>
-                        <th scope="col">User</th>
-                        <th scope="col">
+                        <th>User</th>
+                        <th >
                            Created at
                             <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onAscendingSort(e,"created_at")}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onDescendingSort(e,"created_at")} ></i>
+                                <i className="fa fa-arrow-up" onClick={e=>this.onSort(e,"created_at",1)}></i>
+                                <i className="fa fa-arrow-down" onClick={e=>this.onSort(e,"created_at",-1)} ></i>
                             </div>
                         </th>
-                        <th scope="col">
+                        <th >
                           Updated at
                             <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onAscendingSort(e,"updated_at")}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onDescendingSort(e,"updated_at")} ></i>
+                                <i className="fa fa-arrow-up" onClick={e=>this.onSort(e,"updated_at",1)}></i>
+                                <i className="fa fa-arrow-down" onClick={e=>this.onSort(e,"updated_at",-1)} ></i>
                             </div>
                         </th>
-                        <th scope="col">Actions</th>
+                        <th >Actions</th>
                         
                     </thead>
                     <tbody>
@@ -230,23 +210,9 @@ class ProjectTable extends Component {
                     <p >
                       {`Show ${Math.min(indexOfFirstProject+1,size) } to ${Math.min(indexOfLastProject,size)} of ${size} entries`}
                     </p>
-                    <Pagination>
-                        <PaginationItem previous>
-                                <PaginationLink onClick={this.onPreviousClick}>Previous</PaginationLink>
-                        </PaginationItem>
-                        {
-                            pageNumbers.map((page)=>{
-                                return(
-                                    <PaginationItem>
-                                        <PaginationLink value={page}  onClick={this.onPaginationClick}>{page} </PaginationLink>
-                                    </PaginationItem>
-                                )
-                            })
-                        }
-                        <PaginationItem next> 
-                                <PaginationLink  onClick={this.onNextClick} >Next</PaginationLink>
-                        </PaginationItem>
-                    </Pagination>
+                    <CustomPagination  pages={pageNumbers.length}
+                                       currentPage={currentPage}
+                                       onClick={this.onPaginationClick}></CustomPagination>
                </div> 
 
                </CardBody>

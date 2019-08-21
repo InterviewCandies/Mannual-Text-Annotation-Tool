@@ -29,15 +29,10 @@ class ProjectLayout extends Component {
      localStorage.setItem('projectId',this.props.match.params.id);
      this.navigation={
         items: [
-          {
-            name: 'Projects',
-            url: '/',
-            icon: 'icon-speedometer',
-            
-          },
+         
           {
             name: 'Dataset',
-            url: '/dataset',
+            url: `/project/${localStorage.getItem('projectId')}/dataset`,
             icon: 'icon-speedometer',
             
           },

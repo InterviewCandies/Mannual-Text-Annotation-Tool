@@ -1,10 +1,10 @@
 
 class LabelController {
-      constructor({_createLabel,_deleteLabel,_editLabel,_listLabel}){
-            this._createLabel = _createLabel
-            this._editLabel = _editLabel
-            this._deleteLabel = _deleteLabel
-            this._listLabel = _listLabel
+      constructor({createLabel,deleteLabel,editLabel,listLabel}){
+            this.createLabel = createLabel
+            this.editLabel = editLabel
+            this.deleteLabel = deleteLabel
+            this.listLabel = listLabel
 
             this.create= this.create.bind(this)
             this.edit= this.edit.bind(this)
@@ -12,7 +12,7 @@ class LabelController {
             this.list= this.list.bind(this)
       }
       async create(req,res){
-            const result = await this._createLabel.execute(req);
+            const result = await this.createLabel.execute(req);
             try {
                 res.status(200).json(result);
             } catch (error) {
@@ -20,7 +20,7 @@ class LabelController {
             }
       }
       async delete(req,res){
-          const result =await this._deleteLabel.execute(req);
+          const result =await this.deleteLabel.execute(req);
           try {
               res.status(200).json(result);
           } catch (error) {
@@ -28,7 +28,7 @@ class LabelController {
           }
       }
       async edit(req,res){
-          const result = await this._editLabel.execute(req);
+          const result = await this.editLabel.execute(req);
           try {
               res.status(200).json(result);
           } catch (error) {
@@ -36,7 +36,7 @@ class LabelController {
           }
       }
       async list(req,res){
-            const result =await this._listLabel.execute(req);
+            const result =await this.listLabel.execute(req);
             try {
                 res.status(200).json(result);
             } catch (error) {

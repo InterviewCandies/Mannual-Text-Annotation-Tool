@@ -1,14 +1,9 @@
 export default {
     items: [
-      {
-        name: 'Projects',
-        url: '/',
-        icon: 'icon-speedometer',
-        
-      },
+     
       {
         name: 'Dataset',
-        url: '/dataset',
+        url: `/project/${localStorage.getItem('projectId')}/dataset`,
         icon: 'icon-speedometer',
         
       },

@@ -1,4 +1,5 @@
 import React,{Component} from 'react'
+import {Link} from 'react-router-dom'
 import dateFormat from '../../../utils/dateFormat'
 import {
     ButtonGroup,
@@ -42,7 +43,9 @@ class UserProjectData extends Component{
                 <td>{dateFormat(this.props.data.created_at) }</td>
                 <td>{dateFormat(this.props.data.updated_at) }</td>
                 <td>
-                    <Button className="btn-success">Go to project</Button>
+                    <Link to={`/document/${this.props.data.id}`}> 
+                         <Button className="btn-success">Go to project</Button>
+                    </Link>
                 </td>
             </tr>
         )

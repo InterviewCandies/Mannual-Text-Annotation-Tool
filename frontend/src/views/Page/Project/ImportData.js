@@ -8,9 +8,33 @@ import {
 } from 'reactstrap'
 import navigation from '../../../navRoutes/ProjectNav';
 import SideBar from '../../../component/SideBar/SideBar'
+import { sendFile } from '../../../functions/dataset.function';
 class ImportData extends Component{
     constructor(props){
         super(props)
+        this.state={
+            filename: 'Choose file',
+            fileList : []
+        }
+    }
+    onChange=(e)=>{
+        let fileList =e.target.files;
+        this.setState({
+            filename : fileList[0].name,
+            fileList : fileList
+        })
+       
+    }
+    onClick=(e)=>{
+        const {fileList} = this.state
+        if(fileList.length!=0) {
+            sendFile(fileList[0],this.props.match.params.id)
+            alert('File has been submited')
+            this.setState({
+                filename : 'Choose file'
+            })
+        }
+        else alert('No file selected')
     }
     render(){
         return(
@@ -40,12 +64,17 @@ class ImportData extends Component{
                         </label>
                     </div>
                     <div class="custom-file col-sm-5">
-                            <input type="file" class="custom-file-input" id="inputGroupFile03" style={{width:'5%'}}/>
-                            <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+                            <input type="file" 
+                                   class="custom-file-input" 
+                                   id="file" 
+                                   style={{width:'5%'}}
+                                   onChange={this.onChange} 
+                                   />
+                            <label class="custom-file-label" for="file" >{this.state.filename}</label>
                         </div>
                     <br></br>
                     <div className="mt-sm-5">
-                        <Button color="primary" >Upload dataset</Button>{' '}
+                        <Button color="primary" onClick={this.onClick}>Upload dataset</Button>{' '}
                         <Button color="secondary">Cancel</Button>
                     </div>
                 </CardBody>

@@ -28,12 +28,20 @@ class ProjectGateway{
     }
     async list(req){
         const page = req.params.id
-        let {perPage} = req.body 
+        let {perPage,sortKey,trend} = req.body 
         perPage = Number(perPage)
+        let filter ={}
+        
+        if(sortKey=='project_name') filter={ project_name : trend}
+        else if(sortKey=='project_description') filter={ project_description: trend}
+        else if(sortKey=='creared_at') filter={created_at : trend}
+        else filter={updated_at: trend}
+
         const size = await this.ProjectModel.countDocuments()
         const result = await this.ProjectModel.find()
                                               .skip((perPage * page) - perPage)
                                               .limit(perPage)
+                                              .sort(filter)
                                              
         return { size: size , projects : result.map(this.projectMapper.toEntity) };   
     }

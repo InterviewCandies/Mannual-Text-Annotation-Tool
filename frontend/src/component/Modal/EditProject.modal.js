@@ -7,7 +7,6 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { editProject } from '../../functions/project.function';
-import SuccessModal from './Success.modal';
 class EditProjectModal extends Component{
     constructor(props){
         super(props);
@@ -34,25 +33,20 @@ class EditProjectModal extends Component{
         this.setState({
             name : e.target.value
         })
-        document.getElementById('success').style.display="none"
-        document.getElementById('failed').style.display="none"
+     
     }
     onChangeDescription=(e)=>{
         this.setState({
             description : e.target.value
         })
-        document.getElementById('success').style.display="none"
-        document.getElementById('failed').style.display="none"
+        
     }
     onSubmit = async (e)=>{
         e.preventDefault()
         const result =await editProject(this.state.id,this.state.name,this.state.description)
-        if(result) document.getElementById('success').style.display="flex"
-        else  document.getElementById('failed').style.display="flex"
-        this.setState({
-            name : '',
-            description:''
-        })
+        if(result) alert('Project has been updated')
+        else alert('Failed to update this project')
+        this.onToggle()
         this.props.action()
      
         
@@ -84,16 +78,7 @@ class EditProjectModal extends Component{
                                 onChange={this.onChangeDescription}/>
                         </div>
                         </div>
-                        <div class="form-group row" id="success" style={{display:"none"}}>
-                            <h6 className="text-success col-sm-10 col-form-label"> 
-                               <i className="fa fa-check-circle"></i> Edit project successfully
-                            </h6>
-                        </div>
-                        <div class="form-group row" id="failed" style={{display:"none"}}>
-                            <h6 className="text-danger col-sm-10 col-form-label"> 
-                               <i className="fa fa-times-circle"></i> Failed to edit project
-                            </h6>
-                        </div>
+                       
                     </form>
                 </ModalBody>
                 <ModalFooter>

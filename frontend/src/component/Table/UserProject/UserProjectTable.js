@@ -14,6 +14,7 @@ import { throwStatement } from '@babel/types';
 import UserProjectData from './UserProjectData'
 import { listLabel } from '../../../functions/label.function';
 import { async } from 'q';
+import CustomPagination from '../../Pagination/CustomPagination';
 class UserProjectTable extends Component {
     constructor(props){
         super(props)
@@ -28,15 +29,15 @@ class UserProjectTable extends Component {
         }
     }
     async getUser(projects){
+        if(!projects)  return projects;
         return Promise.all(projects.map(async (project)=>{project.users = await listUser(project.id); return project}))
      }
     
     async componentDidMount(){
         const {currentPage,projectsPerPage} = this.state
         let projects = await getProjectByUser(this.props.userId,currentPage,projectsPerPage)
-        console.log(projects)
         this.setState({
-            size:projects.size
+            size : projects.size?projects.size:0
         })
         projects =await this.getUser(projects.projects)
         this.setState({
@@ -59,10 +60,11 @@ class UserProjectTable extends Component {
         })
         
     }
-    onDropDownChange = (e)=>{
-        this.setState({
+    onDropDownChange = async(e)=>{
+        await this.setState({
             projectsPerPage : Number(e.target.value)
         })
+        this.onChange(e)
     }
     
   
@@ -88,26 +90,10 @@ class UserProjectTable extends Component {
             size :  result.size
         })
     }
-   // Paginantion
-    onPreviousClick =async (e)=>{
-        if(this.state.currentPage!=1)
-          await this.setState({
-                currentPage : this.state.currentPage-1
-            })
-         this.onChange(e)
-    }
-    onNextClick = async(e)=>{
-        const {size,projectsPerPage} = this.state
-        const lastPage=Math.ceil(size/projectsPerPage)
-        if(this.state.currentPage!=lastPage)
-           await  this.setState({
-                currentPage : this.state.currentPage+1
-            })
-         this.onChange(e)
-    }
+   
     onPaginationClick =async (e)=>{
         await this.setState({
-            currentPage : Number(e.target.value)
+            currentPage : e
         })
         await this.onChange(e)
     }
@@ -196,23 +182,10 @@ class UserProjectTable extends Component {
                     <p >
                       {`Show ${Math.min(indexOfFirstProject+1,size) } to ${Math.min(indexOfLastProject,size)} of ${size} entries`}
                     </p>
-                    <Pagination>
-                        <PaginationItem previous>
-                                <PaginationLink onClick={this.onPreviousClick}>Previous</PaginationLink>
-                        </PaginationItem>
-                        {
-                            pageNumbers.map((page)=>{
-                                return(
-                                    <PaginationItem>
-                                        <PaginationLink value={page}  onClick={this.onPaginationClick}>{page}</PaginationLink>
-                                    </PaginationItem>
-                                )
-                            })
-                        }
-                        <PaginationItem next> 
-                                <PaginationLink  onClick={this.onNextClick} >Next</PaginationLink>
-                        </PaginationItem>
-                    </Pagination>
+                    <CustomPagination pages={pageNumbers.length} 
+                                      currentPage={currentPage} 
+                                      onClick={this.onPaginationClick}>
+                    </CustomPagination>
                </div> 
 
                </CardBody>

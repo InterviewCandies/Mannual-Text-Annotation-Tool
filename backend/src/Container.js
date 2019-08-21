@@ -5,6 +5,7 @@ const Router = require('./infra/webserver/Router')
 const userRouter = require('./infra/webserver/User')
 const projectRouter = require('./infra/webserver/Project')
 const labelRouter = require('./infra/webserver/Label')
+const datasetRouter = require('./infra/webserver/Dataset')
 const Database = require('./infra/database')
 const config = require('./config')
 const Controller = require('./deliveries/Controller')
@@ -12,6 +13,7 @@ const Gateway = require('./infra/gateway')
 const UserManagement = require('./application/usecase/userManagement')
 const ProjectManagement = require('./application/usecase/projectManagement')
 const LabelManagement = require('./application/usecase/labelManagement')
+const DatasetManagement = require('./application/usecase/datasetManagement')
 const container = awilix.createContainer();
 const Authentication= require('./infra/util/authentication')
 const PasswordHasher = require('./infra/util/PasswordHasher')
@@ -25,7 +27,8 @@ container.register({
             router : awilix.asFunction(Router).singleton(),
             userRouter: awilix.asFunction(userRouter).singleton(),
             projectRouter: awilix.asFunction(projectRouter).singleton(),
-            labelRouter : awilix.asFunction(labelRouter).singleton()
+            labelRouter : awilix.asFunction(labelRouter).singleton(),
+            datasetRouter: awilix.asFunction(datasetRouter).singleton()
         })
         .register({
             config : awilix.asValue(config)
@@ -35,7 +38,8 @@ container.register({
 container.register({
         userController : awilix.asClass(Controller.UserController).singleton(),
         projectController : awilix.asClass(Controller.ProjectController).singleton(),
-        labelController : awilix.asClass(Controller.LabelController).singleton()
+        labelController : awilix.asClass(Controller.LabelController).singleton(),
+        datasetController : awilix.asClass(Controller.DatasetController).singleton()
 })
 
 
@@ -56,14 +60,17 @@ container.register({
         userMapper : awilix.asClass(Mapper.UserMapper).singleton(),
         projectMapper : awilix.asClass(Mapper.ProjectMapper).singleton(),
         userProjectMapper : awilix.asClass(Mapper.UserProjectMapper).singleton(),
-        labelMapper : awilix.asClass(Mapper.LabelMapper).singleton()
+        labelMapper : awilix.asClass(Mapper.LabelMapper).singleton(),
+        documentMapper : awilix.asClass(Mapper.DocumentMapper).singleton()
 })
 
 //Gateway
 container.register({
         userGateway : awilix.asClass(Gateway.UserGateway).singleton(),
         projectGateway :awilix.asClass(Gateway.ProjectGateway).singleton(),
-        labelGateway : awilix.asClass(Gateway.LabelGateway).singleton()
+        labelGateway : awilix.asClass(Gateway.LabelGateway).singleton(),
+        datasetGateway : awilix.asClass(Gateway.DatasetGateway).singleton()
+        
 })
 
 //Database 
@@ -72,6 +79,7 @@ container.register({
            UserModel : awilix.asValue(Database.UserModel),
            LabelModel : awilix.asValue(Database.LabelModel),
            ProjectModel: awilix.asValue(Database.ProjectModel),
+           DocumentModel : awilix.asValue(Database.DocumentModel),
            UserProjectModel : awilix.asValue(Database.UserProjectModel) 
         })
 
@@ -100,9 +108,18 @@ container.register({
 })
 // Label management
 container.register({
-        _createLabel : awilix.asClass(LabelManagement.CreateLabel),
-        _deleteLabel : awilix.asClass(LabelManagement.DeleteLabel),
-        _editLabel   : awilix.asClass(LabelManagement.EditLabel),
-        _listLabel   : awilix.asClass(LabelManagement.ListLabel)
+        createLabel : awilix.asClass(LabelManagement.CreateLabel),
+        deleteLabel : awilix.asClass(LabelManagement.DeleteLabel),
+        editLabel   : awilix.asClass(LabelManagement.EditLabel),
+        listLabel   : awilix.asClass(LabelManagement.ListLabel)
+})
+container.register({
+        _importData : awilix.asClass(DatasetManagement.Import),
+        listDocument : awilix.asClass(DatasetManagement.List),
+        editDocument: awilix.asClass(DatasetManagement.Edit),
+        deleteDocument : awilix.asClass(DatasetManagement.Delete),
+        verifyDocument: awilix.asClass(DatasetManagement.Verify),
+        searchDocument : awilix.asClass(DatasetManagement.Search)
+
 })
 module.exports = container;

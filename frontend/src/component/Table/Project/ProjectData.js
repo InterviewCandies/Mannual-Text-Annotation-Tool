@@ -78,10 +78,10 @@ class ProjectData extends Component{
                 <td>{this.onDisplayUser()}</td>
                 <td>{ dateFormat( this.props.data.created_at) }</td>
                 <td>{ dateFormat( this.props.data.updated_at) }</td>
-                <td>
+                <td className="d-flex justify-content-center">
                     <ButtonGroup>
-                        <Button onClick={this.onAddUser}>
-                            <i className="fa fa-user-plus"></i>
+                        <Button onClick={this.onAddUser} color="warning">
+                            <i className="fa fa-user-plus" ></i>
                             <AddUserModal   trigger={this.state.addUser}
                                             toggle={this.onAddUser}
                                             data={this.props.data}
@@ -89,7 +89,7 @@ class ProjectData extends Component{
 
                             </AddUserModal>
                         </Button>
-                        <Button onClick={this.onRemoveUser}>
+                        <Button onClick={this.onRemoveUser} color="secondary">
                             <i className="fa fa-user-times"></i>
                             <RemoveUserModal trigger={this.state.removeUser}
                                             toggle={this.onRemoveUser}
@@ -98,7 +98,7 @@ class ProjectData extends Component{
                                             users={this.state.users}></RemoveUserModal>
                         </Button>
                        
-                        <Button onClick={this.onEditProject}>
+                        <Button onClick={this.onEditProject} color="primary">
                             <i className="fa fa-edit"></i>
                           
                             <EditProjectModal trigger={this.state.editProject} 
@@ -108,7 +108,7 @@ class ProjectData extends Component{
                                                
                             </EditProjectModal>
                         </Button>
-                        <Button onClick={this.onDeleteProject}>
+                        <Button onClick={this.onDeleteProject} color="danger">
                             <i className="fa fa-trash"></i>
                             <DeleteProjectModal  trigger={this.state.deleteProject}
                                                  toggle={this.onDeleteProject}

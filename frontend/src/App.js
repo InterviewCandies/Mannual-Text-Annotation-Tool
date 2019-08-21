@@ -3,6 +3,7 @@ import { HashRouter, Route, Switch,Redirect } from 'react-router-dom';
 import './App.scss';
 import jwt_decode from 'jwt-decode'
 import ProjectLayout from './containers/ProjectLayout/ProjectLayout';
+import DocumentLayout from './containers/DocumentLayout/DocumentLayout';
 const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
 
 // Containers
@@ -28,6 +29,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/login" name="Login Page" render={props => <Login {...props} />} />
               <Route path="/project/:id/"  render={props=><ProjectLayout {...props}></ProjectLayout> }></Route>
+              <Route path="/document/:id" render={props=><DocumentLayout {...props}></DocumentLayout> }></Route>
               <Route  path="/" name="Home" 
                      render={ (props) =>
                          { 

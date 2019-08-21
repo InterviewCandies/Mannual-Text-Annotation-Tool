@@ -22,7 +22,6 @@ export const createLabel=(project_id,content,shortcut,backgroundColor,textColor)
         backgroundColor : backgroundColor,
         textColor : textColor
     }
-    console.log(project_id)
     return axios.post('http://localhost:4000/textAnnotation/label/create/',data)
         .then(res=>{
             return res.data
@@ -39,6 +38,6 @@ export const removeLabel=(id)=>{
             return res.data
         })
         .catch(error=>{
-            return []
+            return false
     })
 }

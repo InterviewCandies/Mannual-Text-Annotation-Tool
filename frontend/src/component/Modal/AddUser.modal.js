@@ -20,9 +20,10 @@ class AddUserModal extends Component{
     }
     onClick =async (e)=>{
         const result =await addUser(this.state.user,this.state.id)
-        if(result.message) document.getElementById('warning').style.display="flex"
-        else if(result) document.getElementById('success').style.display="flex"
-        else document.getElementById('failed').style.display="flex"
+        if(result.message) alert('User is already in this project')
+        else if(result) alert('User has been added to this project')
+        else alert('Failed to add user to this project')
+        this.toggle()
         this.props.action()
     }
     async componentDidMount(){
@@ -42,9 +43,7 @@ class AddUserModal extends Component{
         this.setState({
            user : e.target.value
         })
-        document.getElementById('warning').style.display="none"
-        document.getElementById('success').style.display="none"
-        document.getElementById('failed').style.display="none"
+       
     }
     render(){
         return(
@@ -58,21 +57,7 @@ class AddUserModal extends Component{
                     {this.state.users.map((user)=><option value={user.id}>{user.username}</option>)}
                 </select>
         
-            <div  id="success" className="my-sm-3" style={{display:'none'}}>
-                <h6 className="text-success "> 
-                    <i className="fa fa-check-circle"></i> User has been added to this project
-                </h6>
-            </div>
-            <div  id="warning" className="my-sm-3" style={{display:'none'}}>
-                <h6 className="text-warning "> 
-                    <i className="fa fa-exclamation-circle"></i> User is already in this project
-                </h6>
-            </div>
-            <div  id="failed" className="my-sm-3"  style={{display:"none"}}>
-                <h6 className="text-danger"> 
-                    <i className="fa fa-times-circle"></i> Failed to add user 
-                </h6>
-            </div>
+            
             </ModalBody>
             <ModalFooter>
                 <Button color="info" onClick={this.onClick}>Add</Button>{' '}

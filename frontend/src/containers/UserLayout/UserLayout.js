@@ -70,7 +70,7 @@ class UserLayout extends Component {
                         )} />
                     ) : (null);
                   })}
-                  <Redirect from="/" to='/dashboard'></Redirect>
+                  <Redirect from="/" to='/projects'></Redirect>
                 </Switch>
               </Suspense>
             </Container>

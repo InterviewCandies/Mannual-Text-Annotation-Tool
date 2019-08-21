@@ -13,7 +13,7 @@ export const editProject = (id,name,description)=>{
   
     return axios.post('http://localhost:4000/textAnnotation/project/update/'+id,data)
         .then(res=>{
-                return res.data;
+                return Boolean( res.data );
         })
         .catch(error=>{
                 return false;
@@ -21,9 +21,11 @@ export const editProject = (id,name,description)=>{
 }
 
 
-export const list =(page,perPage)=>{
+export const list =(page,perPage,sortKey,trend)=>{
     const data ={
-        perPage : perPage
+        perPage : perPage,
+        sortKey : sortKey,
+        trend   : trend
     }
     console.log(page);
    return axios.post('http://localhost:4000/textAnnotation/project/list/'+page,data)
@@ -68,7 +70,7 @@ export const deleteProject =(id)=>{
    
     return  axios.post('http://localhost:4000/textAnnotation/project/delete/'+id)
             .then((res)=>{
-                    return res.data;
+                    return Boolean( res.data );
             })
             .catch(error=>{
                 return false;
@@ -123,7 +125,7 @@ export const removeUser= (user_id,project_id) =>{
     }
     return  axios.post('http://localhost:4000/textAnnotation/project/removeUser',data)
             .then((res)=>{
-                    return res.data;
+                    return  Boolean( res.data );
             })
             .catch(error=>{
                 return false;

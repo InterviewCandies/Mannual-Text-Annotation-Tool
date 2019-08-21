@@ -2,8 +2,6 @@ import React from 'react';
 
 const AdminDashboard = React.lazy(() => import('../views/Dashboard/AdminDashboard')); 
 const Users = React.lazy(() => import('../views/Page/Users/Users')); 
-const ImportData = React.lazy(() => import('../views/Page/Project/ImportData')); 
-const Labels = React.lazy(() => import('../views/Page/Project/Label')); 
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config

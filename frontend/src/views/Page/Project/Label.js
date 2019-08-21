@@ -10,14 +10,14 @@ import {
 import { createLabel, listLabel, removeLabel } from '../../../functions/label.function';
 
 const LabelCard =props=>(
-    <div class="input-group col mb-sm-1">
+    <ButtonGroup className="mr-sm-2 mb-sm-2">
         <Button disabled  style={{background: props.backgroundColor, color:props.textColor}}>
             <i  className="fa fa-times-circle" onClick={async (e)=>{ await removeLabel(props.id) }}> {props.content}</i>
         </Button>
-        <div class="input-group-append">
-            <Button  disabled>{props.shortcut}</Button>
-        </div>
-    </div>
+     
+        <Button  disabled>{props.shortcut}</Button>
+        
+    </ButtonGroup>
 )
 class Label extends Component{
     constructor(props){
@@ -90,7 +90,7 @@ class Label extends Component{
                     <h5>Label editor</h5>
                 </CardHeader>
                 <CardBody>
-                 <div className="row">
+                 <div className="d-flex flex-row flex-wrap">
                         {this.state.labels.map((label,i)=>{ 
                             return <LabelCard content={label.content} 
                                             shortcut={label.shortcut}
