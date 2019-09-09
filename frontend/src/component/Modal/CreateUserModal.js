@@ -46,7 +46,7 @@ class CreateUserModal extends Component{
     onSubmit = async (e)=>{
         e.preventDefault()
         const {username,password1,password2,role} = this.state
-        if(username==''){
+        if(username ==''){
               alert('Username is required')
               return
         }

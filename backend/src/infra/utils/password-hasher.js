@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 
-module.exports = class PasswordHaser{
+module.exports = class PasswordHasher{
         constructor(){
             this.hash = this.hash.bind(this)
             this.isMatched = this.isMatched.bind(this)

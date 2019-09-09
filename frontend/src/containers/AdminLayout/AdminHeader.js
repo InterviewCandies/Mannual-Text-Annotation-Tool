@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
-
+import jwt_decode from 'jwt-decode'
 import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/logo.svg'
 import sygnet from '../../assets/img/brand/sygnet.svg'
@@ -18,7 +18,9 @@ class AdminHeader extends Component {
 
     // eslint-disable-next-line
     const { children, ...attributes } = this.props;
-
+    const token = localStorage.getItem('userToken');
+    const decoder = jwt_decode(token);
+    const username = decoder.username
     return (
       <React.Fragment id="navbar">
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -37,6 +39,9 @@ class AdminHeader extends Component {
          
         </Nav>
         <Nav className="ml-auto" navbar>
+          <NavItem right className="mr-lg-3">
+                {username} 
+          </NavItem>  
           <NavItem right onClick={e => this.props.onLogout(e)}>
                 Sign out <i className="fa fa-sign-out mr-lg-2"></i>
           </NavItem>  

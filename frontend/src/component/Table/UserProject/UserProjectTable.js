@@ -62,7 +62,7 @@ class UserProjectTable extends Component {
                 sortKey : sortKey,
                 trend:trend
           })
-          await this.onChange()
+         await this.onChange()
     }
     onSearchChange=async(e)=>{
         const query = e.target.value

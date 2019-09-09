@@ -93,9 +93,8 @@ class ProjectGateway{
    async userProjectList(username,page,perPage,sortKey,trend){
         const size = await this.ProjectModel.count({"users.username":username})
         
-
         const projects = await this.ProjectModel.find({"users.username":username})
-                                                .sort(sortQuery(sortKey))
+                                                .sort(sortQuery(sortKey,trend))
                                                 .skip((perPage * page) - perPage)
                                                 .limit(perPage)
         return  { 
