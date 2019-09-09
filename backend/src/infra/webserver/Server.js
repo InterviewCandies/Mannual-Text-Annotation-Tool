@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path')
 class Server {
     constructor({config,router}){
         this.config=config;
