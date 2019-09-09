@@ -11,15 +11,19 @@ const document = new Schema({
       },
       status:{
            type: String,
-           default:"Not verified"
+           default:"Not Verified"
+      },
+      labels:{
+          type: Array,
+          default : []
       },
       created_at:{
           type: String,
-          default: Date()
+          default: new Date().toLocaleString()
       },
       updated_at:{
           type: String,
-          default: Date()
+          default: new Date().toLocaleString()
       }
 })
 module.exports = mongoose.model('Document',document);

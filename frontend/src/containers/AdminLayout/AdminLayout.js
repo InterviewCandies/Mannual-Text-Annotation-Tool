@@ -4,7 +4,6 @@ import * as router from 'react-router-dom';
 import { Container } from 'reactstrap';
 
 import {
-  AppAside,
   AppFooter,
   AppHeader,
   AppSidebar,
@@ -21,11 +20,12 @@ import  projectNav from '../../navRoutes/ProjectNav'
 // routes config
 import routes from '../../routes/AdminRoutes';
 import AdminHeader from './AdminHeader';
+import Spinner from '../../component/Spinner/Spinner';
 
 
 class AdminLayout extends Component {
 
-  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
+  loading = () => <Spinner></Spinner>
   constructor(props){
      super(props);
     

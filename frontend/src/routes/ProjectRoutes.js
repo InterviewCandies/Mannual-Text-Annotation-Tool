@@ -11,7 +11,7 @@ const projectRoutes = [
   { path: '/project/:id/import', name: 'ImportData', component: ImportData },
   { path: '/project/:id/export', name: 'ExportData', component: ExportData },
   { path: '/project/:id/labels',  exact: true, name: 'Labels', component: Labels},
-  { path: '/project/:id/dataset',  exact: true, name: 'Dataset', component: Dataset}
+  { path: '/project/:id/dataset',  exact: true, name: 'Dataset', component: Dataset},
 
 ];
 

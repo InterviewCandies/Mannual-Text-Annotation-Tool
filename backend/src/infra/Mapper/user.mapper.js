@@ -7,14 +7,14 @@ module.exports=class UserMapper{
             const {_id,username,password,role,created_at,updated_at} = data;
             return new User(_id,username,password,role,created_at,updated_at); 
         }
-        async toDatabase(data){
-            let {username,password,role} = data;
+        async toDatabase(entity){
+            let {username,password,role} = entity;
             password =await this.passwordHasher.hash(password);
             return {
                     username:username,
                     password: password,
                     role : role,
-                    updated_at : Date.now()     
+                    updated_at : new Date().toLocaleString()  
             }
         }
         async isMatched(password,data){

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { Badge, UncontrolledDropdown, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
@@ -27,10 +27,7 @@ class ProjectHeader extends Component {
           minimized={{ src: sygnet, width: 30, height: 30, alt: 'CoreUI Logo' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
-        <Nav className="d-md-down-none" navbar >
-          <NavItem className="px-3">
-            <NavLink to={`/project/${localStorage.getItem('projectId')}/annotate`} className="nav-link"><i className="fa fa-check"></i>Annotate Data</NavLink>
-          </NavItem>
+        <Nav className="d-md-down-none" navbar>
           <NavItem className="px-3">
             <Link to={`/project/${localStorage.getItem('projectId')}/import`}className="nav-link"><i className="fa fa-upload"></i> Import Data</Link>
           </NavItem>

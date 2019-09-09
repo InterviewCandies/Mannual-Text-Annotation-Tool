@@ -1,20 +1,12 @@
 import React,{Component} from 'react'
-import dateFormat from '../../../utils/dateFormat'
 import {
-    ButtonGroup,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Button,
     Card,
     CardBody
 } from 'reactstrap'
-import { list, listUser, getProjectByUser, userSearchProject } from '../../../functions/project.function';
-import { throwStatement } from '@babel/types';
+import {  userProjectSearch, userProjectList } from '../../../functions/project.function';
 import UserProjectData from './UserProjectData'
-import { listLabel } from '../../../functions/label.function';
-import { async } from 'q';
 import CustomPagination from '../../Pagination/CustomPagination';
+import Spinner from '../../Spinner/Spinner';
 class UserProjectTable extends Component {
     constructor(props){
         super(props)
@@ -23,71 +15,68 @@ class UserProjectTable extends Component {
             filteredProjects: [],
             query:'',
             size:0,
+            sortKey:'project_name',
+            trend:1,
             editProject:false,
             projectsPerPage : 10,
             currentPage : 1,
+            loading : false
         }
     }
-    async getUser(projects){
-        if(!projects)  return projects;
-        return Promise.all(projects.map(async (project)=>{project.users = await listUser(project.id); return project}))
-     }
-    
+   
     async componentDidMount(){
-        const {currentPage,projectsPerPage} = this.state
-        let projects = await getProjectByUser(this.props.userId,currentPage,projectsPerPage)
-        this.setState({
-            size : projects.size?projects.size:0
-        })
-        projects =await this.getUser(projects.projects)
+        const {currentPage,projectsPerPage,sortKey,trend} = this.state
+        let result = await userProjectList(this.props.userId,currentPage,projectsPerPage,sortKey,trend)
+        let {projects,size} = result
+       
         this.setState({
             filteredProjects :projects,
-            
+            size : size?size:0,
+            loading : true
         })
         
     }
     async  onChange(){
-        const {currentPage,projectsPerPage} = this.state
+        const {currentPage,projectsPerPage,sortKey,trend} = this.state
        
-        let projects = await getProjectByUser(this.props.userId,currentPage,projectsPerPage)
-        this.setState({
-            size : projects.size
+        let result = await userProjectList(this.props.userId,currentPage,projectsPerPage,sortKey,trend)
+        let {projects,size} = result
+       this.setState({
+            size : size?size:0
         })
-        projects =await this.getUser(projects.projects)
         this.setState({
             filteredProjects :projects,
-           
+            
         })
-        
     }
     onDropDownChange = async(e)=>{
         await this.setState({
-            projectsPerPage : Number(e.target.value)
+            projectsPerPage : Number(e.target.value),
+            currentPage : 1
         })
         this.onChange(e)
     }
     
-  
-    onAscendingSort=(e,sortKey)=>{
-            const filteredProjects = this.state.filteredProjects
-            filteredProjects.sort((a,b)=>a[sortKey].localeCompare(b[sortKey]))
-            this.setState({filteredProjects})
-    }
-    onDescendingSort=(e,sortKey)=>{
-        const filteredProjects = this.state.filteredProjects
-        filteredProjects.sort((a,b)=>b[sortKey].localeCompare(a[sortKey]))
-        this.setState({filteredProjects})
+    onSort=async(sortKey,trend)=>{
+          await this.setState({
+                sortKey : sortKey,
+                trend:trend
+          })
+          await this.onChange()
     }
     onSearchChange=async(e)=>{
         const query = e.target.value
         const {projectsPerPage} =this.state
         let result={}
-        if(query) result = await userSearchProject(this.props.userId,1,projectsPerPage,query)
-        else result = await getProjectByUser(this.props.userId,1,projectsPerPage)
-        const projects =await this.getUser(result.projects)
-         this.setState({
-            filteredProjects : projects,
-            size :  result.size
+        if(query) result = await userProjectSearch(this.props.userId,1,projectsPerPage,query)
+        else  result = await userProjectList(this.props.userId,1,projectsPerPage)
+        let {projects,size} = result
+       this.setState({
+            size : size?size:0
+        })
+        this.setState({
+            filteredProjects :projects,
+            
         })
     }
    
@@ -99,6 +88,7 @@ class UserProjectTable extends Component {
     }
 
     displayProjects =  (currentsProjects)=>{
+            currentsProjects = currentsProjects || []
             return currentsProjects.map(  (project,i)=>{
             return  <UserProjectData data={project} key={i} users={project.users} ></UserProjectData>
         })
@@ -116,10 +106,9 @@ class UserProjectTable extends Component {
          //Show project based on pagination
          const indexOfLastProject = currentPage*projectsPerPage
          const indexOfFirstProject =indexOfLastProject-projectsPerPage
-         const currentsProjects = filteredProjects
+         let currentsProjects = filteredProjects
         return(
-
-            <Card>
+            <div>{(this.state.loading)? <Card>
                 <CardBody>
                 <div className="d-flex flex-row justify-content-between">
                   <div className=" form-group form-inline">
@@ -138,35 +127,35 @@ class UserProjectTable extends Component {
                       <input className="form-control mr-sm-2" type="text" onChange={this.onSearchChange}></input>
                   </div>
                 </div>
-                <table className="table table-striped table-bordered">
+                <table className="table table-striped table-bordered text-center">
                     <thead>
                         <th scope="col">
                             Name
                             <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onAscendingSort(e,"project_name")}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onDescendingSort(e,"project_name")} ></i>
+                                <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"project_name",1)}></i>
+                                <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"project_name",-1)} ></i>
                             </div>
                         </th>
                         <th scope="col">
                             Description
                             <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onAscendingSort(e,"project_description")}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onDescendingSort(e,"project_description")} ></i>
+                                <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"project_description",1)}></i>
+                                <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"project_description",-1)} ></i>
                             </div>
                         </th>
                         <th scope="col">User</th>
                         <th scope="col">
                             Created at
                             <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onAscendingSort(e,"created_at")}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onDescendingSort(e,"created_at")} ></i>
+                                <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"created_at",1)}></i>
+                                <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"created_at",-1)} ></i>
                             </div>
                         </th>
                         <th scope="col">
                             Updated at
                             <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onAscendingSort(e,"updated_at")}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onDescendingSort(e,"updated_at")} ></i>
+                                <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"updated_at",1)}></i>
+                                <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"updated_at",-1)} ></i>
                             </div>
                         </th>
                         <th scope="col">Actions</th>
@@ -190,7 +179,8 @@ class UserProjectTable extends Component {
 
                </CardBody>
                 
-            </Card>
+            </Card>:  <Spinner content='projects'></Spinner>}
+          </div>
             
         )
     }

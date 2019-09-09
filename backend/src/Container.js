@@ -1,23 +1,24 @@
 const awilix = require('awilix')
 const App = require('./application/App')
-const Server = require('./infra/webserver/Server')
-const Router = require('./infra/webserver/Router')
-const userRouter = require('./infra/webserver/User')
-const projectRouter = require('./infra/webserver/Project')
-const labelRouter = require('./infra/webserver/Label')
-const datasetRouter = require('./infra/webserver/Dataset')
+const Server = require('./infra/webserver/server')
+const Router = require('./infra/webserver/router')
+const userRouter = require('./infra/webserver/user')
+const projectRouter = require('./infra/webserver/project')
+const labelRouter = require('./infra/webserver/label')
+const datasetRouter = require('./infra/webserver/dataset')
 const Database = require('./infra/database')
 const config = require('./config')
-const Controller = require('./deliveries/Controller')
+const Controller = require('./deliveries/controller')
 const Gateway = require('./infra/gateway')
-const UserManagement = require('./application/usecase/userManagement')
-const ProjectManagement = require('./application/usecase/projectManagement')
-const LabelManagement = require('./application/usecase/labelManagement')
-const DatasetManagement = require('./application/usecase/datasetManagement')
+const UserManagement = require('./application/usecase/user-management')
+const ProjectManagement = require('./application/usecase/project-management')
+const LabelManagement = require('./application/usecase/label-management')
+const DatasetManagement = require('./application/usecase/dataset-management')
 const container = awilix.createContainer();
-const Authentication= require('./infra/util/authentication')
-const PasswordHasher = require('./infra/util/PasswordHasher')
-const Mapper = require('./infra/Mapper')
+const Authentication= require('./infra/utils/authentication')
+const PasswordHasher = require('./infra/utils/password-hasher')
+const FileHandler = require('./infra/utils/file-handler')
+const Mapper = require('./infra/mapper')
 // System
 container.register({
             app : awilix.asClass(App).singleton(),
@@ -46,7 +47,8 @@ container.register({
 //Middleware 
 container.register ({
        authentication : awilix.asClass(Authentication).singleton(),
-       passwordHasher : awilix.asClass(PasswordHasher).singleton()
+       passwordHasher : awilix.asClass(PasswordHasher).singleton(),
+       fileHandler    : awilix.asClass(FileHandler).singleton()
 })
 
 
@@ -59,7 +61,6 @@ container.register({
 container.register({
         userMapper : awilix.asClass(Mapper.UserMapper).singleton(),
         projectMapper : awilix.asClass(Mapper.ProjectMapper).singleton(),
-        userProjectMapper : awilix.asClass(Mapper.UserProjectMapper).singleton(),
         labelMapper : awilix.asClass(Mapper.LabelMapper).singleton(),
         documentMapper : awilix.asClass(Mapper.DocumentMapper).singleton()
 })
@@ -80,31 +81,31 @@ container.register({
            LabelModel : awilix.asValue(Database.LabelModel),
            ProjectModel: awilix.asValue(Database.ProjectModel),
            DocumentModel : awilix.asValue(Database.DocumentModel),
-           UserProjectModel : awilix.asValue(Database.UserProjectModel) 
         })
 
 //App
 //User management
 container.register({
         _login : awilix.asClass(UserManagement.Login),
-        _createUser : awilix.asClass(UserManagement.CreateUser),
-        _deleteUser : awilix.asClass(UserManagement.DeleteUser),
-        _editUser   : awilix.asClass(UserManagement.EditUser),
-        _getUser   : awilix.asClass(UserManagement.GetUser),
-        _listUser  : awilix.asClass(UserManagement.ListUser),
-        _getUserByProject : awilix.asClass(UserManagement.GetUserByProject)
+        createUser : awilix.asClass(UserManagement.CreateUser),
+        deleteUser : awilix.asClass(UserManagement.DeleteUser),
+        editUser   : awilix.asClass(UserManagement.EditUser),
+        searchUser : awilix.asClass(UserManagement.SearchUser),
+        getUser   : awilix.asClass(UserManagement.GetUser),
+        listUser  : awilix.asClass(UserManagement.ListUser),
 })
 //Project management
 container.register({
-        _createProject : awilix.asClass(ProjectManagement.CreateProject),
-        _deleteProject : awilix.asClass(ProjectManagement.DeleteProject),
-        _editProject : awilix.asClass(ProjectManagement.UpdateProject),
-        _listProject : awilix.asClass(ProjectManagement.ListProject),
+        createProject : awilix.asClass(ProjectManagement.CreateProject),
+        deleteProject : awilix.asClass(ProjectManagement.DeleteProject),
+        editProject : awilix.asClass(ProjectManagement.UpdateProject),
+        listProject : awilix.asClass(ProjectManagement.ListProject),
         _addUser : awilix.asClass(ProjectManagement.AddUser),
+        getProject : awilix.asClass(ProjectManagement.Get),
         searchProject : awilix.asClass(ProjectManagement.SearchProject),
-        _userSearchProject : awilix.asClass(ProjectManagement.UserSearchProject),
+        _userProjectSearch : awilix.asClass(ProjectManagement.UserProjectSearch),
         _removeUser : awilix.asClass(ProjectManagement.RemoveUser),
-        _getProjectByUser : awilix.asClass(ProjectManagement.GetProjectByUser)
+        _userProjectList : awilix.asClass(ProjectManagement.UserProjectList)
 })
 // Label management
 container.register({
@@ -114,12 +115,15 @@ container.register({
         listLabel   : awilix.asClass(LabelManagement.ListLabel)
 })
 container.register({
-        _importData : awilix.asClass(DatasetManagement.Import),
+        importDataset : awilix.asClass(DatasetManagement.Import),
+        exportDataset : awilix.asClass(DatasetManagement.Export),
         listDocument : awilix.asClass(DatasetManagement.List),
         editDocument: awilix.asClass(DatasetManagement.Edit),
+        getDocument : awilix.asClass(DatasetManagement.Get),
         deleteDocument : awilix.asClass(DatasetManagement.Delete),
         verifyDocument: awilix.asClass(DatasetManagement.Verify),
-        searchDocument : awilix.asClass(DatasetManagement.Search)
-
+        searchDocument : awilix.asClass(DatasetManagement.Search),
+        annotateDocument : awilix.asClass(DatasetManagement.Annotate)
+ 
 })
 module.exports = container;

@@ -14,7 +14,6 @@ class Login extends Component {
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-
   }
   onChangeUsername(e){
        this.setState({
@@ -57,7 +56,7 @@ class Login extends Component {
                 <Card className="p-4">
                   <CardBody>
                     <p  id="error" style={{color:'red',display:'none'}}>
-                         Invalid username or password,please try again
+                         Invalid username or password
                     </p>
                     <Form onSubmit={this.onSubmit}>
                       <h1>Login</h1>

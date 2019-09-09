@@ -19,11 +19,12 @@ import {
 // routes config
 import routes from '../../routes/ProjectRoutes';
 import ProjectHeader from './ProjectHeader';
+import Spinner from '../../component/Spinner/Spinner';
 
 
 class ProjectLayout extends Component {
 
-  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
+  loading = () => <Spinner></Spinner>
   constructor(props){
      super(props);
      localStorage.setItem('projectId',this.props.match.params.id);
@@ -33,13 +34,13 @@ class ProjectLayout extends Component {
           {
             name: 'Dataset',
             url: `/project/${localStorage.getItem('projectId')}/dataset`,
-            icon: 'icon-speedometer',
+            icon: 'icon-layers',
             
           },
           {
             name: 'Labels',
             url: `/project/${localStorage.getItem('projectId')}/labels`,
-            icon: 'icon-speedometer',
+            icon: 'icon-puzzle',
             
           }
         

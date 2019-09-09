@@ -1,23 +1,14 @@
 import React,{Component} from 'react'
-import dateFormat from '../../../utils/dateFormat'
 import {
-    ButtonGroup,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
     Button,
-    Badge,
     Card,
     CardBody
 } from 'reactstrap'
-import { list, listUser, search } from '../../../functions/project.function';
-import { throwStatement } from '@babel/types';
-import EditProjectModal from '../../Modal/EditProject.modal';
+import { list, search } from '../../../functions/project.function';
 import ProjectData from './ProjectData'
-import CreateProjectModal from '../../Modal/CreateProject.modal';
-import { async } from 'q';
-import { listLabel } from '../../../functions/label.function';
+import CreateProjectModal from '../../Modal/CreateProjectModal';
 import CustomPagination from '../../Pagination/CustomPagination';
+import Spinner from '../../Spinner/Spinner';
 class ProjectTable extends Component {
     constructor(props){
         super(props)
@@ -31,63 +22,58 @@ class ProjectTable extends Component {
             createProject:false,
             projectsPerPage : 10,
             currentPage : 1,
+            loading : false
         }
     }
-    async getUser(projects){
-        if(!projects)  return [];
-        return Promise.all(projects.map(async (project)=>{project.users = await listUser(project.id); return project}))
-    }
+    
   
     async componentDidMount(){
         const {currentPage,projectsPerPage,sortKey,trend} = this.state
-        let   projects = await  list(currentPage,projectsPerPage,sortKey,trend)
+        let  result = await  list(currentPage,projectsPerPage,sortKey,trend)
+        
+        const {projects,size} = result
         this.setState({
-            size : projects.size?projects.size:0
+            filteredProjects : projects,
+            size:size?size:0,
+            loading : true
         })
-        projects = projects.projects
-    
-        projects =await this.getUser(projects)
-        this.setState({
-            projects : projects,
-            filteredProjects :projects
-        })
+       
         
     }
     
-    onChange=async(e)=>{
+    onChange=async()=>{
         const {currentPage,projectsPerPage,sortKey,trend}  = this.state
-        let   projects = await  list(currentPage,projectsPerPage,sortKey,trend)
+        let  result = await  list(currentPage,projectsPerPage,sortKey,trend)
+        const {projects,size} = result
         this.setState({
-              size : projects.size
+            size : size?size:0
         })
-        projects = projects.projects
+        this.setState({
+            filteredProjects : projects
+        })
         
-       projects =await this.getUser(projects)
-        this.setState({
-            projects : projects,
-            filteredProjects :projects
-        })
        
     }
     onDropDownChange =async (e)=>{
         await this.setState({
-            projectsPerPage : Number(e.target.value)
+            projectsPerPage : Number(e.target.value),
+            currentPage :1
         })
-        this.onChange(e)
+        this.onChange()
     }
 
-    onCreateProject = async(e)=>{
+    onCreateProject = async()=>{
         this.setState({
             createProject : !this.state.createProject
         })
     }   
    
-    onSort=(e,sortKey,value)=>{
-         this.setState({
+    onSort=async (sortKey,value)=>{
+         await this.setState({
                trend : value,
                sortKey:sortKey  
          })
-         this.onChange(e)
+        this.onChange()
     }
    
     onSearchChange=async (e)=>{
@@ -96,9 +82,9 @@ class ProjectTable extends Component {
         let result={}
         if(query) result = await search(1,projectsPerPage,query)
         else result = await list(1,projectsPerPage,query)
-        const projects =await this.getUser(result.projects)
+      
          this.setState({
-            filteredProjects : projects,
+            filteredProjects : result.projects,
             size :  result.size
         })
     }
@@ -110,13 +96,13 @@ class ProjectTable extends Component {
         await this.setState({
             currentPage :e
         })
-        this.onChange(e)
+        this.onChange()
     }
 
 
     //Presenting Projects 
     displayProjects = (currentsProjects)=>{
-           
+            currentsProjects = currentsProjects || []
             return currentsProjects.map( (project,i)=>{
             return  <ProjectData data={project} 
                                  key={i} 
@@ -139,85 +125,87 @@ class ProjectTable extends Component {
          //Show project based on pagination
          const indexOfLastProject = currentPage*projectsPerPage
          const indexOfFirstProject =indexOfLastProject-projectsPerPage
-         const currentsProjects = filteredProjects
+         let currentsProjects = filteredProjects
         return(
-
-            <Card>
-                <CardBody>
-               
-                <div className="d-flex flex-row justify-content-between my-sm-2">
-                  <div className=" form-group form-inline">
-                         <label  className="mr-sm-2">Show </label>
-                         <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownChange} >
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        <label>entries</label>
-                        <Button className="btn-success ml-sm-3" onClick={this.onCreateProject}>Start a new Project</Button>
-                        <CreateProjectModal trigger={this.state.createProject}
-                                            toggle={this.onCreateProject}
-                                            action={this.onChange}></CreateProjectModal>
-                  </div>
-                  
-                  <div className="form-group form-inline">
-                      <label className="mr-sm-2">Search:</label>
-                      <input className="form-control mr-sm-2" type="text" onChange={this.onSearchChange}></input>
-                  </div>
-                </div>
-                <table className="table table-striped table-bordered">
-                    <thead>
-                        <th >
-                            Name
-                            <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onSort(e,"project_name",1)}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onSort(e,"project_name",-1)} ></i>
-                            </div>
-                        </th>
-                        <th >
-                            Description
-                            <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onSort(e,"project_description",1)}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onSort(e,"project_description",-1)} ></i>
-                            </div>
-                        </th>
-                        <th>User</th>
-                        <th >
-                           Created at
-                            <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onSort(e,"created_at",1)}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onSort(e,"created_at",-1)} ></i>
-                            </div>
-                        </th>
-                        <th >
-                          Updated at
-                            <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={e=>this.onSort(e,"updated_at",1)}></i>
-                                <i className="fa fa-arrow-down" onClick={e=>this.onSort(e,"updated_at",-1)} ></i>
-                            </div>
-                        </th>
-                        <th >Actions</th>
+             <div>
+                 {this.state.loading?  
+                  <Card onClick={(e)=>{e.stopPropagation()}}>
+                    <CardBody>
+                    
+                    <div className="d-flex flex-row justify-content-between my-sm-2">
+                        <div className=" form-group form-inline">
+                            <label  className="mr-sm-2">Show </label>
+                            <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownChange} >
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <label>entries</label>
+                            <Button className="btn-success ml-sm-3" onClick={this.onCreateProject}>Start a new Project</Button>
+                            <CreateProjectModal trigger={this.state.createProject}
+                                                toggle={this.onCreateProject}
+                                                action={this.onChange}></CreateProjectModal>
+                        </div>
                         
-                    </thead>
-                    <tbody>
-                    {this.displayProjects(currentsProjects)}
-                    </tbody>
-                </table>
-
-               
-               <div className="d-flex flex-row justify-content-between">
-                    <p >
-                      {`Show ${Math.min(indexOfFirstProject+1,size) } to ${Math.min(indexOfLastProject,size)} of ${size} entries`}
-                    </p>
-                    <CustomPagination  pages={pageNumbers.length}
-                                       currentPage={currentPage}
-                                       onClick={this.onPaginationClick}></CustomPagination>
-               </div> 
-
-               </CardBody>
-                
-            </Card>
+                        <div className="form-group form-inline">
+                            <label className="mr-sm-2">Search:</label>
+                            <input className="form-control mr-sm-2" type="text" onChange={this.onSearchChange}></input>
+                        </div>
+                    </div>
+                    <table className="table table-striped table-bordered text-center">
+                        <thead>
+                            <th >
+                                Name
+                                <div className="float-right" >
+                                   <i className="fa fa-arrow-up mb-sm-0 p-sm-0" onClick={this.onSort.bind(this,"project_name",1)}></i>
+                                   <i className="fa fa-arrow-down mt-sm-0 p-sm-0" onClick={this.onSort.bind(this,"project_name",-1)}></i>
+                                </div>
+                            </th>
+                            <th >
+                                Description
+                                <div className="float-right">
+                                    <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"project_description",1)}></i>
+                                    <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"project_description",-1)} ></i>
+                                </div>
+                            </th>
+                            <th>User</th>
+                            <th >
+                                Created at
+                                <div className="float-right">
+                                    <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"created_at",1)}></i>
+                                    <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"created_at",-1)} ></i>
+                                </div>
+                            </th>
+                            <th >
+                                Updated at
+                                <div className="float-right">
+                                    <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"updated_at",1)}></i>
+                                    <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"updated_at",-1)} ></i>
+                                </div>
+                            </th>
+                            <th >Actions</th>
+                            
+                        </thead>
+                        <tbody>
+                        {this.displayProjects(currentsProjects)}
+                        </tbody>
+                    </table>
+    
+                    
+                    <div className="d-flex flex-row justify-content-between">
+                        <p >
+                            {`Show ${Math.min(indexOfFirstProject+1,size) } to ${Math.min(indexOfLastProject,size)} of ${size} entries`}
+                        </p>
+                        <CustomPagination  pages={pageNumbers.length}
+                                            currentPage={currentPage}
+                                            onClick={this.onPaginationClick}></CustomPagination>
+                    </div> 
+    
+                    </CardBody>
+                  
+                  </Card>: <Spinner content='projects'></Spinner>}
+             </div>  
             
         )
     }

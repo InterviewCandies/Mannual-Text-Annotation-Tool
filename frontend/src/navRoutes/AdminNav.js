@@ -3,13 +3,13 @@ export default {
       {
         name: 'Projects',
         url: '/',
-        icon: 'icon-speedometer',
+        icon: 'icon-home',
         
       },
       {
         name: 'Users',
         url: '/users',
-        icon: 'icon-speedometer',
+        icon: 'icon-people',
         
       }
     

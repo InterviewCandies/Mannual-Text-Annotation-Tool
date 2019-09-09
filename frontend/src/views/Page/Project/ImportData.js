@@ -4,11 +4,11 @@ import {
     CardHeader,
     CardBody,
     Button,
-    Container
 } from 'reactstrap'
-import navigation from '../../../navRoutes/ProjectNav';
-import SideBar from '../../../component/SideBar/SideBar'
 import { sendFile } from '../../../functions/dataset.function';
+import txt from '../../../files/Sample.txt'
+import jsonData from '../../../files/Sample'
+
 class ImportData extends Component{
     constructor(props){
         super(props)
@@ -20,16 +20,36 @@ class ImportData extends Component{
     onChange=(e)=>{
         let fileList =e.target.files;
         this.setState({
-            filename : fileList[0].name,
+            filename : fileList[0]?fileList[0].name:'',
             fileList : fileList
         })
        
     }
-    onClick=(e)=>{
+    download =async(e)=>{
+         
+            const json = JSON.stringify(jsonData);
+            const blob = new Blob([json],{type:'application/json'});
+            const href = await URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = href;
+            link.target ='_blank'
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          
+      }
+    onClick=async (e)=>{
         const {fileList} = this.state
         if(fileList.length!=0) {
-            sendFile(fileList[0],this.props.match.params.id)
-            alert('File has been submited')
+            const result =await sendFile(fileList[0],this.props.match.params.id)
+            if(result.response) {
+                if(result.response.status==400) alert(result.response.data.message)
+                
+            }
+            else { 
+                alert('File has been submited')
+                this.props.history.push(`/project/${this.props.match.params.id}/dataset`)
+            }
             this.setState({
                 filename : 'Choose file'
             })
@@ -46,23 +66,16 @@ class ImportData extends Component{
                 <CardBody>
                     <strong>To annotate text, you need to import a set of text items</strong>
                     <ul>
-                        <li>TXT file: each line should contain a text</li>
-                        <li>JSON file: each line should contain a json object at least one key</li>
+                        <li>TXT file: each line should contain a text  
+                        <a href={txt}  target="_blank"> (Sample txt file)</a>    
+                        </li>
+                        <li>JSON file: each line should contain a json object at least one key
+                           <a  href='javascript:void(0);'  onClick={ this.download.bind(this) }> (Sample json file)</a>    
+                        </li>
                         
                     </ul>
                     <br></br>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked/>
-                        <label class="form-check-label" for="exampleRadios1">
-                            Upload a TXT file from your computer
-                        </label>
-                    </div>
-                    <div class="form-check mb-sm-2">
-                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2"/>
-                        <label class="form-check-label" for="exampleRadios2">
-                            Upload a JSON file from your computer
-                        </label>
-                    </div>
+                 
                     <div class="custom-file col-sm-5">
                             <input type="file" 
                                    class="custom-file-input" 

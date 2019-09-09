@@ -12,7 +12,6 @@ class UserDashboard extends Component {
     const decoder = jwt_decode(token);
     this.username = decoder.username;
     this.id = decoder.id;
-    
   }
   
   
@@ -23,7 +22,7 @@ class UserDashboard extends Component {
     return (
       <div className="animated fadeIn">
       
-       <UserProjectTable userId={this.id} ></UserProjectTable>
+       <UserProjectTable userId={this.id} username={this.username}></UserProjectTable>
 
       </div>
     );

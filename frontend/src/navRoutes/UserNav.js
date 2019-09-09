@@ -3,7 +3,7 @@ export default {
       {
         name: 'Projects',
         url: '/',
-        icon: 'icon-speedometer',
+        icon: 'icon-home',
         
       },
       

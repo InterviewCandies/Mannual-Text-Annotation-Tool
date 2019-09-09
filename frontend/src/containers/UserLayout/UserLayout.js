@@ -20,19 +20,22 @@ import navigation from '../../navRoutes/UserNav';
 // routes config
 import routes from '../../routes/UserRoutes';
 import UserHeader from './UserHeader';
+import Spinner from '../../component/Spinner/Spinner';
 
 
 class UserLayout extends Component {
 
-  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
+  loading = () => <Spinner></Spinner>
   constructor(props){
      super(props);
+     document.onkeydown=onkeyup=function(){ return true}
   }
 
   signOut(e) {
     e.preventDefault()
     localStorage.removeItem('userToken');
     this.props.history.push('/login')
+    document.onkeyup =document.onkeydown = function(){return true}
   }
 
   render() {
@@ -54,7 +57,6 @@ class UserLayout extends Component {
               <AppSidebarMinimizer />
             </AppSidebar>
           <main className="main">
-           
             <Container fluid>
               <Suspense fallback={this.loading()}>
                 <Switch>

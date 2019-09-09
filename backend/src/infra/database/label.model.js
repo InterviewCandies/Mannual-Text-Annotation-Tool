@@ -22,12 +22,12 @@ const Label = new Schema({
         required:true
     },
     created_at:{
-        type:Date,
-        default:Date.now()
+        type:String,
+        default:new Date().toLocaleString()
     },
     updated_at:{
         type:String,
-        default:Date.now()
+        default:new Date().toLocaleString()
     }
 
 })

@@ -15,7 +15,7 @@ export const login=newLogin=>{
              const decorder = jwt_decode(token)
              return decorder;
         })
-        .catch(error=>{ return error})
+        .catch(error=>{  return error })
 };
         
 export const createUser = (username,password,role)=>{
@@ -23,7 +23,6 @@ export const createUser = (username,password,role)=>{
                username : username,
                password : password,
                role : role,
-               jwt  : localStorage.getItem('userToken')
           }
           return axios.post('http://localhost:4000/textAnnotation/user/create/',message)
                       .then(res=>{
@@ -33,16 +32,59 @@ export const createUser = (username,password,role)=>{
                            return error;
                       })
 }
+        
+export const editUser = (id,username,password,role)=>{
+     const data = {
+          username : username,
+          password : password,
+          role : role,
+     }
+     return axios.post('http://localhost:4000/textAnnotation/user/update/'+id,data)
+                 .then(res=>{
+                       return res.data;
+                 })
+                 .catch(error=>{
+                      return error;
+                 })
+}
 
-export const UserList =()=>{
-    
-       return axios.get('http://localhost:4000/textAnnotation/user/list/')
+export const userList =(page,perPage,sortKey,trend)=>{
+       const data = {
+            sortKey : sortKey,
+            perPage : perPage,
+            trend : trend
+       }
+       return axios.post('http://localhost:4000/textAnnotation/user/list/'+page,data)
                     .then(res=>{
                               return res.data;
                     })
                     .catch(error=>{
                          return error;
                     })
+}    
+export const userSearch =(page,perPage,searchKey)=>{
+     const data = {
+          searchKey : searchKey,
+          perPage : perPage,
+     }
+     return axios.post('http://localhost:4000/textAnnotation/user/search/'+page,data)
+                  .then(res=>{
+                            return res.data;
+                  })
+                  .catch(error=>{
+                       return error;
+                  })
+}    
+
+export const deleteUser =(id)=>{
+     
+     return axios.post('http://localhost:4000/textAnnotation/user/delete/'+id)
+                  .then(res=>{
+                            return res.data;
+                  })
+                  .catch(error=>{
+                       return error;
+                  })
 }    
 
 export const getUser=(username)=>{

@@ -1,22 +1,14 @@
 import React,{Component} from 'react'
-import { Link,Route} from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import {
     ButtonGroup,
-    Badge,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
-    Button,
-    Card,
-    CardBody
+    Button
 } from 'reactstrap'
 
-import EditProjectModal from '../../Modal/EditProject.modal';
-import DeleteProjectModal from '../../Modal/DeleteProject.modal';
-import AddUserModal from '../../Modal/AddUser.modal';
-import RemoveUserModal from '../../Modal/RemoveUser.modal';
-import ImportData from '../../../views/Page/Project/ImportData';
-import dateFormat from '../../../utils/dateFormat'
+import EditProjectModal from '../../Modal/EditProjectModal';
+import DeleteProjectModal from '../../Modal/DeleteProjectModal';
+import AddUserModal from '../../Modal/AddUserModal';
+import RemoveUserModal from '../../Modal/RemoveUserModal';
 class ProjectData extends Component{
     constructor(props){
             super(props)
@@ -33,7 +25,7 @@ class ProjectData extends Component{
     //Listen to changes
    componentDidUpdate(oldProps){
         const props =this.props
-            if(oldProps.users != props.users )
+            if(oldProps.data != props.data )
             this.setState({
                 users : props.users,
             })
@@ -58,11 +50,13 @@ class ProjectData extends Component{
         })
     }
     onAddUser = (e) =>{
+       
         this.setState({
             addUser : !this.state.addUser
         })
     }
     onRemoveUser = (e) =>{
+      
         this.setState({
             removeUser: ! this.state.removeUser
         })
@@ -76,9 +70,9 @@ class ProjectData extends Component{
                 <td><Link to={`/project/${this.props.data.id}/import`} >{this.props.data.project_name}</Link></td>
                 <td>{this.props.data.project_description}</td>
                 <td>{this.onDisplayUser()}</td>
-                <td>{ dateFormat( this.props.data.created_at) }</td>
-                <td>{ dateFormat( this.props.data.updated_at) }</td>
-                <td className="d-flex justify-content-center">
+                <td>{  this.props.data.created_at }</td>
+                <td>{  this.props.data.updated_at }</td>
+                <td >
                     <ButtonGroup>
                         <Button onClick={this.onAddUser} color="warning">
                             <i className="fa fa-user-plus" ></i>

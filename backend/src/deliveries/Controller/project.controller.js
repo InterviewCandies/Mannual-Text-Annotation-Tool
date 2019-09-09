@@ -1,39 +1,54 @@
 module.exports = class ProjectController {
-     constructor({_listProject,_createProject,_deleteProject,_editProject,
-                  _addUser,_removeUser,_getProjectByUser,searchProject,_userSearchProject}){
+     constructor({listProject,createProject,deleteProject,editProject,getProject,
+                  _addUser,_removeUser,_userProjectList,searchProject,_userProjectSearch}){
 
-          this._listProject = _listProject
-          this._createProject = _createProject
-          this._deleteProject = _deleteProject
-          this._editProject =_editProject
+          this.listProject = listProject
+          this.createProject = createProject
+          this.deleteProject = deleteProject
+          this.editProject =editProject
+          this.getProject = getProject
           this._addUser = _addUser
           this._removeUser = _removeUser
-          this._getProjectByUser = _getProjectByUser
+          this._userProjectList =_userProjectList
           this.searchProject = searchProject
-          this._userSearchProject = _userSearchProject
+          this._userProjectSearch = _userProjectSearch
 
           this.list= this.list.bind(this)
           this.create =this.create.bind(this)
           this.delete= this.delete.bind(this)
+          this.get = this.get.bind(this)
           this.update = this.update.bind(this)
           this.addUser = this.addUser.bind(this)
           this.removeUser = this.removeUser.bind(this)
           this.search = this.search.bind(this)
-          this.getProjectByUser = this.getProjectByUser.bind(this)
-          this.userSearchProject = this.userSearchProject.bind(this)
+          this.userProjectList = this.userProjectList.bind(this)
+          this.userProjectSearch = this.userProjectSearch.bind(this)
      }
      async list(req,res){
-           
-           const result  = await this._listProject.execute(req);
+          const page = req.params.id
+         const {perPage,sortKey,trend} = req.body 
+           const result  = await this.listProject.execute(page,perPage,sortKey,trend);
            try {
                 res.status(200).json(result);
            } catch (error) {
-                res.status(400).json(error);
+               
+                res.status(400).send(error);
            }
      }
      async create(req,res){
+          const {project_name,project_description} = req.body;
+          const result = await this.createProject.execute(project_name,project_description);
+          try{
+               res.status(200).json(result);  
 
-          const result = await this._createProject.execute(req);
+          } catch(e){
+               res.status(400).send(error);
+          }
+
+     }
+     async get(req,res){
+          const id =req.params.id
+          const result =await this.getProject.execute(id)
           try{
                res.status(200).json(result);  
 
@@ -43,9 +58,9 @@ module.exports = class ProjectController {
 
      }
      async update(req,res) {
-            
-
-           const result = await this._editProject.execute(req);
+           const id =req.params.id
+           const {project_name,project_description} = req.body
+           const result = await this.editProject.execute(id,project_name,project_description);
            try {
                    res.status(200).json(result);
            } catch (error) {
@@ -53,16 +68,19 @@ module.exports = class ProjectController {
            }
      }
      async delete(req,res){
-           const result = await this._deleteProject.execute(req);
-           try{
+          const id = req.params.id
+          const result = await this.deleteProject.execute(id);
+          try{
                res.status(200).json(result);
-           }
-           catch(error){
+          }
+          catch(error){
                res.status(400).json(error);
-           }
+          }
      }
      async search(req,res){
-          const result = await this.searchProject.execute(req)
+          const page = req.params.id
+          let {perPage,searchKey} = req.body 
+          const result = await this.searchProject.execute(page,perPage,searchKey)
           try{
                res.status(200).json(result);
            }
@@ -71,31 +89,40 @@ module.exports = class ProjectController {
            }
      }
      async addUser(req,res){
-           const result =await this._addUser.execute(req);
-           try {
-                res.status(200).json(result);
-           } catch (error) {
-                res.status(400).json(error);
-           }
+          const id = req.params.id
+          const {user_id} = req.body
+          const result =await this._addUser.execute(id,user_id);
+          try {
+               if(!result) throw new Error('User has been added to this project before')
+               res.status(200).json(result);
+          } catch (error) {
+               res.status(400).json({message : error.message});
+          }
      }
      async removeUser(req,res){
-          const result = await this._removeUser.execute(req);
+          const id = req.params.id
+          const {user_id} = req.body
+          const result = await this._removeUser.execute(id,user_id);
           try {
                res.status(200).json(result);
           } catch (error) {
                res.status(400).json(error);
           }
      }
-     async getProjectByUser(req,res){
-          const result = await this._getProjectByUser.execute(req);
+     async userProjectList(req,res){
+          const user_id = req.params.id
+          const {page,perPage,sortKey,trend} = req.body
+          const result = await this._userProjectList.execute(user_id,page,perPage,sortKey,trend);
           try {
                res.status(200).json(result);
           } catch (error) {
                res.status(400).json(error);
           }
      }
-     async userSearchProject(req,res){
-          const result = await this._userSearchProject.execute(req)
+     async userProjectSearch(req,res){
+          const user_id = req.params.id
+          const {page,perPage,searchKey} = req.body
+          const result = await this._userProjectSearch.execute(user_id,page,perPage,searchKey)
           try{
                res.status(200).json(result);
            }

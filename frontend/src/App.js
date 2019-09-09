@@ -4,7 +4,8 @@ import './App.scss';
 import jwt_decode from 'jwt-decode'
 import ProjectLayout from './containers/ProjectLayout/ProjectLayout';
 import DocumentLayout from './containers/DocumentLayout/DocumentLayout';
-const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
+import Spinner from './component/Spinner/Spinner';
+const loading = () => <Spinner></Spinner>;
 
 // Containers
 const UserLayout = React.lazy(()=>import('./containers/UserLayout/UserLayout'));
@@ -12,12 +13,12 @@ const AdminLayout = React.lazy(()=>import('./containers/AdminLayout/AdminLayout'
 
 // Pages
 const Login = React.lazy(() => import('./views/Page/Login/Login'));
-
+const Page404 = React.lazy(() => import('./views/Page/Page404/Page404'));
+const Page500 = React.lazy(() => import('./views/Page/Page500/Page500'));
 
 class App extends Component {
   constructor(props){
     super(props);
-    
   }
  
    
@@ -28,6 +29,8 @@ class App extends Component {
           <React.Suspense fallback={loading()}>
             <Switch>
               <Route exact path="/login" name="Login Page" render={props => <Login {...props} />} />
+              <Route exact path="/400" name="404 Page" render={props => <Page404 {...props} />} />
+              <Route exact path="/500" name="500 Page" render={props => <Page500 {...props} />} />
               <Route path="/project/:id/"  render={props=><ProjectLayout {...props}></ProjectLayout> }></Route>
               <Route path="/document/:id" render={props=><DocumentLayout {...props}></DocumentLayout> }></Route>
               <Route  path="/" name="Home" 

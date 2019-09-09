@@ -8,13 +8,17 @@ const project = new Schema({
       project_description:{
           type:String
       },
+      users:{
+          type: Array,
+          default:[]
+      },
       created_at:{
           type: String,
-          default: Date()
+          default:new Date().toLocaleString()
       },
       updated_at:{
           type: String,
-          default: Date()
+          default:new Date().toLocaleString()
       }
 })
 module.exports = moogose.model('project',project);

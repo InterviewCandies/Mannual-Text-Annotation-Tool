@@ -1,11 +1,6 @@
 import React, { Component,Suspense} from 'react';
 import ProjectTable from '../../component/Table/Project/ProjectTable';
 
-
-
-
-
-
 class AdminDashboard extends Component {
   constructor(props) {
     super(props);

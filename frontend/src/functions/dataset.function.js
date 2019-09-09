@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import jwt_decode from 'jwt-decode'
 axios.defaults.headers.common={
     'auth-token' : localStorage.getItem('userToken'),
     'Content-Type': 'multipart/form-data' 
@@ -9,21 +9,38 @@ export const sendFile=(file,id)=>{
         let formData = new FormData()
         formData.set('file',file)
     
-        axios.post('http://localhost:4000/textAnnotation/dataset/import/'+id,formData)
+        return axios.post('http://localhost:4000/textAnnotation/dataset/import/'+id,formData)
               .then((res)=>{
-                   console.log(res.data)
+                   return res.data
               })
               .catch(err=>{
-                  console.log(err)
+                  return err
               })
     
               
 }
 
-export const listDocument = (id,page,perPage) =>{
+
+export const exportData =(id)=>{
+   
+     return axios.post('http://localhost:4000/textAnnotation/dataset/export/'+id)
+           .then((res)=>{
+                return res.data
+           })
+           .catch(err=>{
+                
+               return err
+           })
+ 
+           
+}
+
+export const listDocument = (id,page,perPage,sortKey,trend) =>{
        const data ={
             page : page,
-            perPage : perPage
+            perPage : perPage,
+            sortKey :sortKey,
+            trend : trend
        }
        return axios.post('http://localhost:4000/textAnnotation/dataset/list/'+id,data)
        .then((res)=>{
@@ -34,11 +51,22 @@ export const listDocument = (id,page,perPage) =>{
        })
 
 }
-export const searchDocument = (id,page,perPage,value) =>{
+export const getDocument = (id) =>{
+  
+     return axios.post('http://localhost:4000/textAnnotation/dataset/get/'+id)
+     .then((res)=>{
+          return res.data
+     })
+     .catch(err=>{
+          return []
+     })
+
+}
+export const searchDocument = (id,page,perPage,searchKey) =>{
      const data ={
           page : page,
           perPage : perPage,
-          value: value
+         searchKey: searchKey
      }
      return axios.post('http://localhost:4000/textAnnotation/dataset/search/'+id,data)
      .then((res)=>{
@@ -65,6 +93,39 @@ export const editDocument = (id,content) =>{
      })
 
 }
+
+
+export const annotate = (id,labels) =>{
+     const token = localStorage.getItem('userToken');
+     const decoder = jwt_decode(token);
+
+     const data = {
+          labels:labels,
+          role : decoder.role
+     }
+     return axios.post('http://localhost:4000/textAnnotation/dataset/annotate/'+id,data)
+     .then((res)=>{
+          return res.data
+     })
+     .catch(err=>{
+          return err
+     })
+
+}
+export const verifyDocument = (id,status) =>{
+     const data = {
+          status:status
+     }
+     return axios.post('http://localhost:4000/textAnnotation/dataset/verify/'+id,data)
+     .then((res)=>{
+          return res.data
+     })
+     .catch(err=>{
+          return false
+     })
+
+}
+
 
 export const deleteDocument = (id) =>{
     

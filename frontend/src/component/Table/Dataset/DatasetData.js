@@ -1,39 +1,27 @@
 import React,{Component} from 'react'
-import { Link,Route} from 'react-router-dom'
 import {
     ButtonGroup,
     Badge,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
     Button,
-    Card,
-    CardBody
 } from 'reactstrap'
 
 
-import dateFormat from '../../../utils/dateFormat'
-import EditDocumentModal from '../../Modal/EditDocument.modal';
-import DeleteDocumentModal from '../../Modal/DeleteDocument';
+import EditDocumentModal from '../../Modal/EditDocumentModal';
+import DeleteDocumentModal from '../../Modal/DeleteDocumentModal';
+import VerifyDocumentModal from '../../Modal/VerifyDocumentModal';
+
 class DatasetData extends Component{
     constructor(props){
         super(props)
         this.state={
             edit :  false,
-            delete: false
+            delete: false,
+            verify:false
         }
            
     }
    
-    //Listen to changes
-   componentDidUpdate(oldProps){
-        const props =this.props
-            if(oldProps.data != props.data )
-            this.setState({
-               
-            })
-     
-    }
+ 
     onEdit=(e)=>{
         this.setState({
             edit : !this.state.edit
@@ -44,23 +32,46 @@ class DatasetData extends Component{
             delete: !this.state.delete
         })
     }
-    
-   
+    onVerify=(e)=>{
+        this.setState({
+            verify : !this.state.verify
+        })
+    }
+    //String truncate
+
+    stringTruncate(str, limit, end) {
+        limit = (limit)? limit : 100;
+        end = (end)? end : '...';
+        str = str.split(' ');  
+        if (str.length > limit) {
+          let cutTolimit = str.slice(0, limit);
+          return cutTolimit.join(' ') + ' ' + end;
+        }
+  
+        return str.join(' ');
+      }
     render(){
+        const {content,labels,status,created_at,updated_at} = this.props.data
         return(
             <tr>
-                <td>{this.props.data.content}</td>
-                <td>labels</td>
-                <td>{(this.props.data.status=='Verified')?<Badge color="success">Verified</Badge>
+                <td>{ this.stringTruncate(content,50) }</td>
+               
+                <td>{(status=='Verified')?<Badge color="success">Verified</Badge>
                                              :<Badge color="danger">Not Verified</Badge>}</td>
-                <td>{ dateFormat( this.props.data.created_at) }</td>
-                <td>{ dateFormat( this.props.data.updated_at) }</td>
+                <td>{ created_at }</td>
+                <td>{ updated_at }</td>
                 <td>
                 <ButtonGroup>
                         
-                        <Button color="success">
+                        <Button color="success" onClick={this.onVerify}>
                             <i className="fa fa-check" ></i>
-                          
+                            <VerifyDocumentModal  trigger={this.state.verify}
+                                                  toggle={this.onVerify}
+                                                  data={this.props.data}
+                                                  labels={labels}
+                                                  action={this.props.action}>
+
+                            </VerifyDocumentModal>
                         </Button>
                        
                         <Button color="primary" onClick={this.onEdit}>

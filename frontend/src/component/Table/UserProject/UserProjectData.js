@@ -1,17 +1,10 @@
 import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
-import dateFormat from '../../../utils/dateFormat'
 import {
-    ButtonGroup,
-    Pagination,
-    PaginationItem,
-    PaginationLink,
     Button,
-    Card,
-    CardBody
+   
 } from 'reactstrap'
-import { list, listUser, removeUser } from '../../../functions/project.function';
-import { throwStatement } from '@babel/types';
+
 class UserProjectData extends Component{
     constructor(props){
             super(props)
@@ -22,7 +15,7 @@ class UserProjectData extends Component{
    
     componentDidUpdate(oldProps){
         const props =this.props
-            if(oldProps.users != props.users )
+            if(oldProps.data != props.data )
             this.setState({
                 users : props.users
                
@@ -40,8 +33,8 @@ class UserProjectData extends Component{
                 <td>{this.props.data.project_name}</td>
                 <td>{this.props.data.project_description}</td>
                 <td>{this.onDisplayUser()}</td>
-                <td>{dateFormat(this.props.data.created_at) }</td>
-                <td>{dateFormat(this.props.data.updated_at) }</td>
+                <td>{this.props.data.created_at }</td>
+                <td>{this.props.data.updated_at }</td>
                 <td>
                     <Link to={`/document/${this.props.data.id}`}> 
                          <Button className="btn-success">Go to project</Button>

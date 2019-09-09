@@ -30,6 +30,22 @@ export const createLabel=(project_id,content,shortcut,backgroundColor,textColor)
             return []
     })
 }
+export const editLabel=(id,project_id,content,shortcut,backgroundColor,textColor)=>{
+    const data ={
+        project_id : project_id,
+        content : content,
+        shortcut : shortcut,
+        backgroundColor : backgroundColor,
+        textColor : textColor
+    }
+    return axios.post('http://localhost:4000/textAnnotation/label/update/'+id,data)
+        .then(res=>{
+            return res.data
+        })
+        .catch(error=>{
+            return []
+    })
+}
 
 export const removeLabel=(id)=>{
     

@@ -4,7 +4,7 @@ export default {
       {
         name: 'Dataset',
         url: `/project/${localStorage.getItem('projectId')}/dataset`,
-        icon: 'icon-speedometer',
+        icon: 'icon-layers',
         
       },
       {

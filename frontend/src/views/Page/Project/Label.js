@@ -5,20 +5,52 @@ import {
     CardHeader,
     Button,
     ButtonGroup,
-    Container
 } from 'reactstrap'
-import { createLabel, listLabel, removeLabel } from '../../../functions/label.function';
+import { createLabel, listLabel } from '../../../functions/label.function';
+import EditLabelModal from '../../../component/Modal/EditLabelModal';
 
-const LabelCard =props=>(
-    <ButtonGroup className="mr-sm-2 mb-sm-2">
-        <Button disabled  style={{background: props.backgroundColor, color:props.textColor}}>
-            <i  className="fa fa-times-circle" onClick={async (e)=>{ await removeLabel(props.id) }}> {props.content}</i>
-        </Button>
-     
-        <Button  disabled>{props.shortcut}</Button>
-        
-    </ButtonGroup>
-)
+class LabelTag extends Component{
+      constructor(props){
+          super(props)
+         this.state={
+             edit:false
+         }
+      }
+      onEdit=(e)=>{
+          this.setState({
+              edit : !this.state.edit
+          })
+      }
+      render(){
+          const {backgroundColor,textColor,id,content,shortcut,project_id} =this.props
+          const label ={ 
+                id : id,
+                project_id:project_id,
+                backgroundColor:backgroundColor,
+                textColor:textColor,
+                content:content,
+                shortcut:shortcut
+          }
+          return(
+            <ButtonGroup className="mr-sm-2 mb-sm-2">
+            <Button  style={{background:backgroundColor, color:textColor}} onClick={this.onEdit}>
+                <i  className="fa fa-times-circle"> {content}</i>
+            </Button>
+            <EditLabelModal trigger={this.state.edit}
+                            toggle={this.onEdit}
+                            label={label}
+                            action={this.props.action}>
+
+            </EditLabelModal>
+         
+            <Button  disabled>{shortcut}</Button>
+            
+            </ButtonGroup>
+          )
+      }
+    
+}
+
 class Label extends Component{
     constructor(props){
         super(props)
@@ -61,6 +93,7 @@ class Label extends Component{
             backgroundColor: '#FFFFFF',
             textColor: '#000000'
         })
+        this.onChange()
         
     }
     onReset = async(e) =>{
@@ -77,12 +110,13 @@ class Label extends Component{
                 labels : await listLabel(this.props.match.params.id) 
             })
     }
-    async componentDidUpdate(){
+    onChange=async(e)=>{
         this.setState({
             labels : await listLabel(this.props.match.params.id) 
         })
     }
     render(){
+        console.log(this.state.labels.length)
         return(
            
             <Card className="m-sm-5">
@@ -92,13 +126,16 @@ class Label extends Component{
                 <CardBody>
                  <div className="d-flex flex-row flex-wrap">
                         {this.state.labels.map((label,i)=>{ 
-                            return <LabelCard content={label.content} 
+                            console.log(label)
+                            return <LabelTag content={label.content} 
                                             shortcut={label.shortcut}
                                             backgroundColor={label.backgroundColor}
                                             textColor={label.textColor}
-                                            id={label.id}>
+                                            id={label.id}
+                                            project_id={this.props.match.params.id}
+                                            action={this.onChange}>
                                             
-                                    </LabelCard>
+                                    </LabelTag>
                         }
                         )}
                 </div>
@@ -107,19 +144,20 @@ class Label extends Component{
 
                         <div class="form-group row">
                             <label  for="content" class="col-sm-2 col-form-label"><strong>Preview:</strong></label>
-                        
-                            <LabelCard content={this.state.content} 
-                                        shortcut={this.state.shortcut}
-                                        backgroundColor={this.state.backgroundColor}
-                                        textColor={this.state.textColor}
-                                       ></LabelCard>
+                             <div className="col-sm-5">
+                                <LabelTag content={this.state.content} 
+                                            shortcut={this.state.shortcut}
+                                            backgroundColor={this.state.backgroundColor}
+                                            textColor={this.state.textColor}
+                                ></LabelTag>
+                            </div>
                         
                         </div>
                 
                         
                         <div class="form-group row">
                             <label  for="content" class="col-sm-2 col-form-label"><strong>Content:</strong></label>
-                            <div class="col-sm-10">
+                            <div class="col-sm-8">
                                 <input type="text" 
                                         className="form-control" 
                                         id="content" 
@@ -137,15 +175,15 @@ class Label extends Component{
                             </div>
                         </div>
                         <div class="form-group row">
-                        <label  for="color" class="col-sm-2 col-form-label" ><strong>Background color:</strong></label>
+                        <label  for="color" class="col-sm-2 col-form-label" ><strong>Background:</strong></label>
                         <div class="col-sm-10">
-                                <input type="color" value={this.state.backgroundColor} className="form-control" onChange={this.onChangeBackgroundColor}></input>
+                                <input type="color" value={this.state.backgroundColor} className="form-control col-sm-5" onChange={this.onChangeBackgroundColor}></input>
                             </div>
                         </div>
                         <div class="form-group row">
                         <label  for="color" class="col-sm-2 col-form-label"><strong>Text color:</strong></label>
                         <div class="col-sm-10">
-                                <input type="color"  value={this.state.textColor} className="form-control" onChange={this.onChangeTextColor}></input>
+                                <input type="color"  value={this.state.textColor} className="form-control col-sm-5" onChange={this.onChangeTextColor}></input>
                             </div>
                         </div>   
                         </form>

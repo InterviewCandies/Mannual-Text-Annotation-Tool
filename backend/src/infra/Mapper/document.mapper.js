@@ -1,18 +1,19 @@
 const Document = require('../../domain/Document')
 
 module.exports =class DocumentMapper {
-    constructor(){
-
-    }
+    
     toEntity(data) {
-        const {_id,project_id,content,status,created_at,updated_at} = data
-        return new Document(_id,project_id,content,status,created_at,updated_at);
+        let {_id,project_id,content,status,labels,created_at,updated_at} = data
+        labels = labels || [] 
+        return new Document(_id,project_id,content,status,labels,created_at,updated_at);
     }
-    toDatabase(data){
-        const {content} = data
+    toDatabase(entity){
+        const {content,labels,status} =entity
         const document = {
             content : content,
-            updated_at : Date()
+            labels  : labels,
+            status  : status,
+            updated_at : new Date().toLocaleString()
         }
         return document
     }
