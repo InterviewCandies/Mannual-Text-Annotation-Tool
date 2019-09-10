@@ -7,7 +7,6 @@ const projectRouter = require('./infra/webserver/project')
 const labelRouter = require('./infra/webserver/label')
 const datasetRouter = require('./infra/webserver/dataset')
 const Database = require('./infra/database')
-const config = require('./config')
 const Controller = require('./deliveries/controller')
 const Gateway = require('./infra/gateway')
 const UserManagement = require('./application/usecase/user-management')
@@ -31,9 +30,7 @@ container.register({
             labelRouter : awilix.asFunction(labelRouter).singleton(),
             datasetRouter: awilix.asFunction(datasetRouter).singleton()
         })
-        .register({
-            config : awilix.asValue(config)
-        })
+      
 
 //Controller 
 container.register({
@@ -52,10 +49,6 @@ container.register ({
 })
 
 
-//Secret key for jwt 
-container.register({
-      SECRET_KEY : awilix.asValue('SECRET_KEY')
-})
 
 //Mapper
 container.register({

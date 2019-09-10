@@ -1,14 +1,14 @@
 const express = require('express');
-const path = require('path')
+const config = require('config')
 class Server {
-    constructor({config,router}){
-        this.config=config;
+    constructor({router}){
         this.express=express();
         this.express.use(router);
     }
     start(){
-        this.express.listen(this.config.PORT,"0.0.0.0",()=>{
-                console.log('Server is running on port:' + this.config.PORT);
+        const PORT = config.get('Server.PORT')
+        this.express.listen(PORT,"0.0.0.0",()=>{
+                console.log('Server is running on port:' + PORT);
         }); 
     }
 }

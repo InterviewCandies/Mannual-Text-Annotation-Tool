@@ -1,15 +1,13 @@
-
-class UserGateway {
-    constructor({UserModel,ProjectModel,authentication,userMapper}){
+class UserGateway { 
+    constructor({ UserModel, ProjectModel, authentication, userMapper }) {
         this.UserModel = UserModel
         this.ProjectModel = ProjectModel
         this.authentication = authentication
         this.userMapper = userMapper
     }
-
     async findByUsername(username){
         const user = await this.UserModel.findOne({username:username});
-        if(user) return this.userMapper.toEntity(user)
+        if (user) return this.userMapper.toEntity( user ) 
         else return false
     }
     async findById(id){
@@ -55,10 +53,10 @@ class UserGateway {
         return updatedUser;    
     }
     async list(page,perPage,sortKey,trend){
-        let filter ={}
-        if(sortKey=='username') filter={ username : trend}
-        else if(sortKey=='role') filter={ role: trend}
-        else if(sortKey=='creared_at') filter={created_at : trend}
+        let filter = {}
+        if(sortKey == 'username') filter={ username : trend}
+        else if(sortKey == 'role') filter={ role: trend}
+        else if(sortKey == 'creared_at') filter={created_at : trend}
         else filter={updated_at: trend}
         const size = await this.UserModel.countDocuments()
         const users = await this.UserModel.find().sort(filter).skip(page*perPage - perPage).limit(perPage)
@@ -81,7 +79,5 @@ class UserGateway {
                  users : users.map(this.userMapper.toEntity) 
                 };   
     }
-    
 }
-
 module.exports = UserGateway;
