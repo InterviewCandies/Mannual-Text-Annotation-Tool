@@ -52,6 +52,14 @@ class EditUserModal extends Component{
     onSubmit = async (e)=>{
         e.preventDefault()
         const {id,username,password,role} = this.state
+        if(username=='') {
+              alert('Username is required')
+              return
+        }
+        if(password=='') {
+            alert('Password is required')
+            return
+      }
         const result =await editUser(id,username,password,role)
         if(result.message) {
              alert(result.message)

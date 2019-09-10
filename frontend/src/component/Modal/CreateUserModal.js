@@ -50,6 +50,10 @@ class CreateUserModal extends Component{
               alert('Username is required')
               return
         }
+        if(password1==''){
+              alert('Password is required')
+              return
+        }
         if(password1!==password2){ 
             alert('Password is not correct')
             return

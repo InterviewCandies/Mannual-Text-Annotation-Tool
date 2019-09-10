@@ -49,6 +49,10 @@ class EditLabelModal extends Component{
     onSubmit = async (e)=>{
         e.preventDefault()
         const {project_id,content,shortcut,backgroundColor,textColor} =this.state
+        if(content =='') {
+             alert('Label\'s content is required');
+             return
+        }
         const result =await editLabel(this.props.label.id,project_id,content,shortcut,backgroundColor,textColor)
         this.onToggle()
         this.props.action()

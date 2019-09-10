@@ -32,7 +32,12 @@ class CreateProjectModal extends Component{
     }
     onSubmit = async (e)=>{
         e.preventDefault()
-        const result =await createProject(this.state.name,this.state.description)
+        const {name,description} =this.state
+        if(name =='') { 
+            alert('Project\'s name is required');
+            return
+        }
+        const result =await createProject(name,description)
         this.setState({
             name:'',
             description:''

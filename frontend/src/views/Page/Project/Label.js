@@ -86,6 +86,10 @@ class Label extends Component{
     onSubmit = async (e)=>{
         e.preventDefault()
         const {content,shortcut,backgroundColor,textColor} = this.state
+        if(content =='') {
+              alert('Label\'s content is required')
+              return
+        }
         await createLabel(this.props.match.params.id,content,shortcut,backgroundColor,textColor)
         this.setState({
             content:'',

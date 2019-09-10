@@ -43,7 +43,12 @@ class EditProjectModal extends Component{
     }
     onSubmit = async (e)=>{
         e.preventDefault()
-        const result =await editProject(this.state.id,this.state.name,this.state.description)
+        const {id,name,description} = this.state
+        if(name == '') {
+              alert('Project\'s name is required')
+              return
+        }
+        const result =await editProject(id,name,description)
         if(result) alert('Project has been updated')
         else alert('Failed to update this project')
         this.onToggle()
