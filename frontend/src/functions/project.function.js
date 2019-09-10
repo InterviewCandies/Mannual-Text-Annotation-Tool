@@ -1,9 +1,7 @@
 import axios from "axios";
-
 axios.defaults.headers.common={
     'auth-token' : localStorage.getItem('userToken')   
 }
-
 
 export const editProject = (id,name,description)=>{
     const data ={

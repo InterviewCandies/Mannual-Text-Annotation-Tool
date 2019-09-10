@@ -26,18 +26,20 @@ class DatasetTable extends Component {
     async componentDidMount(){
         const {currentPage,documentPerPage,sortKey,trend} = this.state
         const result = await listDocument(this.props.projectId,currentPage,documentPerPage,sortKey,trend)
+        const {dataset,size} = result
         this.setState({
-            dataset:result.dataset,
-            size:result.size,
-            loading:true
+            dataset:dataset,
+            size:size?size:0,
+            loading : true
         })
     }
     onChange=async()=>{
         const {currentPage,documentPerPage,sortKey,trend} = this.state
         const result = await listDocument(this.props.projectId,currentPage,documentPerPage,sortKey,trend)
+        const {dataset,size} = result
         this.setState({
-            dataset:result.dataset,
-            size:result.size
+            dataset:dataset,
+            size:size?size:0
         })
     }
     onSort=async (sortKey,trend)=>{
