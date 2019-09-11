@@ -101,6 +101,7 @@ class ProjectLayout extends Component {
                           )} />
                       ) : (null);
                     })}
+                    <Redirect from='/' to='/projects'></Redirect>
                   </Switch>
                 </Suspense>
               </Container>
