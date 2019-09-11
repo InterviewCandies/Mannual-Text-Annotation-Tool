@@ -120,7 +120,6 @@ class Label extends Component{
         })
     }
     render(){
-        console.log(this.state.labels.length)
         return(
            
             <Card className="m-sm-5">

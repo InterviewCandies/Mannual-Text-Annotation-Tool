@@ -10,12 +10,10 @@ module.exports =class Authentication{
              const token = jwt.sign(payload,SECRET_KEY);
             return token
       }
-
       verify(req,res,next){
             const token = req.header('auth-token');
             if(!token) return res.status(401).send('Acess denined')
             return jwt.verify(token,SECRET_KEY,function(err,decoded){
-                  console.log(decoded+'  '+SECRET_KEY)
                   if(err) return res.status(400).send('Invalid token');
                   return next();
             })

@@ -23,6 +23,19 @@ class EditLabelModal extends Component{
         this.onToggle = this.props.toggle
     }
  
+    componentDidUpdate(oldProps){
+        const props = this.props
+        const {project_id,content,shortcut,backgroundColor,textColor} =props.label
+        if(oldProps.label!=props.label) {
+           this.setState({
+             project_id :project_id,
+             content : content,
+             shortcut : shortcut,
+             backgroundColor: backgroundColor,
+             textColor : textColor
+           })
+        }
+    }
 
     onChangeContent=(e)=>{
         this.setState({

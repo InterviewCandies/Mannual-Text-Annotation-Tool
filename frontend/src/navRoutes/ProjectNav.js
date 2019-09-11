@@ -12,6 +12,12 @@ export default {
         url: `/project/${localStorage.getItem('projectId')}/labels`,
         icon: 'icon-speedometer',
         
+      },
+      {
+        name: 'Statistics',
+        url: `/project/${localStorage.getItem('projectId')}/labels`,
+        icon: 'icon-speedometer',
+        
       }
     
     ],

@@ -22,6 +22,9 @@ class ExportData extends Component{
         let result = await exportData(this.props.match.params.id)
         if(!result.length){
             alert('No dataset to download')
+            this.setState({
+                  jsonLoading : false
+            })
             return
         }
         const fileName = this.props.match.params.id;
@@ -45,6 +48,9 @@ class ExportData extends Component{
         let result = await exportData(this.props.match.params.id)
         if(!result.length){
              alert('No dataset to download')
+             this.setState({
+                   csvLoading : false
+             })
              return
         }
          const fileName = this.props.match.params.id;

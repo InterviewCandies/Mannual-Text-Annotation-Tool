@@ -20,8 +20,8 @@ class DeleteLabelModal extends Component{
         if(result) alert('Label has been removed from this project and its documents')
         else alert('Failed to delete this label')
         this.toggle()
-        this.props.close()
         this.props.action()
+        this.props.close()
     }
     componentDidUpdate(oldProps){
         const props = this.props

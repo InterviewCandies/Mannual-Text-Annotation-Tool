@@ -42,7 +42,14 @@ class ProjectLayout extends Component {
             url: `/project/${localStorage.getItem('projectId')}/labels`,
             icon: 'icon-puzzle',
             
+          },
+          {
+            name: 'Statistics',
+            url: `/project/${localStorage.getItem('projectId')}/statistics`,
+            icon: 'icon-chart',
+            
           }
+        
         
         ],
       };

@@ -113,18 +113,7 @@ export const get= (id) =>{
 }
 
 
-export const listUser= (project_id) =>{
-    const data ={
-        project_id: project_id,
-    }
-    return  axios.post('http://localhost:4000/textAnnotation/user/getUserByProject',data)
-            .then((res)=>{
-                    return res.data;
-            })
-            .catch(error=>{
-                return [];
-    })
-}
+
 
 export const removeUser= (user_id,project_id) =>{
     const data ={
