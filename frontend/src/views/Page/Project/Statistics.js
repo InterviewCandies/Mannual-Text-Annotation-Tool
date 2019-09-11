@@ -47,7 +47,7 @@ class Statistics extends Component {
            //Pie chart 
            const pieData ={
                 datasets: [{
-                data: [result.labeled,result.size],
+                data: [result.labeled,result.size-result.labeled],
                 backgroundColor : ['#63c2de','#f86c6b']
                 }],
                 labels: [
@@ -84,7 +84,7 @@ class Statistics extends Component {
            const {datasetSize,labelsNumber,usersNumber} = this.state
            return(
                 <div>
-                    {this.state.loading?<Spinner content="Charts"></Spinner>:
+                    {this.state.loading?<Spinner content="charts"></Spinner>:
                                        <div>
                                            <Row className="mt-sm-3">
                                                <Col xs="16" sm="8" lg="4">
