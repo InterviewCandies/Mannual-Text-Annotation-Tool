@@ -17,6 +17,9 @@ const document = new Schema({
           type: Array,
           default : []
       },
+      user: {
+          type: ObjectId
+      },
       created_at:{
           type: String,
           default: new Date().toLocaleString()

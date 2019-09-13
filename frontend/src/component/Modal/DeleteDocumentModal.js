@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { deleteDocument } from '../../functions/dataset.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class DeleteDocumentModal extends Component{
     constructor(props){
         super(props);
@@ -17,8 +19,8 @@ class DeleteDocumentModal extends Component{
     }
     onClick =async (e)=>{
         const result = await deleteDocument(this.state.id)
-        if(result) alert('Document has been removed from dataset')
-        else alert('Failed to delete thid document')
+        if(result) toast.success('Document has been removed from dataset')
+        else toast.error('Error: Failed to delete thid document')
         this.toggle()
         this.props.action()
     }
@@ -33,6 +35,8 @@ class DeleteDocumentModal extends Component{
     
        render(){
            return(
+            <div>
+                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.toggle}
                     className={'modal-danger ' + this.props.className}>
                 <ModalHeader toggle={this.toggle}>Delete document</ModalHeader>
@@ -45,7 +49,7 @@ class DeleteDocumentModal extends Component{
                   </ModalFooter>
                
                </Modal>
-
+            </div>
            )
        }
 }

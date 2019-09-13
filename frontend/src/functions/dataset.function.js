@@ -44,6 +44,7 @@ export const listDocument = (id,page,perPage,sortKey,trend) =>{
        }
        return axios.post('http://localhost:4000/textAnnotation/dataset/list/'+id,data)
        .then((res)=>{
+            console.log(res.data)
             return res.data
        })
        .catch(err=>{
@@ -101,7 +102,7 @@ export const annotate = (id,labels) =>{
 
      const data = {
           labels:labels,
-          role : decoder.role
+          user_id : decoder.id
      }
      return axios.post('http://localhost:4000/textAnnotation/dataset/annotate/'+id,data)
      .then((res)=>{

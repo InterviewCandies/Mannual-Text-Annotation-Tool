@@ -1,5 +1,5 @@
 import React,{Component} from 'react' 
-import {Doughnut,Bar} from 'react-chartjs-2'
+import {Doughnut,Bar, HorizontalBar} from 'react-chartjs-2'
 import { listDocument } from '../../../functions/dataset.function'
 import Spinner from '../../../component/Spinner/Spinner'
 import {
@@ -11,12 +11,14 @@ import {
 } from 'reactstrap'
 import { listLabel } from '../../../functions/label.function'
 import {  get } from '../../../functions/project.function'
+import { getUser } from '../../../functions/user.function'
 class Statistics extends Component {
      constructor(props){
           super(props)
           this.state={
                 pieData: {},
                 barData: {},
+                HorizontalBarData: {},
                 datasetSize : 0,
                 labelsNumber:0,
                 usersNumber:0,
@@ -34,6 +36,18 @@ class Statistics extends Component {
         let b=[]
 
         for(let i=0;i<labels.length;i++) b.push(a[ labels[i]])
+        
+        return b
+     }
+     countByUser(users,dataset){
+        let a=[]
+        for(let i=0;i<users.length;i++) a[ users[i] ]=0
+
+        for(let i =0;i<dataset.length;i++)
+             a[ dataset[i].user]+=1
+        let b=[]
+
+        for(let i=0;i<users.length;i++) b.push(a[ users[i]])
         
         return b
      }
@@ -64,17 +78,30 @@ class Statistics extends Component {
            const barData = {
             datasets: [{
                 data: this.countByLabel(labels,dataset),
-                backgroundColor : '#4dbd74',
+                backgroundColor : '#bf7fbf',
                 label : 'Labels'
             }],
             labels: labels
            }
+           //Horizontal data 
+           let project = await get(this.projectId)
+           let users = project.users
+           const usernames = users.map(user=>user.username)
+           users = users.map(user=>user.id)
+           const HorizontalBarData = {
+            datasets: [{
+                data: this.countByUser(users,dataset),
+                backgroundColor : '#99cc99',
+                label : 'Users'
+            }],
+            labels: usernames
+           }
            this.setState({
                pieData : pieData,
-               barData : barData
+               barData : barData,
+               HorizontalBarData : HorizontalBarData
            })
-           let project = await get(this.projectId)
-           const users = project.users
+           
            this.setState({ 
                usersNumber : users.length,
                loading: false
@@ -133,7 +160,7 @@ class Statistics extends Component {
                                                             responsive : true,
                                                             maintainAspectRatio: false,
                                                             scales: {
-                                                                yAxes: [
+                                                                xAxes: [
                                                                         {
                                                                             ticks: {
                                                                             min: 0,
@@ -143,9 +170,32 @@ class Statistics extends Component {
                                                                     ]
                                                                 }
                                                         }}
-                                                        width="500" 
-                                                        height="500">
+                                                        >
                                                     </Bar>
+                                                </CardBody>
+                                            </Card>
+                                            <Card>
+                                                <CardHeader>Users</CardHeader>
+                                                <CardBody>
+                                                    <HorizontalBar data ={this.state.HorizontalBarData}
+                                                        options={ {
+                                                            responsive : true,
+                                                            maintainAspectRatio: false,
+                                                            scales: {
+                                                                xAxes: [
+                                                                        {
+                                                                            ticks: {
+                                                                            min: 0,
+                                                                            max: datasetSize
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                        }}
+                                                       
+                                                       
+                                                      >
+                                                    </HorizontalBar>
                                                 </CardBody>
                                             </Card>
                                     </div>

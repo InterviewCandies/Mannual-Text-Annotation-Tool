@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { editProject } from '../../functions/project.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class EditProjectModal extends Component{
     constructor(props){
         super(props);
@@ -45,12 +47,12 @@ class EditProjectModal extends Component{
         e.preventDefault()
         const {id,name,description} = this.state
         if(name == '') {
-              alert('Project\'s name is required')
+              toast.error('Error: Project\'s name is required')
               return
         }
         const result =await editProject(id,name,description)
-        if(result) alert('Project has been updated')
-        else alert('Failed to update this project')
+        if(result) toast.success('Project has been updated')
+        else toast.error('Error: Failed to update this project')
         this.onToggle()
         this.props.action()
      

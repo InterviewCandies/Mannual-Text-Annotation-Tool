@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { deleteProject } from '../../functions/project.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class DeleteProjectModal extends Component{
     constructor(props){
         super(props);
@@ -17,8 +19,8 @@ class DeleteProjectModal extends Component{
     }
     onClick =async (e)=>{
         const result =await deleteProject(this.state.id)
-        if(result) alert('Project has been removed successsfully')
-        else alert('Failed to delete this project')
+        if(result) toast.success('Project has been removed successsfully')
+        else toast.error('Error: Failed to delete this project')
         this.toggle()
         this.props.action()
     }
@@ -33,6 +35,8 @@ class DeleteProjectModal extends Component{
     
        render(){
            return(
+               <div>
+                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.toggle}
                     className={'modal-danger ' + this.props.className}>
                 <ModalHeader toggle={this.toggle}>Delete project</ModalHeader>
@@ -45,7 +49,7 @@ class DeleteProjectModal extends Component{
                   </ModalFooter>
                
                </Modal>
-
+             </div>
            )
        }
 }

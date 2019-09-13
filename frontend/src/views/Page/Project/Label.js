@@ -6,6 +6,8 @@ import {
     Button,
     ButtonGroup,
 } from 'reactstrap'
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import { createLabel, listLabel } from '../../../functions/label.function';
 import EditLabelModal from '../../../component/Modal/EditLabelModal';
 
@@ -87,7 +89,7 @@ class Label extends Component{
         e.preventDefault()
         const {content,shortcut,backgroundColor,textColor} = this.state
         if(content =='') {
-              alert('Label\'s content is required')
+              toast.warn('Warning: Label\'s content is required')
               return
         }
         await createLabel(this.props.match.params.id,content,shortcut,backgroundColor,textColor)
@@ -121,7 +123,8 @@ class Label extends Component{
     }
     render(){
         return(
-           
+            <div>
+            <ToastContainer></ToastContainer>
             <Card className="m-sm-5">
                 <CardHeader>
                     <h5>Label editor</h5>
@@ -196,7 +199,7 @@ class Label extends Component{
                 </CardBody>
                 
             </Card>
-            
+            </div>
            
         )
     }

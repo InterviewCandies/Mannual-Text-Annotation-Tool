@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { createProject } from '../../functions/project.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class CreateProjectModal extends Component{
     constructor(props){
         super(props);
@@ -34,7 +36,7 @@ class CreateProjectModal extends Component{
         e.preventDefault()
         const {name,description} =this.state
         if(name =='') { 
-            alert('Project\'s name is required');
+            toast.error('Error: Project\'s name is required');
             return
         }
         const result =await createProject(name,description)
@@ -42,13 +44,15 @@ class CreateProjectModal extends Component{
             name:'',
             description:''
         })
-        if(result) alert('Project has been added')
-        else alert('Failed to create project')
+        if(result) toast.success('Project has been added')
+        else toast.error('Error: Failed to create project')
         this.onToggle()
         this.props.action()
     }
        render(){
            return(
+               <div>
+                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-success ' + this.props.className}>
                 <ModalHeader toggle={this.onToggle}>Create new project</ModalHeader>
@@ -83,7 +87,7 @@ class CreateProjectModal extends Component{
                     <Button color="secondary" onClick={this.onToggle}>Cancel</Button>
                   </ModalFooter>
                </Modal>
-
+            </div>
            )
        }
 }

@@ -5,11 +5,14 @@ import {
     CardBody,
     Button,
 } from 'reactstrap'
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import { sendFile } from '../../../functions/dataset.function';
 import txt from '../../../files/Sample.txt'
 import jsonData from '../../../files/Sample'
 
 class ImportData extends Component{
+   
     constructor(props){
         super(props)
         this.state={
@@ -32,8 +35,8 @@ class ImportData extends Component{
             const href = await URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = href;
-            link.target ='_blank'
             document.body.appendChild(link);
+            link.download = "Sample.json"
             link.click();
             document.body.removeChild(link);
           
@@ -43,22 +46,21 @@ class ImportData extends Component{
         if(fileList.length!=0) {
             const result =await sendFile(fileList[0],this.props.match.params.id)
             if(result.response) {
-                if(result.response.status==400) alert(result.response.data.message)
+                if(result.response.status==400) toast.error('Error: '+result.response.data.message)
                 
             }
             else { 
-                alert('File has been submited')
+                toast.success('Success: File has been submited')
                 this.props.history.push(`/project/${this.props.match.params.id}/dataset`)
             }
-            this.setState({
-                filename : 'Choose file'
-            })
+           
         }
-        else alert('No file selected')
+        else toast.error('Error: No file selected')
     }
     render(){
         return(
-           
+          <div>
+            <ToastContainer></ToastContainer>
             <Card className="m-sm-5" >
                 <CardHeader>
                     <h5>Import Dataset</h5>
@@ -67,7 +69,7 @@ class ImportData extends Component{
                     <strong>To annotate text, you need to import a set of text items</strong>
                     <ul>
                         <li>TXT file: each line should contain a text  
-                        <a href={txt}  target="_blank"> (Sample txt file)</a>    
+                        <a href={txt} download> (Sample txt file)</a>    
                         </li>
                         <li>JSON file: each line should contain a json object at least one key
                            <a  href='javascript:void(0);'  onClick={ this.download.bind(this) }> (Sample json file)</a>    
@@ -92,8 +94,7 @@ class ImportData extends Component{
                     </div>
                 </CardBody>
             </Card>
-            
-               
+          </div>
             
         )
     }

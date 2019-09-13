@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { editDocument } from '../../functions/dataset.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class EditDocumentModal extends Component{
     constructor(props){
         super(props);
@@ -37,14 +39,16 @@ class EditDocumentModal extends Component{
         e.preventDefault()
         const result=await editDocument(this.state.id,this.state.content)
 
-        if(result) alert('Document has been updated')
-        else  alert('Failed to edit this document')
+        if(result) toast.success('Document has been updated')
+        else  toast.error('Error: Failed to edit this document')
 
         this.onToggle()
         this.props.action()   
     }
        render(){
            return(
+             <div>
+                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-info ' + this.props.className}>
                 <ModalHeader toggle={this.onToggle}>Edit document</ModalHeader>
@@ -67,7 +71,7 @@ class EditDocumentModal extends Component{
                     <Button color="secondary" onClick={this.onToggle}>Cancel</Button>
                   </ModalFooter>
                </Modal>
-
+            </div>
            )
        }
 }

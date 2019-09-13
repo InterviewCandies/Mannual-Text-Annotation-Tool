@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { deleteProject, listUser, removeUser } from '../../functions/project.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class RemoveUserModal extends Component{
     constructor(props){
         super(props);
@@ -25,8 +27,8 @@ class RemoveUserModal extends Component{
     }
     onClick =async (e)=>{
         const result =await removeUser(this.state.user,this.state.id)
-        if(result) alert('User has been removed from this project')
-        else alert('Failed to remove user')
+        if(result) toast.success('User has been removed from this project')
+        else toast.warn('Error: Failed to remove user')
         this.toggle()
         this.props.action()
      
@@ -34,7 +36,7 @@ class RemoveUserModal extends Component{
     
     async componentDidUpdate(oldProps){
         const props = this.props
-        if(oldProps.data!=props.data) {
+        if(oldProps.data!=props.data || oldProps.users != props.users) {
            this.setState({
              id : props.data.id,
              users : props.users
@@ -45,6 +47,8 @@ class RemoveUserModal extends Component{
     
        render(){
            return(
+               <div>
+                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.toggle}
                     className={'modal-danger ' + this.props.className}>
                 <ModalHeader toggle={this.toggle}>Remove user</ModalHeader>
@@ -61,7 +65,7 @@ class RemoveUserModal extends Component{
                   </ModalFooter>
                
                </Modal>
-
+            </div>
            )
        }
 }

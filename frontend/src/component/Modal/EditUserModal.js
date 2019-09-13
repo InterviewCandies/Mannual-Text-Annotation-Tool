@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { createUser, editUser } from '../../functions/user.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class EditUserModal extends Component{
     constructor(props){
         super(props);
@@ -52,17 +54,17 @@ class EditUserModal extends Component{
     onSubmit = async (e)=>{
         e.preventDefault()
         const {id,username,password,role} = this.state
-        if(username=='') {
-              alert('Username is required')
+        if(username =='') {
+              toast.error('Error: Username is required')
               return
         }
-        if(password=='') {
-            alert('Password is required')
+        if(password =='') {
+            toast.error('Error: Password is required')
             return
-      }
+       }
         const result =await editUser(id,username,password,role)
         if(result.message) {
-             alert(result.message)
+             toast.warn('Warning '+ result.message)
              this.setState( {
                 id : this.props.data.id,
                 username :  this.props.data.username,
@@ -71,11 +73,8 @@ class EditUserModal extends Component{
              })
              return
         }
-        this.setState({
-            username :'',
-            password:'',
-            role:0
-        })
+        toast.success('User profile has been updated')
+       
           
         this.onToggle()
         this.props.action()

@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { removeLabel } from '../../functions/label.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class DeleteLabelModal extends Component{
     constructor(props){
         super(props);
@@ -17,8 +19,8 @@ class DeleteLabelModal extends Component{
     }
     onClick =async (e)=>{
         const result =await removeLabel(this.state.id)
-        if(result) alert('Label has been removed from this project and its documents')
-        else alert('Failed to delete this label')
+        if(result) toast.success('Label has been removed from this project and its documents')
+        else toast.error('Error: Failed to delete this label')
         this.toggle()
         this.props.action()
         this.props.close()
@@ -34,6 +36,8 @@ class DeleteLabelModal extends Component{
     
        render(){
            return(
+            <div>
+                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.toggle}
                     className={'modal-danger ' + this.props.className}>
                 <ModalHeader toggle={this.toggle}>Delete label</ModalHeader>
@@ -46,7 +50,7 @@ class DeleteLabelModal extends Component{
                   </ModalFooter>
                
                </Modal>
-
+            </div>
            )
        }
 }

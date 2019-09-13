@@ -8,6 +8,8 @@ import {
 } from 'reactstrap'
 import { editLabel } from '../../functions/label.function';
 import DeleteLabelModal from './DeleteLabelModal';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class EditLabelModal extends Component{
     constructor(props){
         super(props);
@@ -63,7 +65,7 @@ class EditLabelModal extends Component{
         e.preventDefault()
         const {project_id,content,shortcut,backgroundColor,textColor} =this.state
         if(content =='') {
-             alert('Label\'s content is required');
+             toast.error('Error: Label\'s content is required');
              return
         }
         const result =await editLabel(this.props.label.id,project_id,content,shortcut,backgroundColor,textColor)
@@ -77,6 +79,8 @@ class EditLabelModal extends Component{
     }
        render(){
            return(
+            <div>
+                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-primary ' + this.props.className}>
                 <ModalHeader toggle={this.onToggle}>Edit label</ModalHeader>
@@ -128,7 +132,7 @@ class EditLabelModal extends Component{
                     <Button color="secondary" onClick={this.onToggle}>Cancel</Button>
                   </ModalFooter>
                </Modal>
-
+            </div>
            )
        }
 }

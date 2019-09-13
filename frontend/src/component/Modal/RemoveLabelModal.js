@@ -18,7 +18,6 @@ class RemoveLabelModal extends Component{
        this.toggle = this.props.toggle  
     }
     onChange=(e)=>{
-         console.log(e.target.value)
          this.setState({
              label : e.target.value
          })

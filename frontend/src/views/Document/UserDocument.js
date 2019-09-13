@@ -12,6 +12,9 @@ import { listLabel } from '../../functions/label.function';
 import { get } from '../../functions/project.function';
 import Spinner from '../../component/Spinner/Spinner';
 import NoRecord from '../Page/NoRecord/NoRecord';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 class LabelCard  extends Component{
   constructor(props){
     super(props)
@@ -41,7 +44,7 @@ class UserDocument extends Component {
     super(props);
     this.state={
           size:0,
-          document : {},
+          doc : {},
           labels:[],
           labelList:[],
           labeled:0,
@@ -65,7 +68,7 @@ class UserDocument extends Component {
         })
         if(result.labeled!=result.size){
              this.setState({
-                   document: result.dataset[0],
+                   doc: result.dataset[0],
                    labelList: result.dataset[0].labels,
              })
         } 
@@ -75,13 +78,11 @@ class UserDocument extends Component {
   }
   onClick =async (e)=>{
        
-        const {id} = this.state.document
-
-      
-
+        const {id} = this.state.doc
+        if (!id) return 
         let result =await annotate(id,this.state.labelList) 
         if(result.response) {
-          if(result.response.status==400) alert(result.response.data.message)
+          if(result.response.status==400) toast.warn('Warning: ' +result.response.data.message)
         }
         
         document.getElementById('spinner').style.display='flex'
@@ -99,11 +100,11 @@ class UserDocument extends Component {
         })
         if(result.labeled!=result.size){
              this.setState({
-                   document: result.dataset[0],
+                   doc: result.dataset[0],
                    labelList : result.dataset[0].labels,
              })
         } 
-        else this.setState({ labelList: [], document:{} })
+        else this.setState({ labelList: [], doc:{} })
   }
   onLabelClick =(e,label)=>{
      let {labelList} = this.state
@@ -140,7 +141,7 @@ class UserDocument extends Component {
     onKeyPress = (e)=>{
       e = e || window.event; 
       map[e.keyCode] = e.type == 'keydown';
-      if(map[39]) {
+      if(map[39]|| map[13]) {
         e.target.value=1
         this.onClick(e)
       }
@@ -163,10 +164,10 @@ class UserDocument extends Component {
 
   render() {
     
-    const {document,size,labels,labelList,labeled} = this.state
+    const {doc,size,labels,labelList,labeled} = this.state
     return (
-     
-     
+        <div>
+          <ToastContainer></ToastContainer>
           <div>{this.state.loading?  
             <div>
                   <Container fluid className="m-lg-5">
@@ -177,7 +178,7 @@ class UserDocument extends Component {
                     <div>{`Labeled documents: ${labeled}/${size}`}</div>
                   </div>  
                   </Container>
-             { (document.content)?
+             { (doc.content)?
                  <div> 
                   <div id="spinner" style={{display:'none'}}>
                       <Spinner content='document'></Spinner>
@@ -191,22 +192,22 @@ class UserDocument extends Component {
                         {
                           (labelList.length)? labelList.map((label,i)=><LabelCard label={label} action={this.onRemoveLabel} key={i}></LabelCard>) : <div></div>
                         }
-                        <h4>{document.content}</h4>
+                        <h4>{doc.content}</h4>
                         
                     </CardBody>
                   </Card>
-                  <div className="d-flex flex-row justify-content-center"  >
+                  <div className="d-flex flex-row justify-content-center "  >
                         <Button color="primary"  
                                 id = "next"
-                                className="mb-sm-2" 
-                                onClick={this.onClick}
+                                className="mb-sm-2 btn btn-primary btn-lg" 
+                                onClick={this.onClick} 
                                 style={{width:'10%'}}>
-                                <i className="fa fa-forward"></i>
+                                Next  <i className="fa fa-forward"></i> 
                         </Button>
                   </div>     
               </div>
           : <NoRecord content="document"></NoRecord> } </div> : <Spinner content='document'></Spinner>}</div> 
-          
+        </div>
     );
   }
 }

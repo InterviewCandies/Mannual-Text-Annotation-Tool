@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { deleteUser } from '../../functions/user.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class DeleteUserModal extends Component{
     constructor(props){
         super(props);
@@ -17,8 +19,8 @@ class DeleteUserModal extends Component{
     }
     onClick =async (e)=>{
         const result =await deleteUser(this.state.id)
-        if(result) alert('User has been removed successsfully')
-        else alert('Failed to delete this user')
+        if(result) toast.success('User has been removed successsfully')
+        else toast.error('Error: Failed to delete this user')
         this.toggle()
         this.props.action()
     }
@@ -33,19 +35,21 @@ class DeleteUserModal extends Component{
     
        render(){
            return(
-                <Modal isOpen={this.props.trigger} toggle={this.toggle}
-                    className={'modal-danger ' + this.props.className}>
-                <ModalHeader toggle={this.toggle}>Delete user</ModalHeader>
-                <ModalBody>
-                    <p>Do you really want to delete this user?</p>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="danger" onClick={this.onClick}>Delete</Button>{' '}
-                    <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                  </ModalFooter>
-               
-               </Modal>
-
+               <div>
+                    <ToastContainer></ToastContainer>
+                    <Modal isOpen={this.props.trigger} toggle={this.toggle}
+                        className={'modal-danger ' + this.props.className}>
+                    <ModalHeader toggle={this.toggle}>Delete user</ModalHeader>
+                    <ModalBody>
+                        <p>Do you really want to delete this user?</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="danger" onClick={this.onClick}>Delete</Button>{' '}
+                        <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                    </ModalFooter>
+                
+                </Modal>
+               </div>
            )
        }
 }

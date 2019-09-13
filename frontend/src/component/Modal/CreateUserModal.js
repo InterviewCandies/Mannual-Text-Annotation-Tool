@@ -7,6 +7,8 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { createUser } from '../../functions/user.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class CreateUserModal extends Component{
     constructor(props){
         super(props);
@@ -47,22 +49,22 @@ class CreateUserModal extends Component{
         e.preventDefault()
         const {username,password1,password2,role} = this.state
         if(username ==''){
-              alert('Username is required')
+              toast.error('Error: Username is required')
               return
         }
         if(password1==''){
-              alert('Password is required')
+              toast.error('Error: Password is required')
               return
         }
         if(password1!==password2){ 
-            alert('Password is not correct')
+            toast.error('Error: Password is not correct')
             return
         }
         const result =await createUser(username,password1,role)
         if(result.response) {
-            if(result.response.status==400) alert(result.response.data.message)
+            if(result.response.status==400) toast.error('Error ' +result.response.data.message)
         }
-        else alert('User has been created')
+        else toast.success('User has been created')
         this.setState({
             username :'',
             password1:'',
@@ -75,6 +77,8 @@ class CreateUserModal extends Component{
     }
        render(){
            return(
+               <div>
+                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-success ' + this.props.className}>
                 <ModalHeader toggle={this.onToggle}>Create new user</ModalHeader>
@@ -134,7 +138,7 @@ class CreateUserModal extends Component{
                     <Button color="secondary" onClick={this.onToggle}>Cancel</Button>
                   </ModalFooter>
                </Modal>
-
+            </div>
            )
        }
 }

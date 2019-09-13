@@ -9,6 +9,8 @@ import {
 } from 'reactstrap'
 import { addUser } from '../../functions/project.function';
 import { userList } from '../../functions/user.function';
+import {ToastContainer,toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 class AddUserModal extends Component{
     constructor(props){
         super(props);
@@ -24,10 +26,10 @@ class AddUserModal extends Component{
         const result =await addUser(this.state.user.value,this.state.id)
         this.setState({ user:{}})
         if(result.response) {
-            if(result.response.status==400) alert(result.response.data.message)
+            if(result.response.status==400) toast.error('Error: '+ result.response.data.message)
             
         }
-        else alert('User has been added to this project')
+        else toast.success('User has been added to this project')
         this.toggle()
         this.props.action()
     }
@@ -61,6 +63,8 @@ class AddUserModal extends Component{
     render(){
         const options = this.state.users
         return(
+           <div>
+            <ToastContainer></ToastContainer>
             <Modal isOpen={this.props.trigger} toggle={this.toggle} 
                 className={'modal-info ' + this.props.className} onClick={(e)=>{e.stopPropagation()}} >
             <ModalHeader toggle={this.toggle}>Add new user</ModalHeader>
@@ -76,7 +80,7 @@ class AddUserModal extends Component{
                 </ModalFooter>
             
             </Modal>
-
+        </div> 
         )
     }
 }
