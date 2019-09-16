@@ -37,7 +37,7 @@ class CreateProjectModal extends Component{
       
         const {name,description} =this.state
         if(name ==='') { 
-            return toast('Error: Project\'s name is required');
+            return toast.error('Error: Project\'s name is required');
         }
         const result =await createProject(name,description)
         this.setState({
