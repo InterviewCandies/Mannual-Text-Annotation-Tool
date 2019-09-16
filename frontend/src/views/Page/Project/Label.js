@@ -91,6 +91,7 @@ class Label extends Component{
         if(content =='') {
               toast.warn('Warning: Label\'s content is required')
               return
+
         }
         await createLabel(this.props.match.params.id,content,shortcut,backgroundColor,textColor)
         this.setState({
@@ -124,7 +125,7 @@ class Label extends Component{
     render(){
         return(
             <div>
-            <ToastContainer></ToastContainer>
+           
             <Card className="m-sm-5">
                 <CardHeader>
                     <h5>Label editor</h5>
@@ -132,7 +133,6 @@ class Label extends Component{
                 <CardBody>
                  <div className="d-flex flex-row flex-wrap">
                         {this.state.labels.map((label,i)=>{ 
-                            console.log(label)
                             return <LabelTag content={label.content} 
                                             shortcut={label.shortcut}
                                             backgroundColor={label.backgroundColor}

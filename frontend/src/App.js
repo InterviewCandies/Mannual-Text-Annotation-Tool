@@ -5,6 +5,7 @@ import jwt_decode from 'jwt-decode'
 import ProjectLayout from './containers/ProjectLayout/ProjectLayout';
 import DocumentLayout from './containers/DocumentLayout/DocumentLayout';
 import Spinner from './component/Spinner/Spinner';
+import { ToastContainer } from 'react-toastify';
 const loading = () => <Spinner></Spinner>;
 
 // Containers
@@ -46,6 +47,7 @@ class App extends Component {
                       } />
             </Switch>
           </React.Suspense>
+          <ToastContainer></ToastContainer>
       </HashRouter>
     );
   }

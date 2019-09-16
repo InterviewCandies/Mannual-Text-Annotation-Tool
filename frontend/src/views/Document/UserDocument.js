@@ -167,7 +167,6 @@ class UserDocument extends Component {
     const {doc,size,labels,labelList,labeled} = this.state
     return (
         <div>
-          <ToastContainer></ToastContainer>
           <div>{this.state.loading?  
             <div>
                   <Container fluid className="m-lg-5">

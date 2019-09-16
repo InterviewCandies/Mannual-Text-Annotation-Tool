@@ -78,7 +78,6 @@ class CreateUserModal extends Component{
        render(){
            return(
                <div>
-                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-success ' + this.props.className}>
                 <ModalHeader toggle={this.onToggle}>Create new user</ModalHeader>

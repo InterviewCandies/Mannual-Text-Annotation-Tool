@@ -80,7 +80,6 @@ class EditLabelModal extends Component{
        render(){
            return(
             <div>
-                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-primary ' + this.props.className}>
                 <ModalHeader toggle={this.onToggle}>Edit label</ModalHeader>

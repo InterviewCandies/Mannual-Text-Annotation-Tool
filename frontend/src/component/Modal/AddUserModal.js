@@ -64,7 +64,6 @@ class AddUserModal extends Component{
         const options = this.state.users
         return(
            <div>
-            <ToastContainer></ToastContainer>
             <Modal isOpen={this.props.trigger} toggle={this.toggle} 
                 className={'modal-info ' + this.props.className} onClick={(e)=>{e.stopPropagation()}} >
             <ModalHeader toggle={this.toggle}>Add new user</ModalHeader>

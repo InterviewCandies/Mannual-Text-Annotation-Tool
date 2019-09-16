@@ -48,7 +48,6 @@ class EditDocumentModal extends Component{
        render(){
            return(
              <div>
-                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-info ' + this.props.className}>
                 <ModalHeader toggle={this.onToggle}>Edit document</ModalHeader>

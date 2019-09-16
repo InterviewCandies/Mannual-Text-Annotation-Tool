@@ -41,7 +41,7 @@ class ImportData extends Component{
             document.body.removeChild(link);
           
       }
-    onClick=async (e)=>{
+    onUpload=async (e)=>{
         const {fileList} = this.state
         if(fileList.length!=0) {
             const result =await sendFile(fileList[0],this.props.match.params.id)
@@ -60,7 +60,6 @@ class ImportData extends Component{
     render(){
         return(
           <div>
-            <ToastContainer></ToastContainer>
             <Card className="m-sm-5" >
                 <CardHeader>
                     <h5>Import Dataset</h5>
@@ -89,7 +88,7 @@ class ImportData extends Component{
                         </div>
                     <br></br>
                     <div className="mt-sm-5">
-                        <Button color="primary" onClick={this.onClick}>Upload dataset</Button>{' '}
+                        <Button color="primary" onClick={this.onUpload}>Upload dataset</Button>{' '}
                         <Button color="secondary">Cancel</Button>
                     </div>
                 </CardBody>

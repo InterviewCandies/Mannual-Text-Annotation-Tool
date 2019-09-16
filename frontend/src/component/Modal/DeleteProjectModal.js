@@ -36,7 +36,6 @@ class DeleteProjectModal extends Component{
        render(){
            return(
                <div>
-                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.toggle}
                     className={'modal-danger ' + this.props.className}>
                 <ModalHeader toggle={this.toggle}>Delete project</ModalHeader>

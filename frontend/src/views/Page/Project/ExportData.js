@@ -82,7 +82,6 @@ class ExportData extends Component{
     render(){
         return(
             <div>
-                <ToastContainer></ToastContainer>
                 <Card className="m-sm-5" >
                     <CardHeader>
                         <h5>Export Dataset</h5>

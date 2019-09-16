@@ -34,10 +34,10 @@ class CreateProjectModal extends Component{
     }
     onSubmit = async (e)=>{
         e.preventDefault()
+      
         const {name,description} =this.state
-        if(name =='') { 
-            toast.error('Error: Project\'s name is required');
-            return
+        if(name ==='') { 
+            return toast('Error: Project\'s name is required');
         }
         const result =await createProject(name,description)
         this.setState({
@@ -52,9 +52,8 @@ class CreateProjectModal extends Component{
        render(){
            return(
                <div>
-                <ToastContainer></ToastContainer>
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
-                    className={'modal-success ' + this.props.className}>
+                    className={'modal-success ' + this.props.className} onClick={(e)=>e.stopPropagation()}>
                 <ModalHeader toggle={this.onToggle}>Create new project</ModalHeader>
                 <ModalBody>
                   <form>
