@@ -35,7 +35,7 @@ class DatasetController {
     const fileType = filename.split('.').pop()
     const result = await this.importDataset.execute(project_id, file, fileType);
     try {
-      if (!result) throw Error('Failed to import file.Check out your file')
+      if ( result != 0 && !result) throw Error('Failed to import file.Check out your file')
       res.status(200).json(result);
     } catch (error) {
       res.status(400).send({ message: error.message });
@@ -47,6 +47,8 @@ class DatasetController {
     const result = await this.exportDataset.execute(project_id);
     try {
       res.status(200).json(result);
+      console.log(result.length)
+
     } catch (error) {
       res.status(400).send(error);
     }

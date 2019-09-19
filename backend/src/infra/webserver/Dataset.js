@@ -2,7 +2,19 @@ const express = require('express');
 const multer = require('multer');
 const fileFilter = require('../utils/file-filter');
 
-const upload = multer({ dest: 'uploads/', fileFilter }).single('file');
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    return cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    let ext = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
+    return cb(null, Date.now() + ext);
+  },
+  
+})
+
+
+const upload = multer({ storage:storage, fileFilter : fileFilter }).single('file');
 
 module.exports = ({ datasetController }) => {
   const router = express.Router();

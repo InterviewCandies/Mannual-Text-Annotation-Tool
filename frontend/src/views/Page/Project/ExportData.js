@@ -47,7 +47,10 @@ class ExportData extends Component{
         this.setState({
             csvLoading : true
        })
+        console.log(this.props.match.params.id)
         let result = await exportData(this.props.match.params.id)
+        console.log(result)
+
         if(!result.length){
              toast.warn('Warning: No dataset to download')
              this.setState({

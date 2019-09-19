@@ -3,7 +3,7 @@ module.exports = class FileHandler {
     let arr = []
     if (fileType === 'json') {
       try {
-        arr = JSON.parse(contents.replace(/^\ufeff/g, '')) || []
+        arr = contents
         arr = arr.map((document) => document = document.text)
       } catch (e) {
         return false

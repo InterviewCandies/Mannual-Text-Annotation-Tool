@@ -27,7 +27,7 @@ class Statistics extends Component {
           this.projectId = localStorage.getItem('projectId')
        
      }
-     countByLabel(labels,dataset){
+     countByLabel(labels,dataset=[]){
         let a=[]
         for(let i=0;i<labels.length;i++) a[ labels[i] ]=0
 
@@ -39,7 +39,7 @@ class Statistics extends Component {
         
         return b
      }
-     countByUser(users,dataset){
+     countByUser(users,dataset=[]){
         let a=[]
         for(let i=0;i<users.length;i++) a[ users[i] ]=0
 

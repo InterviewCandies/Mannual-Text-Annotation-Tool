@@ -16,8 +16,9 @@ const sortQuery = (sortKey, trend) => {
 
 
 class ProjectGateway {
-  constructor({ ProjectModel, projectMapper }) {
+  constructor({ ProjectModel,DocumentModel, projectMapper }) {
     this.ProjectModel = ProjectModel
+    this.DocumentModel = DocumentModel
     this.projectMapper = projectMapper
   }
 
@@ -41,6 +42,8 @@ class ProjectGateway {
 
   async delete(id) {
     const result = await this.ProjectModel.deleteOne({ _id: id });
+    let ans={}
+    if(result.deletedCount)  await this.DocumentModel.deleteMany({project_id:id})
     // eslint-disable-next-line eqeqeq
     return result.deletedCount == 1
   }

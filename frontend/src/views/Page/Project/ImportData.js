@@ -17,7 +17,8 @@ class ImportData extends Component{
         super(props)
         this.state={
             filename: 'Choose file',
-            fileList : []
+            fileList : [],
+            loading : false
         }
     }
     onChange=(e)=>{
@@ -43,15 +44,28 @@ class ImportData extends Component{
       }
     onUpload=async (e)=>{
         const {fileList} = this.state
+        this.setState({
+              loading : true
+        })
         if(fileList.length!=0) {
+            toast.info('Loading your file to server. It might take a while')
             const result =await sendFile(fileList[0],this.props.match.params.id)
+           
             if(result.response) {
                 if(result.response.status==400) toast.error('Error: '+result.response.data.message)
                 
             }
             else { 
                 toast.success('Success: File has been submited')
-                this.props.history.push(`/project/${this.props.match.params.id}/dataset`)
+                toast.info('Proccessing your file. It might take a while')
+                if(result!=0) { 
+                    toast.success('Success: File has been processed successfully')
+                    this.setState({
+                        loading :false
+                   })
+                    this.props.history.push(`/project/${this.props.match.params.id}/dataset`)
+                }
+               
             }
            
         }
@@ -88,7 +102,9 @@ class ImportData extends Component{
                         </div>
                     <br></br>
                     <div className="mt-sm-5">
-                        <Button color="primary" onClick={this.onUpload}>Upload dataset</Button>{' '}
+                        {this.state.loading? <Button color="primary" disabled>Upload dataset</Button>
+                        :<Button color="primary" onClick={this.onUpload}>Upload dataset</Button>
+                        } {'  '}
                         <Button color="secondary">Cancel</Button>
                     </div>
                 </CardBody>
