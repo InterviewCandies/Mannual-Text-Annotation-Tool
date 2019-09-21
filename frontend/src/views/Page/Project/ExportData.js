@@ -6,9 +6,9 @@ import {
     Button,
     
 } from 'reactstrap'
-import {ToastContainer,toast} from 'react-toastify'
+import {toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import { exportData } from '../../../functions/dataset.function';
+import { exportData} from '../../../functions/dataset.function';
 class ExportData extends Component{
     constructor(props){
         super(props)
@@ -21,24 +21,24 @@ class ExportData extends Component{
         this.setState({
              jsonLoading : true
         })
-        let result = await exportData(this.props.match.params.id)
-        if(!result.length){
-            toast.warn('Warning: No dataset to download')
-            this.setState({
-                  jsonLoading : false
-            })
-            return
+        let result = await exportData(this.props.match.params.id,'json')
+        if(result.response) {
+            if(result.response.status==400) toast.error('Error: '+result.response.data.message)
         }
-        const fileName = this.props.match.params.id;
-        const json = JSON.stringify(result);
-        const blob = new Blob([json],{type:'application/json;charset=utf-8;'});
-        const href = await URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = href;
-        link.download = fileName + ".json";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        else {
+            if(result.url=='') { 
+                toast.warn('Warning: No dataset to download')
+            }
+            else {
+                const link = document.createElement('a');
+                link.href = `${result.url}`;
+                link.target = '_blank'
+                link.download = result.url.split('/').pop()
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
         this.setState({
             jsonLoading : false
        })
@@ -47,42 +47,29 @@ class ExportData extends Component{
         this.setState({
             csvLoading : true
        })
-        console.log(this.props.match.params.id)
-        let result = await exportData(this.props.match.params.id)
-        console.log(result)
-
-        if(!result.length){
-             toast.warn('Warning: No dataset to download')
-             this.setState({
-                   csvLoading : false
-             })
-             return
+        let result = await exportData(this.props.match.params.id,'csv')
+        if(result.response) {
+            if(result.response.status==400) toast.error('Error: '+result.response.data.message)
         }
-        const fileName = this.props.match.params.id;
-        const header = Object.keys(result[0])
-        const replacer = (key, value) => value === null ? '' : value 
-        let csv = result.map(row => header.map(fieldName => {  
-                let labels= JSON.stringify(row[fieldName], replacer) 
-                if(labels=='[]') labels=null; return labels;} 
-            ).join(',')   
-        )
-        csv.unshift(header.join(','))
-        csv = "\uFEFF"+csv.join('\r\n')
-        const blob = new Blob([csv],{
-            type: "text/csv;charset=utf-8;"
-        });
-        const href = await URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = href;
-        link.download = fileName + ".csv";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        else {
+            if(result.url=='') { 
+                toast.warn('Warning: No dataset to download')
+            }
+            else {
+                const link = document.createElement('a');
+                link.href = `${result.url}`;
+                link.target = '_blank'
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
         this.setState({
             csvLoading : false
        })
     } 
     render(){
+        const {csvLoading,jsonLoading} = this.state
         return(
             <div>
                 <Card className="m-sm-5" >
@@ -95,8 +82,16 @@ class ExportData extends Component{
                         <br></br>
                     
                         <div className="mt-sm-5">
-                            <Button color="primary" onClick={this.onCSVClick}  disabled={this.state.csvLoading}>Download CSV file</Button>{' '}
-                            <Button color="primary" onClick={this.onJSONClick} disabled={this.state.jsonLoading}>Download JSON file</Button>
+                            {csvLoading? 
+                                <Button color="primary"  disabled> <i className="fa fa-spinner fa-spin"></i> Download CSV file</Button>
+                                :
+                                <Button color="primary" onClick={this.onCSVClick}  >Download CSV file</Button>
+                            }{' '}
+                            {jsonLoading? 
+                                <Button color="primary"  disabled> <i className="fa fa-spinner fa-spin"></i> Download JSON file</Button>
+                                :
+                                <Button color="primary" onClick={this.onJSONClick}  >Download JSON file</Button>
+                            }
                         </div>
                     </CardBody>
                 </Card>

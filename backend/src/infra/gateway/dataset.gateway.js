@@ -3,15 +3,17 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.mongo
 
 class DatasetGateway {
-  constructor({ DocumentModel, documentMapper }) {
+  constructor({ DocumentModel, documentMapper, database }) {
     this.DocumentModel = DocumentModel;
     this.documentMapper = documentMapper
+    this.database = database
   }
 
   async findById(id) {
     const document = await this.DocumentModel.findOne({ _id: id })
     return this.documentMapper.toEntity(document)
   }
+
 
   async importData(project_id, dataset) {
     const dbItem= dataset.map(content=> { return {project_id : project_id ,content : content} })  
@@ -47,6 +49,7 @@ class DatasetGateway {
             },
           },
         } } }])
+    
     return documents.map(this.documentMapper.toEntity)
   }
 

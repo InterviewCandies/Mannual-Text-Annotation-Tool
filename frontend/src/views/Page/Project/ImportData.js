@@ -48,7 +48,6 @@ class ImportData extends Component{
               loading : true
         })
         if(fileList.length!=0) {
-            toast.info('Loading your file to server. It might take a while')
             const result =await sendFile(fileList[0],this.props.match.params.id)
            
             if(result.response) {
@@ -57,9 +56,8 @@ class ImportData extends Component{
             }
             else { 
                 toast.success('Success: File has been submited')
-                toast.info('Proccessing your file. It might take a while')
-                if(result!=0) { 
-                    toast.success('Success: File has been processed successfully')
+                if(result) { 
+                    toast.info('Proccessing your file. It might take a while. Refresh to see changes')
                     this.setState({
                         loading :false
                    })
@@ -69,7 +67,10 @@ class ImportData extends Component{
             }
            
         }
-        else toast.error('Error: No file selected')
+        else  toast.error('Error: No file selected')
+        this.setState({
+            loading :false
+       })
     }
     render(){
         return(
@@ -102,7 +103,7 @@ class ImportData extends Component{
                         </div>
                     <br></br>
                     <div className="mt-sm-5">
-                        {this.state.loading? <Button color="primary" disabled>Upload dataset</Button>
+                        {this.state.loading? <Button color="primary" disabled> <i className="fa fa-spinner fa-spin"></i> Upload dataset</Button>
                         :<Button color="primary" onClick={this.onUpload}>Upload dataset</Button>
                         } {'  '}
                         <Button color="secondary">Cancel</Button>

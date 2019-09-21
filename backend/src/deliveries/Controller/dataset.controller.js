@@ -12,6 +12,7 @@ class DatasetController {
     this.searchDocument = searchDocument
     this.annotateDocument = annotateDocument
     this.exportDataset = exportDataset
+
     this.importData = this.importData.bind(this)
     this.exportData = this.exportData.bind(this)
     this.list = this.list.bind(this)
@@ -44,16 +45,15 @@ class DatasetController {
 
   async exportData(req, res) {
     const project_id = req.params.id
-    const result = await this.exportDataset.execute(project_id);
+    const {fileType} = req.body
+    const result = await this.exportDataset.execute(project_id,fileType);
     try {
       res.status(200).json(result);
-      console.log(result.length)
-
     } catch (error) {
       res.status(400).send(error);
     }
   }
-
+  
 
   async get(req, res) {
     const project_id = req.params.id

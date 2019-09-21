@@ -7,36 +7,46 @@ class ImportDataUseCase {
     this.fileHandler = fileHandler
   }
 
+   
+
   async execute(project_id, file, fileType) {
     //json
     if(fileType=='json') {
       let dataset = require('../../../uploads/'+file.filename)
       dataset = dataset.map((document) =>  document.text)
-      let i=0;
-      let temp=[]
-      while(i<dataset.length) {
-         temp.push(dataset[i]);
+      
+
+      const forLoop = async (dataset) => {
+        let temp=[]
+        let i=0;
+        for (let document of dataset) {
+          temp.push(document);
           i++;
           if(i%1000 ==0 ) {
               await this.datasetGateway.importData(project_id,temp)
               temp=[]
           } 
+        }
+        return temp
       }
-      await this.datasetGateway.importData(project_id,temp)
+      const rest = await forLoop(dataset)
+      await this.datasetGateway.importData(project_id,rest)
       return dataset
     }
     else {
       //txt file
       const that =this;
+
       const rl = readline.createInterface({
       input : fs.createReadStream(file.path),
       output: process.stdout,
-      terminal: false
+      terminal: false,
       })
-      let num =0;
+      let num=0;
       let dataset=[]
       let paused = false
       let datasetTmp =[]
+     
       rl.on('line',function(line){
           num++;
           if(paused) datasetTmp.push(line)
@@ -52,11 +62,12 @@ class ImportDataUseCase {
           rl.resume()
       })
       rl.on('resume',function(){  paused=false });
+     
       rl.on('close', async function() { 
         await that.datasetGateway.importData(project_id,dataset)
-        return 1
       })
-      return 0
+      return dataset
+        
     }
   }
 

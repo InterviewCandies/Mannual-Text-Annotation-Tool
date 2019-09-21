@@ -21,9 +21,11 @@ export const sendFile=(file,id)=>{
 }
 
 
-export const exportData =(id)=>{
-   
-     return axios.post('http://localhost:4000/textAnnotation/dataset/export/'+id)
+export const exportData =(id,fileType)=>{
+     const data = {
+          fileType 
+     }
+     return axios.post('http://localhost:4000/textAnnotation/dataset/export/'+id,data)
            .then((res)=>{
                 return res.data
            })

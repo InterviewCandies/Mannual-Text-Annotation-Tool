@@ -1,7 +1,8 @@
 {
     "Server": {
         "PORT": 4000,
-        "SECRET_KEY" : "Secret"
+        "SECRET_KEY" : "Secret",
+        "TIMEOUT" : 1200000
     },
     "Db": {
         "connectedString" : "mongodb+srv://Thang:voquocthang@text-annotation-g9uqn.mongodb.net/TextAnnotation?retryWrites=true&w=majority"

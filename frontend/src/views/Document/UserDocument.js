@@ -66,6 +66,7 @@ class UserDocument extends Component {
                size : result.size,
                labeled : result.labeled
         })
+       
         if(result.labeled!=result.size){
              this.setState({
                    doc: result.dataset[0],
@@ -98,6 +99,7 @@ class UserDocument extends Component {
           size : result.size,
           labeled : result.labeled
         })
+       
         if(result.labeled!=result.size){
              this.setState({
                    doc: result.dataset[0],
@@ -177,7 +179,7 @@ class UserDocument extends Component {
                     <div>{`Labeled documents: ${labeled}/${size}`}</div>
                   </div>  
                   </Container>
-             { (doc.content)?
+             { (labeled !=size)?
                  <div> 
                   <div id="spinner" style={{display:'none'}}>
                       <Spinner content='document'></Spinner>
