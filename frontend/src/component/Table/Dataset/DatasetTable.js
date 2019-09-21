@@ -3,7 +3,7 @@ import {
     Card,
     CardBody
 } from 'reactstrap'
-import { listDocument, searchDocument } from '../../../functions/dataset.function';
+import { listDocument } from '../../../functions/dataset.function';
 import DatasetData from './DatasetData';
 import CustomPagination from '../../Pagination/CustomPagination';
 import Spinner from '../../Spinner/Spinner';
@@ -15,6 +15,7 @@ class DatasetTable extends Component {
             dataset : [],
             size:0,
             sortKey: 'content',
+            searchKey: '',
             trend: 1,
             documentPerPage:10,
             currentPage:1,
@@ -24,8 +25,8 @@ class DatasetTable extends Component {
    
     
     async componentDidMount(){
-        const {currentPage,documentPerPage,sortKey,trend} = this.state
-        const result = await listDocument(this.props.projectId,currentPage,documentPerPage,sortKey,trend)
+        const {currentPage,documentPerPage,sortKey,trend,searchKey} = this.state
+        const result = await listDocument(this.props.projectId,currentPage,documentPerPage,sortKey,trend,searchKey)
         const {dataset,size} = result
         this.setState({
             dataset:dataset,
@@ -34,8 +35,8 @@ class DatasetTable extends Component {
         })
     }
     onChange=async()=>{
-        const {currentPage,documentPerPage,sortKey,trend} = this.state
-        const result = await listDocument(this.props.projectId,currentPage,documentPerPage,sortKey,trend)
+        const {currentPage,documentPerPage,sortKey,trend,searchKey} = this.state
+        const result = await listDocument(this.props.projectId,currentPage,documentPerPage,sortKey,trend,searchKey)
         const {dataset,size} = result
         this.setState({
             dataset:dataset,
@@ -60,14 +61,11 @@ class DatasetTable extends Component {
    
     onSearchChange=async(e)=>{
         const query = e.target.value
-        const {documentPerPage} =this.state
-        let result={}
-        if(query) result = await searchDocument(this.props.projectId,1,documentPerPage,query)
-        else result = await listDocument(this.props.projectId,1,documentPerPage,query)
-         this.setState({
-            dataset : result.dataset,
-            size :  result.size
+        await this.setState({
+             searchKey : query,
+             currentPage : 1
         })
+        await this.onChange()
     }
    
     onPaginationClick =async (e)=>{

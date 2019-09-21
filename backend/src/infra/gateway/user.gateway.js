@@ -58,14 +58,20 @@ class UserGateway {
     return updatedUser;
   }
 
-  async list(page, perPage, sortKey, trend) {
+  async list(page, perPage, sortKey, trend, searchKey='') {
+    const query = { $or: [
+      { username: { $regex: searchKey, $options: 'i' } },
+      //  {role: { "$regex": searchKey, "$options": "i" }},
+      { created_at: { $regex: searchKey, $options: 'i' } },
+      { updated_at: { $regex: searchKey, $options: 'i' } }],
+    }
     let filter = {}
     if (sortKey == 'username') filter = { username: trend }
     else if (sortKey == 'role') filter = { role: trend }
     else if (sortKey == 'creared_at') filter = { created_at: trend }
     else filter = { updated_at: trend }
-    const size = await this.UserModel.countDocuments()
-    const users = await this.UserModel.find().sort(filter).skip(page * perPage - perPage).limit(perPage)
+    const size = await this.UserModel.count(query)
+    const users = await this.UserModel.find(query).sort(filter).skip(page * perPage - perPage).limit(perPage)
     return { size, users: users.map(this.userMapper.toEntity) }
   }
 

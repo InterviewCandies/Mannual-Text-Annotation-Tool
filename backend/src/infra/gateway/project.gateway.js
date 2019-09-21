@@ -1,4 +1,4 @@
-const searchQuery = (searchKey) => ({ $or: [
+const searchQuery = (searchKey='') => ({ $or: [
   { project_name: { $regex: searchKey, $options: 'i' } },
   { project_description: { $regex: searchKey, $options: 'i' } },
   { created_at: { $regex: searchKey, $options: 'i' } },
@@ -49,9 +49,10 @@ class ProjectGateway {
   }
 
 
-  async list(page, perPage, sortKey, trend) {
-    const size = await this.ProjectModel.countDocuments()
-    const projects = await this.ProjectModel.find()
+  async list(page, perPage, sortKey, trend,searchKey) {
+    const query = searchQuery(searchKey)
+    const size = await this.ProjectModel.count(query)
+    const projects = await this.ProjectModel.find(query)
       .sort(sortQuery(sortKey, trend))
       .skip((perPage * page) - perPage)
       .limit(perPage)
@@ -72,14 +73,7 @@ class ProjectGateway {
 
   async userProjectSearch(username, page, perPage, searchKey) {
     const projects = await this.ProjectModel.find(
-      {
-        $and: [
-          {
-            'users.username': username,
-          },
-          searchQuery(searchKey),
-        ],
-      },
+    
     )
       .skip((perPage * page) - perPage)
       .limit(perPage)
@@ -90,9 +84,17 @@ class ProjectGateway {
   }
 
 
-  async userProjectList(username, page, perPage, sortKey, trend) {
-    const size = await this.ProjectModel.count({ 'users.username': username })
-    const projects = await this.ProjectModel.find({ 'users.username': username })
+  async userProjectList(username, page, perPage, sortKey, trend,searchKey) {
+    const query = {
+      $and: [
+        {
+          'users.username': username,
+        },
+        searchQuery(searchKey),
+      ],
+    }
+    const size = await this.ProjectModel.count(query)
+    const projects = await this.ProjectModel.find(query)
       .sort(sortQuery(sortKey, trend))
       .skip((perPage * page) - perPage)
       .limit(perPage)

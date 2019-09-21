@@ -4,7 +4,7 @@ import {
     Card,
     CardBody
 } from 'reactstrap'
-import { list, search } from '../../../functions/project.function';
+import { list } from '../../../functions/project.function';
 import ProjectData from './ProjectData'
 import CreateProjectModal from '../../Modal/CreateProjectModal';
 import CustomPagination from '../../Pagination/CustomPagination';
@@ -19,6 +19,7 @@ class ProjectTable extends Component {
             query:'',
             trend:1,
             sortKey:'project_name',
+            searchKey:'',
             createProject:false,
             projectsPerPage : 10,
             currentPage : 1,
@@ -28,8 +29,8 @@ class ProjectTable extends Component {
     
   
     async componentDidMount(){
-        const {currentPage,projectsPerPage,sortKey,trend} = this.state
-        let  result = await  list(currentPage,projectsPerPage,sortKey,trend)
+        const {currentPage,projectsPerPage,sortKey,trend,searchKey} = this.state
+        let  result = await  list(currentPage,projectsPerPage,sortKey,trend,searchKey)
         
         const {projects,size} = result
         this.setState({
@@ -42,8 +43,8 @@ class ProjectTable extends Component {
     }
     
     onChange=async()=>{
-        const {currentPage,projectsPerPage,sortKey,trend}  = this.state
-        let  result = await  list(currentPage,projectsPerPage,sortKey,trend)
+        const {currentPage,projectsPerPage,sortKey,trend,searchKey}  = this.state
+        let  result = await  list(currentPage,projectsPerPage,sortKey,trend,searchKey)
         const {projects,size} = result
         this.setState({
             size : size?size:0
@@ -77,16 +78,11 @@ class ProjectTable extends Component {
     }
    
     onSearchChange=async (e)=>{
-        const query = e.target.value
-        const {projectsPerPage} =this.state
-        let result={}
-        if(query) result = await search(1,projectsPerPage,query)
-        else result = await list(1,projectsPerPage,query)
-      
-         this.setState({
-            filteredProjects : result.projects,
-            size :  result.size
+        await this.setState({
+            searchKey : e.target.value,
+            currentPage:1
         })
+        await this.onChange()
     }
 
    

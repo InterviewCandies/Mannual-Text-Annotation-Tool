@@ -19,11 +19,12 @@ export const editProject = (id,name,description)=>{
 }
 
 
-export const list =(page,perPage,sortKey,trend)=>{
+export const list =(page,perPage,sortKey,trend,searchKey)=>{
     const data ={
         perPage : perPage,
         sortKey : sortKey,
-        trend   : trend
+        trend   : trend,
+        searchKey : searchKey
     }
    return axios.post('http://localhost:4000/textAnnotation/project/list/'+page,data)
             .then((res)=>{
@@ -31,37 +32,6 @@ export const list =(page,perPage,sortKey,trend)=>{
             })
             .catch((err)=> {return err} )
 }
-
-
-
-export const search=(page,perPage,searchKey)=>{
-    const data ={
-        perPage : perPage,
-        searchKey : searchKey
-    }
-   return axios.post('http://localhost:4000/textAnnotation/project/search/'+page,data)
-            .then((res)=>{
-                    return res.data;
-            })
-            .catch((err)=>{ return []} )
-}
-
-
-export const userProjectSearch=(user_id,page,perPage,searchKey)=>{
-    const data ={
-        page :page,
-        perPage : perPage,
-        searchKey : searchKey
-    }
-   return axios.post('http://localhost:4000/textAnnotation/project/userProjectSearch/'+user_id,data)
-            .then((res)=>{
-                    return res.data;
-            })
-            .catch((err)=>{ return []} )
-}
-
-
-
 
 export const deleteProject =(id)=>{
    
@@ -127,12 +97,13 @@ export const removeUser= (user_id,project_id) =>{
                 return false;
     })
 }
-export const userProjectList=(user_id,page,perPage,sortKey,trend)=>{
+export const userProjectList=(user_id,page,perPage,sortKey,trend,searchKey)=>{
     const data ={
         page : page,
         perPage : perPage,
         sortKey : sortKey,
-        trend : trend
+        trend : trend,
+        searchKey : searchKey
     }
    
     return  axios.post('http://localhost:4000/textAnnotation/project/userProjectList/'+user_id,data)

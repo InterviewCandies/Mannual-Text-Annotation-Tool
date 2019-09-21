@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, Button} from 'reactstrap';
-import { userList, userSearch } from '../../../functions/user.function';
+import { userList } from '../../../functions/user.function';
 import CustomPagination from '../../Pagination/CustomPagination';
 import UserData from './UserData';
 import CreateUserModal from '../../Modal/CreateUserModal';
@@ -16,14 +16,15 @@ class UsersTable extends Component {
        currentPage : 1,
        usersPerPage: 10,
        sortKey : "username",
+       searchKey : '',
        createUser : false,
        trend: 1,
        loading : true
     }
   }
   async componentDidMount(){
-      const {currentPage,usersPerPage,sortKey,trend}= this.state
-      const result =await  userList(currentPage,usersPerPage,sortKey,trend)
+      const {currentPage,usersPerPage,sortKey,trend,searchKey}= this.state
+      const result =await  userList(currentPage,usersPerPage,sortKey,trend,searchKey)
       if(result.size)
         this.setState({
           users: result.users,
@@ -34,8 +35,8 @@ class UsersTable extends Component {
       })
   }
   onChange =async (e) =>{
-    const {currentPage,usersPerPage,sortKey,trend}= this.state
-    const result =await  userList(currentPage,usersPerPage,sortKey,trend)
+    const {currentPage,usersPerPage,sortKey,trend,searchKey}= this.state
+    const result =await  userList(currentPage,usersPerPage,sortKey,trend,searchKey)
     this.setState({
       users: result.users,
       size  : result.size
@@ -61,15 +62,11 @@ class UsersTable extends Component {
   }
   onSearchChange=async (e)=>{
     const query = e.target.value
-    const {usersPerPage,sortKey,trend} =this.state
-    let result={}
-    if(query) result = await userSearch(1,usersPerPage,query)
-    else result = await  userList(1,usersPerPage,sortKey,trend)
-  
-     this.setState({
-        users : result.users,
-        size :  result.size
+    await this.setState({
+         searchKey : query,
+         currentPage: 1
     })
+    await this.onChange()
   }
   onSort=async (sortKey,value)=>{
     await this.setState({

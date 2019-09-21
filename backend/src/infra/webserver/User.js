@@ -9,6 +9,5 @@ module.exports = ({ userController, authentication }) => {
   router.post('/user/update/:id', userController.edit);
   router.post('/user/list/:id', userController.list);
   router.post('/user/get', userController.get);
-  router.post('/user/search/:id', userController.search)
   return router;
 }

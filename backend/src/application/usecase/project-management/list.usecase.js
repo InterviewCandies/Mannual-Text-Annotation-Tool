@@ -3,9 +3,9 @@ class ListProjectUseCase {
     this.projectGateway = projectGateway;
   }
 
-  async execute(page, perPage, sortKey, trend) {
+  async execute(page, perPage, sortKey, trend,searchKey) {
     // Check params
-    const projects = await this.projectGateway.list(page, perPage, sortKey, trend);
+    const projects = await this.projectGateway.list(page, perPage, sortKey, trend,searchKey);
     return projects;
   }
 }

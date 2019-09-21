@@ -1,6 +1,6 @@
 
 class UserController {
-  constructor({ _login, createUser, deleteUser, editUser, getUser, listUser, searchUser }) {
+  constructor({ _login, createUser, deleteUser, editUser, getUser, listUser}) {
     // eslint-disable-next-line no-underscore-dangle
     this._login = _login
     this.createUser = createUser
@@ -8,7 +8,6 @@ class UserController {
     this.editUser = editUser
     this.getUser = getUser
     this.listUser = listUser
-    this.searchUser = searchUser
 
     this.login = this.login.bind(this)
     this.get = this.get.bind(this)
@@ -16,7 +15,6 @@ class UserController {
     this.delete = this.delete.bind(this)
     this.create = this.create.bind(this)
     this.edit = this.edit.bind(this)
-    this.search = this.search.bind(this)
   }
 
   async get(req, res) {
@@ -31,8 +29,8 @@ class UserController {
 
   async list(req, res) {
     const page = req.params.id
-    const { perPage, sortKey, trend } = req.body
-    const result = await this.listUser.execute(page, perPage, sortKey, trend)
+    const { perPage, sortKey, trend, searchKey } = req.body
+    const result = await this.listUser.execute(page, perPage, sortKey, trend, searchKey)
     try {
       res.status(200).json(result);
     } catch (error) {
@@ -40,17 +38,7 @@ class UserController {
     }
   }
 
-  async search(req, res) {
-    const page = req.params.id
-    const { perPage, searchKey } = req.body
-    const result = await this.searchUser.execute(page, perPage, searchKey)
-    try {
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).send(error);
-    }
-  }
-
+  
   async login(req, res) {
     const { username, password } = req.body
     // eslint-disable-next-line no-underscore-dangle

@@ -1,7 +1,20 @@
 const mongoose = require('mongoose');
 
 const { ObjectId } = mongoose.mongo
-
+const searchQuery =(project_id,searchKey='')=> { return { $and:
+  [{
+    $or: [
+      { content: { $regex: searchKey, $options: 'i' } },
+      { status: { $regex: searchKey, $options: 'i' } },
+      { created_at: { $regex: searchKey, $options: 'i' } },
+      { updated_at: { $regex: searchKey, $options: 'i' } },
+    ],
+  },
+  {
+    project_id,
+  },
+  ],
+}}
 class DatasetGateway {
   constructor({ DocumentModel, documentMapper, database }) {
     this.DocumentModel = DocumentModel;
@@ -53,8 +66,9 @@ class DatasetGateway {
     return documents.map(this.documentMapper.toEntity)
   }
 
-  async list(project_id, page, perPage, sortKey, trend) {
-    const size = await this.DocumentModel.count({ project_id })
+  async list(project_id, page, perPage, sortKey, trend,searchKey) {
+    const query = searchQuery(project_id,searchKey)
+    const size = await this.DocumentModel.count(query)
     let filter = { }
     if (sortKey == 'content') filter = { content: trend }
     else if (sortKey == 'status') filter = { status: trend }
@@ -65,7 +79,7 @@ class DatasetGateway {
         { labels: { $exists: false } },
         { labels: { $size: 0 } },
       ] })
-    const documents = await this.DocumentModel.find({ project_id })
+    const documents = await this.DocumentModel.find(query)
       .sort(filter)
       .skip((perPage * page) - perPage)
       .limit(perPage)

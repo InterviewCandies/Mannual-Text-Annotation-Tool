@@ -1,6 +1,6 @@
 module.exports = class ProjectController {
   constructor({ listProject, createProject, deleteProject, editProject, getProject,
-    _addUser, _removeUser, _userProjectList, searchProject, _userProjectSearch }) {
+    _addUser, _removeUser, _userProjectList, }) {
     this.listProject = listProject
     this.createProject = createProject
     this.deleteProject = deleteProject
@@ -12,9 +12,7 @@ module.exports = class ProjectController {
     this._removeUser = _removeUser
     // eslint-disable-next-line no-underscore-dangle
     this._userProjectList = _userProjectList
-    this.searchProject = searchProject
-    // eslint-disable-next-line no-underscore-dangle
-    this._userProjectSearch = _userProjectSearch
+  
 
     this.list = this.list.bind(this)
     this.create = this.create.bind(this)
@@ -23,15 +21,13 @@ module.exports = class ProjectController {
     this.update = this.update.bind(this)
     this.addUser = this.addUser.bind(this)
     this.removeUser = this.removeUser.bind(this)
-    this.search = this.search.bind(this)
     this.userProjectList = this.userProjectList.bind(this)
-    this.userProjectSearch = this.userProjectSearch.bind(this)
   }
 
   async list(req, res) {
     const page = req.params.id
-    const { perPage, sortKey, trend } = req.body
-    const result = await this.listProject.execute(page, perPage, sortKey, trend);
+    const { perPage, sortKey, trend, searchKey } = req.body
+    const result = await this.listProject.execute(page, perPage, sortKey, trend,searchKey);
     try {
       res.status(200).json(result);
     } catch (error) {
@@ -82,16 +78,6 @@ module.exports = class ProjectController {
     }
   }
 
-  async search(req, res) {
-    const page = req.params.id
-    const { perPage, searchKey } = req.body
-    const result = await this.searchProject.execute(page, perPage, searchKey)
-    try {
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json(error);
-    }
-  }
 
   async addUser(req, res) {
     const { id } = req.params
@@ -121,9 +107,9 @@ module.exports = class ProjectController {
 
   async userProjectList(req, res) {
     const user_id = req.params.id
-    const { page, perPage, sortKey, trend } = req.body
+    const { page, perPage, sortKey, trend, searchKey } = req.body
     // eslint-disable-next-line no-underscore-dangle
-    const result = await this._userProjectList.execute(user_id, page, perPage, sortKey, trend);
+    const result = await this._userProjectList.execute(user_id, page, perPage, sortKey, trend,searchKey);
     try {
       res.status(200).json(result);
     } catch (error) {
@@ -131,16 +117,4 @@ module.exports = class ProjectController {
     }
   }
 
-
-  async userProjectSearch(req, res) {
-    const user_id = req.params.id
-    const { page, perPage, searchKey } = req.body
-    // eslint-disable-next-line no-underscore-dangle
-    const result = await this._userProjectSearch.execute(user_id, page, perPage, searchKey)
-    try {
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).json(error);
-    }
-  }
 }

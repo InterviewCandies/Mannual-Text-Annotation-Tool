@@ -81,7 +81,6 @@ container.register({
   createUser: awilix.asClass(UserManagement.CreateUser),
   deleteUser: awilix.asClass(UserManagement.DeleteUser),
   editUser: awilix.asClass(UserManagement.EditUser),
-  searchUser: awilix.asClass(UserManagement.SearchUser),
   getUser: awilix.asClass(UserManagement.GetUser),
   listUser: awilix.asClass(UserManagement.ListUser),
 })
@@ -94,8 +93,6 @@ container.register({
   listProject: awilix.asClass(ProjectManagement.ListProject),
   _addUser: awilix.asClass(ProjectManagement.AddUser),
   getProject: awilix.asClass(ProjectManagement.Get),
-  searchProject: awilix.asClass(ProjectManagement.SearchProject),
-  _userProjectSearch: awilix.asClass(ProjectManagement.UserProjectSearch),
   _removeUser: awilix.asClass(ProjectManagement.RemoveUser),
   _userProjectList: awilix.asClass(ProjectManagement.UserProjectList),
 })
@@ -114,7 +111,6 @@ container.register({
   getDocument: awilix.asClass(DatasetManagement.Get),
   deleteDocument: awilix.asClass(DatasetManagement.Delete),
   verifyDocument: awilix.asClass(DatasetManagement.Verify),
-  searchDocument: awilix.asClass(DatasetManagement.Search),
   annotateDocument: awilix.asClass(DatasetManagement.Annotate),
 })
 module.exports = container;

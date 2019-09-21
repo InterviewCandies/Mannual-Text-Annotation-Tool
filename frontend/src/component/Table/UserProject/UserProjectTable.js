@@ -3,7 +3,7 @@ import {
     Card,
     CardBody
 } from 'reactstrap'
-import {  userProjectSearch, userProjectList } from '../../../functions/project.function';
+import { userProjectList } from '../../../functions/project.function';
 import UserProjectData from './UserProjectData'
 import CustomPagination from '../../Pagination/CustomPagination';
 import Spinner from '../../Spinner/Spinner';
@@ -17,6 +17,7 @@ class UserProjectTable extends Component {
             size:0,
             sortKey:'project_name',
             trend:1,
+            searchKey:'',
             editProject:false,
             projectsPerPage : 10,
             currentPage : 1,
@@ -25,8 +26,8 @@ class UserProjectTable extends Component {
     }
    
     async componentDidMount(){
-        const {currentPage,projectsPerPage,sortKey,trend} = this.state
-        let result = await userProjectList(this.props.userId,currentPage,projectsPerPage,sortKey,trend)
+        const {currentPage,projectsPerPage,sortKey,trend,searchKey} = this.state
+        let result = await userProjectList(this.props.userId,currentPage,projectsPerPage,sortKey,trend,searchKey)
         let {projects,size} = result
        
         this.setState({
@@ -37,9 +38,9 @@ class UserProjectTable extends Component {
         
     }
     async  onChange(){
-        const {currentPage,projectsPerPage,sortKey,trend} = this.state
+        const {currentPage,projectsPerPage,sortKey,trend,searchKey} = this.state
        
-        let result = await userProjectList(this.props.userId,currentPage,projectsPerPage,sortKey,trend)
+        let result = await userProjectList(this.props.userId,currentPage,projectsPerPage,sortKey,trend,searchKey)
         let {projects,size} = result
        this.setState({
             size : size?size:0
@@ -66,18 +67,11 @@ class UserProjectTable extends Component {
     }
     onSearchChange=async(e)=>{
         const query = e.target.value
-        const {projectsPerPage} =this.state
-        let result={}
-        if(query) result = await userProjectSearch(this.props.userId,1,projectsPerPage,query)
-        else  result = await userProjectList(this.props.userId,1,projectsPerPage)
-        let {projects,size} = result
-       this.setState({
-            size : size?size:0
+        await this.setState({
+            searchKey : query,
+            currentPage : 1
         })
-        this.setState({
-            filteredProjects :projects,
-            
-        })
+        await this.onChange()
     }
    
     onPaginationClick =async (e)=>{

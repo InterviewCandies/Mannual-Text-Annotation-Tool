@@ -48,11 +48,12 @@ export const editUser = (id,username,password,role)=>{
                  })
 }
 
-export const userList =(page,perPage,sortKey,trend)=>{
+export const userList =(page,perPage,sortKey,trend,searchKey)=>{
        const data = {
-            sortKey : sortKey,
-            perPage : perPage,
-            trend : trend
+            sortKey ,
+            perPage,
+            trend,
+            searchKey
        }
        return axios.post('http://localhost:4000/textAnnotation/user/list/'+page,data)
                     .then(res=>{
@@ -62,19 +63,7 @@ export const userList =(page,perPage,sortKey,trend)=>{
                          return error;
                     })
 }    
-export const userSearch =(page,perPage,searchKey)=>{
-     const data = {
-          searchKey : searchKey,
-          perPage : perPage,
-     }
-     return axios.post('http://localhost:4000/textAnnotation/user/search/'+page,data)
-                  .then(res=>{
-                            return res.data;
-                  })
-                  .catch(error=>{
-                       return error;
-                  })
-}    
+
 
 export const deleteUser =(id)=>{
      

@@ -2,14 +2,13 @@ const exportData = require('../../application/usecase/dataset-management/export.
 
 class DatasetController {
   constructor({ importDataset, listDocument, editDocument, deleteDocument, getDocument,
-    verifyDocument, searchDocument, annotateDocument, exportDataset }) {
+    verifyDocument, annotateDocument, exportDataset }) {
     this.importDataset = importDataset
     this.listDocument = listDocument
     this.editDocument = editDocument
     this.getDocument = getDocument
     this.deleteDocument = deleteDocument
     this.verifyDocument = verifyDocument
-    this.searchDocument = searchDocument
     this.annotateDocument = annotateDocument
     this.exportDataset = exportDataset
 
@@ -20,7 +19,6 @@ class DatasetController {
     this.get = this.get.bind(this)
     this.delete = this.delete.bind(this)
     this.verify = this.verify.bind(this)
-    this.search = this.search.bind(this)
     this.annotate = this.annotate.bind(this)
   }
 
@@ -67,8 +65,8 @@ class DatasetController {
 
   async list(req, res) {
     const project_id = req.params.id
-    const { page, perPage, sortKey, trend } = req.body
-    const result = await this.listDocument.execute(project_id, page, perPage, sortKey, trend)
+    const { page, perPage, sortKey, trend,searchKey } = req.body
+    const result = await this.listDocument.execute(project_id, page, perPage, sortKey, trend,searchKey)
     try {
       res.status(200).json(result);
     } catch (error) {
@@ -91,17 +89,6 @@ class DatasetController {
   async delete(req, res) {
     const { id } = req.params
     const result = await this.deleteDocument.execute(id)
-    try {
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(400).send(error);
-    }
-  }
-
-  async search(req, res) {
-    const project_id = req.params.id;
-    const { page, perPage, searchKey } = req.body
-    const result = await this.searchDocument.execute(project_id, page, perPage, searchKey)
     try {
       res.status(200).json(result);
     } catch (error) {

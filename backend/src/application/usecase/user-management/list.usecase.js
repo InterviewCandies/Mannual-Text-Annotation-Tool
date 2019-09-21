@@ -4,9 +4,9 @@ class ListUserUseCase {
     this.userGateway = userGateway
   }
 
-  async execute(page, perPage, sortKey, trend) {
+  async execute(page, perPage, sortKey, trend, searchKey) {
     // Check params
-    const users = await this.userGateway.list(page, perPage, sortKey, trend);
+    const users = await this.userGateway.list(page, perPage, sortKey, trend, searchKey);
     return users;
   }
 }
