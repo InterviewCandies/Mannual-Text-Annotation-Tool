@@ -6,5 +6,6 @@ module.exports = {
   Delete: require('./delete.usecase'),
   Verify: require('./verify.usecase'),
   Get: require('./get.usecase'),
+  GetAll: require('./getAll.usecase'),
   Annotate: require('./annotate.usecase'),
 }

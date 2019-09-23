@@ -27,6 +27,7 @@ class UserController {
     }
   }
 
+
   async list(req, res) {
     const page = req.params.id
     const { perPage, sortKey, trend, searchKey } = req.body

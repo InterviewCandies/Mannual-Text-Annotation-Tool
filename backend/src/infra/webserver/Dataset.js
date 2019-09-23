@@ -22,6 +22,7 @@ module.exports = ({ datasetController }) => {
   router.post('/dataset/export/:id', datasetController.exportData);
   router.post('/dataset/list/:id', datasetController.list);
   router.post('/dataset/get/:id', datasetController.get);
+  router.post('/dataset/getAll/:id', datasetController.getAll);
   router.post('/dataset/update/:id', datasetController.edit)
   router.post('/dataset/delete/:id', datasetController.delete)
   router.post('/dataset/verify/:id', datasetController.verify)

@@ -36,7 +36,7 @@ class DatasetGateway {
 
 
   async exportData(project_id) {
-    const documents = await this.DocumentModel.aggregate([{ $match: { project_id: ObjectId(project_id) } },
+    const documents = await this.DocumentModel.aggregate([{ $match: { project_id: ObjectId(project_id)} },
       { $addFields: {
         labels: '$labels.content',
       },
@@ -67,6 +67,7 @@ class DatasetGateway {
   }
 
   async list(project_id, page, perPage, sortKey, trend,searchKey) {
+    
     const query = searchQuery(project_id,searchKey)
     const size = await this.DocumentModel.count(query)
     let filter = { }
@@ -89,6 +90,20 @@ class DatasetGateway {
       dataset: documents.map(this.documentMapper.toEntity),
     };
   }
+  async getAll(project_id){
+    const size = await this.DocumentModel.count({project_id})
+    const labeledDocs = await this.DocumentModel.count({ project_id,
+      $nor: [
+        { labels: { $exists: false } },
+        { labels: { $size: 0 } },
+      ] })
+    const documents = await this.DocumentModel.find({project_id})
+    return  {
+      size,
+      labeled: labeledDocs,
+      dataset: documents.map(this.documentMapper.toEntity),
+    };
+  }
 
   async getRandomRecord(project_id) {
     const size = await this.DocumentModel.count({ project_id })
@@ -106,33 +121,6 @@ class DatasetGateway {
       dataset: documents.map(this.documentMapper.toEntity),
     }
   }
-
-  async search(project_id, page, perPage, searchKey) {
-    const query = { $and:
-      [{
-        $or: [
-          { content: { $regex: searchKey, $options: 'i' } },
-          { status: { $regex: searchKey, $options: 'i' } },
-          { created_at: { $regex: searchKey, $options: 'i' } },
-          { updated_at: { $regex: searchKey, $options: 'i' } },
-        ],
-      },
-      {
-        project_id,
-      },
-      ],
-    }
-
-    const size = await this.DocumentModel.count(query)
-    const documents = await this.DocumentModel.find(query)
-      .skip((perPage * page) - perPage)
-      .limit(perPage)
-    return {
-      size,
-      dataset: documents.map(this.documentMapper.toEntity),
-    }
-  }
-
 
   async edit(entity) {
     const dbItem = this.documentMapper.toDatabase(entity)

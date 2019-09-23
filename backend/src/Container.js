@@ -15,7 +15,6 @@ const LabelManagement = require('./application/usecase/label-management')
 const DatasetManagement = require('./application/usecase/dataset-management')
 const Authentication = require('./infra/utils/authentication')
 const PasswordHasher = require('./infra/utils/password-hasher')
-const FileHandler = require('./infra/utils/file-handler')
 const Mapper = require('./infra/mapper')
 
 const container = awilix.createContainer();
@@ -46,7 +45,6 @@ container.register({
 container.register({
   authentication: awilix.asClass(Authentication).singleton(),
   passwordHasher: awilix.asClass(PasswordHasher).singleton(),
-  fileHandler: awilix.asClass(FileHandler).singleton(),
 })
 
 // Mapper
@@ -109,6 +107,7 @@ container.register({
   listDocument: awilix.asClass(DatasetManagement.List),
   editDocument: awilix.asClass(DatasetManagement.Edit),
   getDocument: awilix.asClass(DatasetManagement.Get),
+  getAllDocument: awilix.asClass(DatasetManagement.GetAll),
   deleteDocument: awilix.asClass(DatasetManagement.Delete),
   verifyDocument: awilix.asClass(DatasetManagement.Verify),
   annotateDocument: awilix.asClass(DatasetManagement.Annotate),

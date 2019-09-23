@@ -66,6 +66,18 @@ export const getDocument = (id) =>{
 
 }
 
+export const getAllDocument = (id) =>{
+  
+     return axios.post('http://localhost:4000/textAnnotation/dataset/getAll/'+id)
+     .then((res)=>{
+          return res.data
+     })
+     .catch(err=>{
+          return []
+     })
+
+}
+
 export const editDocument = (id,content) =>{
      const data = {
            content:content

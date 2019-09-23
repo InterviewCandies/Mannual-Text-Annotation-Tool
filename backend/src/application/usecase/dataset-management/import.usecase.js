@@ -2,9 +2,8 @@ const fs = require('fs')
 const util = require('util')
 const readline = require('readline');
 class ImportDataUseCase {
-  constructor({ datasetGateway, fileHandler }) {
+  constructor({ datasetGateway }) {
     this.datasetGateway = datasetGateway;
-    this.fileHandler = fileHandler
   }
 
    

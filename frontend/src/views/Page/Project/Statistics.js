@@ -1,6 +1,6 @@
 import React,{Component} from 'react' 
 import {Doughnut,Bar, HorizontalBar} from 'react-chartjs-2'
-import { listDocument } from '../../../functions/dataset.function'
+import { getAllDocument } from '../../../functions/dataset.function'
 import Spinner from '../../../component/Spinner/Spinner'
 import {
     CardBody,
@@ -53,57 +53,67 @@ class Statistics extends Component {
      }
      async componentDidMount(){
             
-           const result = await listDocument(this.projectId)
-           const dataset = result.dataset 
-           this.setState({ 
-                datasetSize  : result.size
+           const result = await getAllDocument(this.projectId)
+           if(!result.response){
+            const dataset = result.dataset 
+            this.setState({ 
+                    datasetSize  : result.size
+                })
+            //Pie chart 
+            const pieData ={
+                    datasets: [{
+                    data: [result.labeled,result.size-result.labeled],
+                    backgroundColor : ['#63c2de','#f86c6b']
+                    }],
+                    labels: [
+                        'Labeled',
+                        'Unlabeled'
+                    ]
+            }
+            this.setState({
+                pieData
             })
-           //Pie chart 
-           const pieData ={
-                datasets: [{
-                data: [result.labeled,result.size-result.labeled],
-                backgroundColor : ['#63c2de','#f86c6b']
-                }],
-                labels: [
-                    'Labeled',
-                    'Unlabeled'
-                ]
-           }
+           
            // Bar chart 
            let labels = await listLabel(this.projectId)
-           labels = labels.map(label => label.content)
-           this.setState({
-                labelsNumber : labels.length
-           })
-           const barData = {
-            datasets: [{
-                data: this.countByLabel(labels,dataset),
-                backgroundColor : '#bf7fbf',
-                label : 'Labels'
-            }],
-            labels: labels
+           if(!labels.response){
+            labels = labels.map(label => label.content)
+            this.setState({
+                    labelsNumber : labels.length
+            })
+            const barData = {
+                datasets: [{
+                    data: this.countByLabel(labels,dataset),
+                    backgroundColor : '#bf7fbf',
+                    label : 'Labels'
+                }],
+                labels: labels
+            }
+            this.setState({
+                barData
+            })
            }
            //Horizontal data 
-           let project = await get(this.projectId)
-           let users = project.users
-           const usernames = users.map(user=>user.username)
-           users = users.map(user=>user.id)
-           const HorizontalBarData = {
-            datasets: [{
-                data: this.countByUser(users,dataset),
-                backgroundColor : '#99cc99',
-                label : 'Users'
-            }],
-            labels: usernames
+            let project = await get(this.projectId)
+            if(!project.response){
+                let users = project.users
+                const usernames = users.map(user=>user.username)
+                users = users.map(user=>user.id)
+                const HorizontalBarData = {
+                    datasets: [{
+                        data: this.countByUser(users,dataset),
+                        backgroundColor : '#99cc99',
+                        label : 'Users'
+                    }],
+                    labels: usernames
+                    }
+                    this.setState({
+                        HorizontalBarData,
+                        usersNumber : users.length
+                    })
+            }
            }
-           this.setState({
-               pieData : pieData,
-               barData : barData,
-               HorizontalBarData : HorizontalBarData
-           })
-           
            this.setState({ 
-               usersNumber : users.length,
                loading: false
             })
      }

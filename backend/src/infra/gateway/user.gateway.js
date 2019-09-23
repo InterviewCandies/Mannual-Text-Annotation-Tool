@@ -75,20 +75,12 @@ class UserGateway {
     return { size, users: users.map(this.userMapper.toEntity) }
   }
 
-  async search(page, perPage, searchKey) {
-    const query = { $or: [
-      { username: { $regex: searchKey, $options: 'i' } },
-      //  {role: { "$regex": searchKey, "$options": "i" }},
-      { created_at: { $regex: searchKey, $options: 'i' } },
-      { updated_at: { $regex: searchKey, $options: 'i' } }],
-    }
-    const users = await this.UserModel.find(query)
-      .skip((perPage * page) - perPage)
-      .limit(perPage)
-    const size = users.length
-    return { size,
-      users: users.map(this.userMapper.toEntity),
-    };
+  async getAll(){
+    const size = await this.UserModel.count({})
+    const users = await this.UserModel.find()
+    return { size, users: users.map(this.userMapper.toEntity) }
   }
+
+ 
 }
 module.exports = UserGateway;

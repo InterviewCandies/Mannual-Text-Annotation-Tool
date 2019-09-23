@@ -2,7 +2,7 @@ const exportData = require('../../application/usecase/dataset-management/export.
 
 class DatasetController {
   constructor({ importDataset, listDocument, editDocument, deleteDocument, getDocument,
-    verifyDocument, annotateDocument, exportDataset }) {
+    verifyDocument, annotateDocument, exportDataset, getAllDocument }) {
     this.importDataset = importDataset
     this.listDocument = listDocument
     this.editDocument = editDocument
@@ -11,6 +11,7 @@ class DatasetController {
     this.verifyDocument = verifyDocument
     this.annotateDocument = annotateDocument
     this.exportDataset = exportDataset
+    this.getAllDocument = getAllDocument
 
     this.importData = this.importData.bind(this)
     this.exportData = this.exportData.bind(this)
@@ -20,6 +21,7 @@ class DatasetController {
     this.delete = this.delete.bind(this)
     this.verify = this.verify.bind(this)
     this.annotate = this.annotate.bind(this)
+    this.getAll = this.getAll.bind(this)
   }
 
 
@@ -56,6 +58,16 @@ class DatasetController {
   async get(req, res) {
     const project_id = req.params.id
     const result = await this.getDocument.execute(project_id);
+    try {
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  }
+
+  async getAll(req,res){
+    const project_id = req.params.id
+    const result = await this.getAllDocument.execute(project_id);
     try {
       res.status(200).json(result);
     } catch (error) {
