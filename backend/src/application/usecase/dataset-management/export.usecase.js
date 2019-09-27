@@ -6,7 +6,7 @@ class ExportDataUseCase {
   }
 
   toCSV(data){
-    const header = ['content','labels']
+    const header = ['content','labels','user']
     const replacer = (key, value) => value == null? '' : value 
     let csv = data.map(row => header.map(fieldName => {  
             let labels= JSON.stringify(row[fieldName], replacer) 

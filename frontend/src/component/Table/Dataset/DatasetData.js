@@ -8,7 +8,6 @@ import {
 
 import EditDocumentModal from '../../Modal/EditDocumentModal';
 import DeleteDocumentModal from '../../Modal/DeleteDocumentModal';
-import VerifyDocumentModal from '../../Modal/VerifyDocumentModal';
 
 class DatasetData extends Component{
     constructor(props){
@@ -16,7 +15,6 @@ class DatasetData extends Component{
         this.state={
             edit :  false,
             delete: false,
-            verify:false
         }
            
     }
@@ -32,11 +30,7 @@ class DatasetData extends Component{
             delete: !this.state.delete
         })
     }
-    onVerify=(e)=>{
-        this.setState({
-            verify : !this.state.verify
-        })
-    }
+   
     //String truncate
 
     stringTruncate(str, limit, end) {
@@ -56,24 +50,11 @@ class DatasetData extends Component{
             <tr>
                 <td>{ this.stringTruncate(content,50) }</td>
                
-                <td>{(status=='Verified')?<Badge color="success">Verified</Badge>
-                                             :<Badge color="danger">Not Verified</Badge>}</td>
                 <td>{ created_at }</td>
                 <td>{ updated_at }</td>
                 <td>
                 <ButtonGroup>
                         
-                        <Button color="success" onClick={this.onVerify}>
-                            <i className="fa fa-check" ></i>
-                            <VerifyDocumentModal  trigger={this.state.verify}
-                                                  toggle={this.onVerify}
-                                                  data={this.props.data}
-                                                  labels={labels}
-                                                  action={this.props.action}>
-
-                            </VerifyDocumentModal>
-                        </Button>
-                       
                         <Button color="primary" onClick={this.onEdit}>
                             <i className="fa fa-edit"></i>
                            

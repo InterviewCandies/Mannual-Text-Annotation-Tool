@@ -26,9 +26,9 @@ class VerifyDocumentModal extends Component{
              id : this.props.data.id,
              labels: this.props.data.labels,
              edit:false,
-             status: (this.props.data.status=='Verified')?true:false
         }
         this.onToggle = this.props.toggle
+
     }
     componentDidUpdate(oldProps){
         const props = this.props
@@ -36,31 +36,18 @@ class VerifyDocumentModal extends Component{
            this.setState({
             id : this.props.data.id,
             labels: this.props.data.labels,
-            status: (this.props.data.status=='Verified')?true:false
            })
         }
     }
 
-   
-    onSubmit = async (e)=>{
-        e.preventDefault()
-        const status = (this.state.status)?'Verified':'Not Verified'
-        const result = await verifyDocument(this.state.id,status)
-        this.onToggle()
-        this.props.action()
-    }
     onEdit=(e)=>{
          this.setState({
              edit : !this.state.edit
          })
     }
-    onVerify = (e)=>{
-        this.setState({
-             status: !this.state.status
-        })
-    }
+  
        render(){
-           const {labels,status} =this.state
+           const {labels} =this.state
            return(
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-success ' + this.props.className}>
@@ -68,7 +55,7 @@ class VerifyDocumentModal extends Component{
                 <ModalBody>
                     <div className="form-group">
                         <h5>Content</h5>
-                        <textarea className="form-control-plaintext border" readOnly >{this.props.data.content}</textarea>
+                        <textarea className="form-control-plaintext border" rows="5" readOnly >{this.props.data.content}</textarea>
                      </div>
                      <div className="form-group">
                         <h5>Label:</h5>
@@ -84,23 +71,10 @@ class VerifyDocumentModal extends Component{
                         <EditAnnotationModal    trigger={this.state.edit}
                                                 toggle={this.onEdit}
                                                 data={this.props.data}
-                                               action={this.props.action}></EditAnnotationModal>
+                                                ></EditAnnotationModal>
                      </div>
-                    <div className="form-check">
-                        <input class="form-check-input" 
-                               type="checkbox" 
-                               id="verify" 
-                               checked={status}
-                               onClick={this.onVerify}
-                              
-                        />
-                        <label class="form-check-label" for="verify">
-                            <div className="lead">Accept annotation</div>
-                        </label>
-                    </div>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="success" onClick={this.onSubmit}>Save</Button>{' '}
                     <Button color="secondary" onClick={this.onToggle}>Cancel</Button>
                   </ModalFooter>
                </Modal>

@@ -170,7 +170,7 @@ class Statistics extends Component {
                                                             responsive : true,
                                                             maintainAspectRatio: false,
                                                             scales: {
-                                                                xAxes: [
+                                                                yAxes: [
                                                                         {
                                                                             ticks: {
                                                                             min: 0,

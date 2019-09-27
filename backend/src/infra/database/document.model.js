@@ -12,8 +12,8 @@ const document = new Schema({
     type: String,
   },
   status: {
-    type: String,
-    default: 'Not Verified',
+    type: Number,
+    default: 0,
   },
   labels: {
     type: Array,

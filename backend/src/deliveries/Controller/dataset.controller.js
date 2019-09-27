@@ -2,7 +2,7 @@ const exportData = require('../../application/usecase/dataset-management/export.
 
 class DatasetController {
   constructor({ importDataset, listDocument, editDocument, deleteDocument, getDocument,
-    verifyDocument, annotateDocument, exportDataset, getAllDocument }) {
+    verifyDocument, annotateDocument, exportDataset, getAllDocument, getDocumentByUserId }) {
     this.importDataset = importDataset
     this.listDocument = listDocument
     this.editDocument = editDocument
@@ -12,6 +12,7 @@ class DatasetController {
     this.annotateDocument = annotateDocument
     this.exportDataset = exportDataset
     this.getAllDocument = getAllDocument
+    this.getDocumentByUserId = getDocumentByUserId
 
     this.importData = this.importData.bind(this)
     this.exportData = this.exportData.bind(this)
@@ -22,6 +23,7 @@ class DatasetController {
     this.verify = this.verify.bind(this)
     this.annotate = this.annotate.bind(this)
     this.getAll = this.getAll.bind(this)
+    this.getDocsByUserId = this.getDocsByUserId.bind(this)
   }
 
 
@@ -65,6 +67,19 @@ class DatasetController {
     }
   }
 
+  async getDocsByUserId(req,res){
+    const project_id = req.params.id
+    const {userId,maxDocs} = req.body
+    console.log(userId) 
+    console.log(maxDocs)
+    const result = await this.getDocumentByUserId.execute(project_id,userId,maxDocs);
+    try {
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  }
+
   async getAll(req,res){
     const project_id = req.params.id
     const result = await this.getAllDocument.execute(project_id);
@@ -77,7 +92,7 @@ class DatasetController {
 
   async list(req, res) {
     const project_id = req.params.id
-    const { page, perPage, sortKey, trend,searchKey } = req.body
+    const { page, perPage, sortKey, trend,searchKey} = req.body
     const result = await this.listDocument.execute(project_id, page, perPage, sortKey, trend,searchKey)
     try {
       res.status(200).json(result);
@@ -121,8 +136,8 @@ class DatasetController {
 
   async annotate(req, res) {
     const { id } = req.params
-    const { labels, user_id } = req.body
-    const result = await this.annotateDocument.execute(id, labels, user_id)
+    const { labels, user_id, status} = req.body
+    const result = await this.annotateDocument.execute(id, labels, user_id, status)
     try {
       if (!result) throw new Error('Your annotation will not be saved because document has been labeled before')
       res.status(200).json(result);

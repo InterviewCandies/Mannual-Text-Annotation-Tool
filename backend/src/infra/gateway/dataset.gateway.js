@@ -1,20 +1,26 @@
 const mongoose = require('mongoose');
 
 const { ObjectId } = mongoose.mongo
-const searchQuery =(project_id,searchKey='')=> { return { $and:
-  [{
-    $or: [
-      { content: { $regex: searchKey, $options: 'i' } },
-      { status: { $regex: searchKey, $options: 'i' } },
-      { created_at: { $regex: searchKey, $options: 'i' } },
-      { updated_at: { $regex: searchKey, $options: 'i' } },
-    ],
-  },
-  {
-    project_id,
-  },
-  ],
-}}
+const searchQuery =(searchKey) => [
+  { content: { $regex: searchKey, $options: 'i' } },
+  { created_at: { $regex: searchKey, $options: 'i' } },
+  { updated_at: { $regex: searchKey, $options: 'i' } },
+]
+const Query =(project_id,searchKey='')=> 
+{ 
+  return  { 
+          $and:
+            [
+              {
+                $or: searchQuery(searchKey)
+              },
+              {
+                project_id,
+              },
+          ],  
+    }
+}
+
 class DatasetGateway {
   constructor({ DocumentModel, documentMapper, database }) {
     this.DocumentModel = DocumentModel;
@@ -39,10 +45,21 @@ class DatasetGateway {
     const documents = await this.DocumentModel.aggregate([{ $match: { project_id: ObjectId(project_id)} },
       { $addFields: {
         labels: '$labels.content',
+        },
       },
+      {
+        $lookup: {
+            from : "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "userInfo"
+        }
       },
-      { $project: { content: true,
+      {$unwind:"$userInfo"},
+      { $project: { 
+        content: true,
         _id: false,
+        user: "$userInfo.username",
         labels: {
           $reduce: {
             input: '$labels',
@@ -62,13 +79,11 @@ class DatasetGateway {
             },
           },
         } } }])
-    
     return documents.map(this.documentMapper.toEntity)
   }
 
-  async list(project_id, page, perPage, sortKey, trend,searchKey) {
-    
-    const query = searchQuery(project_id,searchKey)
+  async list(project_id, page, perPage, sortKey, trend,searchKey) { 
+    const query = Query(project_id,searchKey)
     const size = await this.DocumentModel.count(query)
     let filter = { }
     if (sortKey == 'content') filter = { content: trend }
@@ -89,6 +104,22 @@ class DatasetGateway {
       labeled: labeledDocs,
       dataset: documents.map(this.documentMapper.toEntity),
     };
+  }
+  async getDocsByUserId(project_id,userId,maxDocs){
+      const documents = await this.DocumentModel.aggregate([{
+          $match : {
+            project_id : ObjectId(project_id),
+            user :userId
+          }
+        },
+        {
+          $sample : {
+            size : maxDocs
+          }
+        }
+      ]) 
+      
+      return  {  size : documents.length , dataset : documents.map(this.documentMapper.toEntity) } 
   }
   async getAll(project_id){
     const size = await this.DocumentModel.count({project_id})

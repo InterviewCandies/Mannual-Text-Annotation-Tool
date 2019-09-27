@@ -37,13 +37,14 @@ export const exportData =(id,fileType)=>{
            
 }
 
-export const listDocument = (id,page,perPage,sortKey,trend,searchKey) =>{
+export const listDocument = (id,page,perPage,sortKey,trend,searchKey,userId) =>{
        const data ={
             page : page,
             perPage : perPage,
             sortKey :sortKey,
             trend : trend,
-            searchKey : searchKey
+            searchKey : searchKey,
+            userId
        }
        return axios.post('http://localhost:4000/textAnnotation/dataset/list/'+id,data)
        .then((res)=>{
@@ -78,6 +79,21 @@ export const getAllDocument = (id) =>{
 
 }
 
+export const getUserDocs = (id,userId,maxDocs=100) =>{
+     const data = {
+           userId,
+           maxDocs
+     }
+     return axios.post('http://localhost:4000/textAnnotation/dataset/getUserDocs/'+id,data)
+     .then((res)=>{
+          return res.data
+     })
+     .catch(err=>{
+          return []
+     })
+
+}
+
 export const editDocument = (id,content) =>{
      const data = {
            content:content
@@ -99,7 +115,8 @@ export const annotate = (id,labels) =>{
 
      const data = {
           labels:labels,
-          user_id : decoder.id
+          user_id : (decoder.role)? undefined : decoder.id,
+          status : decoder.role
      }
      return axios.post('http://localhost:4000/textAnnotation/dataset/annotate/'+id,data)
      .then((res)=>{

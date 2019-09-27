@@ -4,18 +4,19 @@ class Annotate {
     this.userGateway = userGateway
   }
 
-  async execute(id, labels, user_id) {
+  async execute(id, labels, user_id, status) {
     // Check labels
     // Find entity by id
     // eslint-disable-next-line prefer-const
     let document = await this.datasetGateway.findById(id)
-    const user = await this.userGateway.findById(user_id)
-    const { role } = user
+    if(user_id) {    
+      document.user = user_id
+    }
     // Check if it true
-    if (document.labels.length && !role) return false
     // Change labels of entity
     document.labels = labels
-    document.user = user.id
+    document.status = status
+
     // Update entity
     const updatedDoc = await this.datasetGateway.annotate(document);
 

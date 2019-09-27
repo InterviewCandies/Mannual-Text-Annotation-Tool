@@ -82,7 +82,6 @@ class EditAnnotationModal extends Component{
         const {id,labels} = this.state
         const result=await annotate(id,labels)
         this.onToggle()
-        this.props.action()
     }
        render(){
            let {projectLabels,labels} = this.state

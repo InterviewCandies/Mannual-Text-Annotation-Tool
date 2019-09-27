@@ -8,4 +8,5 @@ module.exports = {
   Get: require('./get.usecase'),
   GetAll: require('./getAll.usecase'),
   Annotate: require('./annotate.usecase'),
+  GetDocsByUserId: require('./getDocsByUserId.usecase')
 }

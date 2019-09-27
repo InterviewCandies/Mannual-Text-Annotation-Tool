@@ -1,25 +1,32 @@
 import React,{Component} from 'react'
 import {
     Card,
-    CardBody
+    CardBody,
+    Button
 } from 'reactstrap'
 import { listDocument } from '../../../functions/dataset.function';
 import DatasetData from './DatasetData';
 import CustomPagination from '../../Pagination/CustomPagination';
 import Spinner from '../../Spinner/Spinner';
+import { get } from '../../../functions/project.function';
+import UserRecordModal from '../../Modal/UserRecordModal';
 
 class DatasetTable extends Component {
     constructor(props){
         super(props)
         this.state ={
+            users: [],
             dataset : [],
+            currentUser:'',
             size:0,
             sortKey: 'content',
             searchKey: '',
             trend: 1,
             documentPerPage:10,
             currentPage:1,
-            loading : false
+            verifiedDocs:10,
+            loading : false,
+            verify : false
         }
     }
    
@@ -30,9 +37,11 @@ class DatasetTable extends Component {
         const {dataset,size} = result
         this.setState({
             dataset:dataset,
+            users : this.props.users || [],
             size:size?size:0,
             loading : true
         })
+
     }
     onChange=async()=>{
         const {currentPage,documentPerPage,sortKey,trend,searchKey} = this.state
@@ -58,6 +67,21 @@ class DatasetTable extends Component {
         })
         this.onChange()
     }
+    onDropDownUserChange = async(e)=>{
+        await this.setState({
+            currentUser : e.target.value,
+            currentPage : 1
+        })
+        this.onChange()
+    }
+    onDropDownDocsChange = async(e)=>{
+        await this.setState({
+            verifiedDocs : Number(e.target.value),
+            currentPage : 1
+        })
+        this.onChange()
+    }
+   
    
     onSearchChange=async(e)=>{
         const query = e.target.value
@@ -67,7 +91,11 @@ class DatasetTable extends Component {
         })
         await this.onChange()
     }
-   
+    onVerify = async(e) =>{
+        await this.setState({
+             verify : !this.state.verify
+        })
+    }
     onPaginationClick =async (e)=>{
         await this.setState({
             currentPage : e
@@ -84,7 +112,7 @@ class DatasetTable extends Component {
   
     }
     render(){
-         const {size,dataset,documentPerPage,currentPage} = this.state
+         const {size,dataset,documentPerPage,currentPage,users} = this.state
          const pageNumbers = []
          for(let i=1;i<=Math.ceil(size/documentPerPage);i++)
              pageNumbers.push(i);
@@ -106,7 +134,28 @@ class DatasetTable extends Component {
                             <option value="100">100</option>
                         </select>
                         <label>entries</label>
-                     
+                        <label  className="ml-xl-5 mr-sm-2">User</label>
+                         <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownUserChange} >
+                            <option></option>
+                            {
+                                users.map(user=> <option value={user.id}>{user.username}</option>)
+                            }
+                        </select>
+                        <label  className="ml-sm-2 mr-sm-2">Docs</label>
+                         <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownDocsChange} >
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <Button color="success m-sm-2" onClick={this.onVerify}>Verify docs</Button>
+                        <UserRecordModal  trigger={this.state.verify}
+                                                  toggle={this.onVerify}
+                                                  action={this.onChange()}
+                                                  projectId={this.props.projectId}
+                                                  userId = {this.state.currentUser}
+                                                  maxDocs = {this.state.verifiedDocs}
+                                               ></UserRecordModal>
                   </div>
                   <div className="form-group form-inline">
                       <label className="mr-sm-2">Search:</label>
@@ -123,14 +172,7 @@ class DatasetTable extends Component {
                             </div>
                         </th>
                         
-                        <th scope="col">
-                            Status
-                            <div className="float-right">
-                                <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,'status',1)}></i>
-                                <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,'status',-1)}></i>
-                            </div>
-                        </th>
-
+                
                         <th scope="col">
                             Created at
                             <div className="float-right">

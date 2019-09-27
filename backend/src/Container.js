@@ -111,5 +111,6 @@ container.register({
   deleteDocument: awilix.asClass(DatasetManagement.Delete),
   verifyDocument: awilix.asClass(DatasetManagement.Verify),
   annotateDocument: awilix.asClass(DatasetManagement.Annotate),
+  getDocumentByUserId: awilix.asClass(DatasetManagement.GetDocsByUserId)
 })
 module.exports = container;

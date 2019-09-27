@@ -57,7 +57,7 @@ class EditDocumentModal extends Component{
                             <label  for="projectname" class="col-sm-2 col-form-label">Content:</label>
                             <div class="col-sm-10">
                                 <textarea className="form-control" value={this.state.content}
-                                            onChange={this.onChangeContent}>
+                                            onChange={this.onChangeContent} rows="10">
                                 </textarea>
                             </div>
                         </div>
