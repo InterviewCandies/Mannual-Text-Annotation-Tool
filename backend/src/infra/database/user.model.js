@@ -24,6 +24,6 @@ const Users = new Schema({
     default: new Date().toLocaleString(),
   },
 
-});
+}, { collation: { locale: 'en' } });
 
 module.exports = mongoose.model('Users', Users);

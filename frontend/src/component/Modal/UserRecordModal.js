@@ -16,7 +16,7 @@ class UserRecordModal extends Component{
         return (
             <Modal isOpen={this.props.trigger} toggle={this.toggle} 
                 className={'modal-xl modal-success ' + this.props.className} >
-                <ModalHeader toggle={this.toggle}>{this.props.userId}</ModalHeader>
+                <ModalHeader toggle={this.toggle}>{`Documents annotated by ${this.props.username}`}</ModalHeader>
                 <ModalBody>
                     <UserDatasetTable projectId={this.props.projectId} 
                                       userId={this.props.userId}

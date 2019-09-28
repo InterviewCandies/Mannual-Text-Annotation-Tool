@@ -61,10 +61,12 @@ class Statistics extends Component {
                 })
             //Pie chart 
             const pieData ={
-                    datasets: [{
-                    data: [result.labeled,result.size-result.labeled],
-                    backgroundColor : ['#63c2de','#f86c6b']
-                    }],
+                    datasets: [
+                        {
+                        data: [result.labeled,result.size-result.labeled],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(192, 0, 0, 1)'],
+                        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(192, 0, 0, 0.2)']                        }
+                     ],
                     labels: [
                         'Labeled',
                         'Unlabeled'
@@ -84,7 +86,9 @@ class Statistics extends Component {
             const barData = {
                 datasets: [{
                     data: this.countByLabel(labels,dataset),
-                    backgroundColor : '#bf7fbf',
+                    backgroundColor : '#ffff9a',
+                    borderColor : '#ffc001',
+                    borderWidth : 2,
                     label : 'Labels'
                 }],
                 labels: labels
@@ -102,7 +106,9 @@ class Statistics extends Component {
                 const HorizontalBarData = {
                     datasets: [{
                         data: this.countByUser(users,dataset),
-                        backgroundColor : '#99cc99',
+                        backgroundColor: "rgba(206, 0, 0, 0.4)",
+                        borderColor: "rgba(206, 0, 0, 1)",
+                        borderWidth : 2,
                         label : 'Users'
                     }],
                     labels: usernames

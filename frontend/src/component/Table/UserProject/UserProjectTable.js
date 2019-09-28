@@ -39,7 +39,6 @@ class UserProjectTable extends Component {
     }
     async  onChange(){
         const {currentPage,projectsPerPage,sortKey,trend,searchKey} = this.state
-       
         let result = await userProjectList(this.props.userId,currentPage,projectsPerPage,sortKey,trend,searchKey)
         let {projects,size} = result
        this.setState({
@@ -67,11 +66,15 @@ class UserProjectTable extends Component {
     }
     onSearchChange=async(e)=>{
         const query = e.target.value
-        await this.setState({
-            searchKey : query,
-            currentPage : 1
-        })
-        await this.onChange()
+        if(this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.setState({
+                searchKey : query,
+                currentPage : 1
+            },()=>{
+             this.onChange()
+            })
+        }, 300);
     }
    
     onPaginationClick =async (e)=>{

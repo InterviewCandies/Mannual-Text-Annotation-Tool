@@ -36,7 +36,7 @@ class UsersTable extends Component {
   }
   onChange =async (e) =>{
     const {currentPage,usersPerPage,sortKey,trend,searchKey}= this.state
-    const result =await  userList(currentPage,usersPerPage,sortKey,trend,searchKey)
+   const result =await  userList(currentPage,usersPerPage,sortKey,trend,searchKey)
     this.setState({
       users: result.users,
       size  : result.size
@@ -62,11 +62,15 @@ class UsersTable extends Component {
   }
   onSearchChange=async (e)=>{
     const query = e.target.value
-    await this.setState({
-         searchKey : query,
-         currentPage: 1
-    })
-    await this.onChange()
+    if(this.timeout) clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => {
+        this.setState({
+            searchKey : query,
+            currentPage : 1
+        },()=>{
+         this.onChange()
+        })
+    }, 300);
   }
   onSort=async (sortKey,value)=>{
     await this.setState({

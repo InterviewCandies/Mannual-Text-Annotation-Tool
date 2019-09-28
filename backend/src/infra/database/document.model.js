@@ -30,5 +30,5 @@ const document = new Schema({
     type: String,
     default: new Date().toLocaleString(),
   },
-})
+}, { collation: { locale: 'en' } })
 module.exports = mongoose.model('Document', document);

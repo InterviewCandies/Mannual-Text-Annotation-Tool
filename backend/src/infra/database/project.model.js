@@ -22,5 +22,5 @@ const project = new Schema({
     type: String,
     default: new Date().toLocaleString(),
   },
-})
+}, { collation: { locale: 'en' } })
 module.exports = moogose.model('project', project);

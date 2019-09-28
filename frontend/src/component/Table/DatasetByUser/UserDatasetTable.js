@@ -4,7 +4,7 @@ import {
     CardBody,
     Button
 } from 'reactstrap'
-import { listDocument, getUserDocs } from '../../../functions/dataset.function';
+import { getUserDocs } from '../../../functions/dataset.function';
 import CustomPagination from '../../Pagination/CustomPagination';
 import Spinner from '../../Spinner/Spinner';
 import UserDatasetData from './UserDatasetData'
@@ -27,6 +27,7 @@ class UserDatasetTable extends Component {
         }
         this.projectId = this.props.projectId
         this.userId = this.props.userId
+        this.timeout = 0
     }
    
     
@@ -42,11 +43,23 @@ class UserDatasetTable extends Component {
         })
 
     }
-    onChange=async()=>{
-        
-    }
     onSort=async (sortKey,trend)=>{
-        
+        await this.setState({
+             sortKey,
+             trend,
+        })
+    }
+    sort_by = function(field, reverse, primer){
+
+        var key = primer ? 
+            function(x) {return primer(x[field])} : 
+            function(x) {return x[field]};
+     
+        reverse = !reverse ? 1 : -1;
+     
+        return function (a, b) {
+            return a = key(a), b = key(b), reverse * (a.localeCompare(b));
+        } 
     }
 
     onDropDownChange = async(e)=>{
@@ -56,9 +69,34 @@ class UserDatasetTable extends Component {
         })
     }
    
+
     onSearchChange=async(e)=>{
-        
+        const searchKey = e.target.value
+        if(this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.setState({
+                searchKey,
+                currentPage : 1
+            },()=>{
+             this.filterArray();
+            })
+        }, 300);
     }
+    filterArray = () => {
+        let {searchKey,filteredDataset,dataset} = this.state
+        if(searchKey.length>0) {
+            filteredDataset = dataset.filter( element => 
+                element.content.toUpperCase().includes(searchKey.toUpperCase()) || 
+                element.created_at.toUpperCase().includes(searchKey.toUpperCase()) || 
+                element.updated_at.toUpperCase().includes(searchKey.toUpperCase())
+            )
+        }
+        else filteredDataset = dataset
+        this.setState({
+             filteredDataset
+        })
+    }
+
     onPaginationClick =async (e)=>{
        await this.setState({
            currentPage : e
@@ -70,16 +108,17 @@ class UserDatasetTable extends Component {
             return dataset.map(  (document,i)=>{
             return  <UserDatasetData data={document} key={i}></UserDatasetData>
         })
-         
-  
     }
     render(){
-         const {size,documentPerPage,currentPage,filteredDataset} = this.state
+         const {documentPerPage,currentPage,sortKey,trend} = this.state
+         let {filteredDataset} = this.state
+         const size = filteredDataset.length
          const pageNumbers = []
          for(let i=1;i<=Math.ceil(size/documentPerPage);i++)
              pageNumbers.push(i);
         const indexOfLastDocument = currentPage*documentPerPage
         const indexOfFirstDocument=indexOfLastDocument-documentPerPage
+        filteredDataset = filteredDataset.sort(this.sort_by(sortKey,trend < 0,function(a){return a.toUpperCase()}))
         let currentDataset = filteredDataset.slice(indexOfFirstDocument,indexOfLastDocument)
         return(
             <div>
@@ -146,7 +185,7 @@ class UserDatasetTable extends Component {
 
                </CardBody>
                 
-            </Card>  : <Spinner content='document'></Spinner>}
+            </Card>  : <div className="text-center lead"> <i className="fa fa-spinner fa-spin"></i> Loading documents... </div>}
             
             </div>
         )

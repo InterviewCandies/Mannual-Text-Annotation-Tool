@@ -78,11 +78,16 @@ class ProjectTable extends Component {
     }
    
     onSearchChange=async (e)=>{
-        await this.setState({
-            searchKey : e.target.value,
-            currentPage:1
-        })
-        await this.onChange()
+        const query = e.target.value
+        if(this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.setState({
+                searchKey : query,
+                currentPage : 1
+            },()=>{
+             this.onChange()
+            })
+        }, 300);
     }
 
    

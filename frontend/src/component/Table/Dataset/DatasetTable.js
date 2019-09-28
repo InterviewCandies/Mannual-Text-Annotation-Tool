@@ -10,6 +10,7 @@ import CustomPagination from '../../Pagination/CustomPagination';
 import Spinner from '../../Spinner/Spinner';
 import { get } from '../../../functions/project.function';
 import UserRecordModal from '../../Modal/UserRecordModal';
+import { toast } from 'react-toastify';
 
 class DatasetTable extends Component {
     constructor(props){
@@ -18,6 +19,7 @@ class DatasetTable extends Component {
             users: [],
             dataset : [],
             currentUser:'',
+            currentUsername:'',
             size:0,
             sortKey: 'content',
             searchKey: '',
@@ -68,8 +70,11 @@ class DatasetTable extends Component {
         this.onChange()
     }
     onDropDownUserChange = async(e)=>{
+        const sel = document.getElementById("selectedUser");
+        const text= sel.options[sel.selectedIndex].text;
         await this.setState({
             currentUser : e.target.value,
+            currentUsername : text,
             currentPage : 1
         })
         this.onChange()
@@ -85,13 +90,22 @@ class DatasetTable extends Component {
    
     onSearchChange=async(e)=>{
         const query = e.target.value
-        await this.setState({
-             searchKey : query,
-             currentPage : 1
-        })
-        await this.onChange()
+        if(this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.setState({
+                searchKey : query,
+                currentPage : 1
+            },()=>{
+             this.onChange()
+            })
+        }, 300);
     }
     onVerify = async(e) =>{
+        const {currentUser} = this.state
+        if(currentUser.length <= 0) {
+              toast.error('Error: User must be specified')
+              return
+        }
         await this.setState({
              verify : !this.state.verify
         })
@@ -108,9 +122,8 @@ class DatasetTable extends Component {
             return dataset.map(  (document,i)=>{
             return  <DatasetData data={document} key={i} action={this.onChange}></DatasetData>
         })
-         
-  
     }
+    
     render(){
          const {size,dataset,documentPerPage,currentPage,users} = this.state
          const pageNumbers = []
@@ -125,7 +138,7 @@ class DatasetTable extends Component {
             {this.state.loading? <Card id="card">
                 <CardBody>
                 <div className="d-flex flex-row justify-content-between">
-                  <div className=" form-group form-inline">
+                  <div className="form-group form-inline">
                          <label  className="mr-sm-2">Show </label>
                          <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownChange} >
                             <option value="10" selected>10</option>
@@ -134,14 +147,16 @@ class DatasetTable extends Component {
                             <option value="100">100</option>
                         </select>
                         <label>entries</label>
-                        <label  className="ml-xl-5 mr-sm-2">User</label>
-                         <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownUserChange} >
-                            <option></option>
+                    </div>
+                    <div className="form-group form-inline">
+                        <label  className="mr-sm-2">User</label>
+                         <select class="custom-select mr-sm-2" id="selectedUser" onChange={this.onDropDownUserChange} >
+                            <option value="">None</option>
                             {
-                                users.map(user=> <option value={user.id}>{user.username}</option>)
+                                users.map(user=> <option value={user.id} >{user.username}</option>)
                             }
                         </select>
-                        <label  className="ml-sm-2 mr-sm-2">Docs</label>
+                        <label  className="mr-sm-2">Docs</label>
                          <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownDocsChange} >
                             <option value="10" selected>10</option>
                             <option value="20">20</option>
@@ -151,10 +166,10 @@ class DatasetTable extends Component {
                         <Button color="success m-sm-2" onClick={this.onVerify}>Verify docs</Button>
                         <UserRecordModal  trigger={this.state.verify}
                                                   toggle={this.onVerify}
-                                                  action={this.onChange()}
                                                   projectId={this.props.projectId}
                                                   userId = {this.state.currentUser}
                                                   maxDocs = {this.state.verifiedDocs}
+                                                  username = {this.state.currentUsername}
                                                ></UserRecordModal>
                   </div>
                   <div className="form-group form-inline">
