@@ -2,12 +2,14 @@ import React,{Component} from 'react'
 import {Doughnut,Bar, HorizontalBar} from 'react-chartjs-2'
 import { getAllDocument } from '../../../functions/dataset.function'
 import Spinner from '../../../component/Spinner/Spinner'
+import  {CSVDownload,CSVLink} from 'react-csv'
 import {
     CardBody,
     Card,
     CardHeader,
     Row,
-    Col
+    Col,
+    Button
 } from 'reactstrap'
 import { listLabel } from '../../../functions/label.function'
 import {  get } from '../../../functions/project.function'
@@ -22,9 +24,17 @@ class Statistics extends Component {
                 datasetSize : 0,
                 labelsNumber:0,
                 usersNumber:0,
+                labeledDocs : 0,
+                csvData: [],
+                labelsCount : [],
+                rightLabels : [],
+                wrongLabels : [],
                 loading : true
           }
           this.projectId = localStorage.getItem('projectId')
+          this.csvLink = React.createRef();
+          this.labels=[]
+          this.users =[]
        
      }
      countByLabel(labels,dataset=[]){
@@ -39,25 +49,27 @@ class Statistics extends Component {
         
         return b
      }
-     countByUser(users,dataset=[]){
+     countByUser(users,dataset=[],mistakes=0){
         let a=[]
         for(let i=0;i<users.length;i++) a[ users[i] ]=0
 
         for(let i =0;i<dataset.length;i++)
-             a[ dataset[i].user]+=1
+        if(dataset[i].status == mistakes) a[ dataset[i].user]+=1
         let b=[]
 
         for(let i=0;i<users.length;i++) b.push(a[ users[i]])
         
         return b
      }
+     
      async componentDidMount(){
             
            const result = await getAllDocument(this.projectId)
            if(!result.response){
             const dataset = result.dataset 
             this.setState({ 
-                    datasetSize  : result.size
+                    datasetSize  : result.size,
+                    labeledDocs : result.labeled
                 })
             //Pie chart 
             const pieData ={
@@ -80,12 +92,14 @@ class Statistics extends Component {
            let labels = await listLabel(this.projectId)
            if(!labels.response){
             labels = labels.map(label => label.content)
+            this.labels = labels
             this.setState({
-                    labelsNumber : labels.length
+                    labelsNumber : labels.length,
+                    labelsCount : this.countByLabel(labels,dataset)
             })
             const barData = {
                 datasets: [{
-                    data: this.countByLabel(labels,dataset),
+                    data: this.state.labelsCount,
                     backgroundColor : '#ffff9a',
                     borderColor : '#ffc001',
                     borderWidth : 2,
@@ -103,13 +117,24 @@ class Statistics extends Component {
                 let users = project.users
                 const usernames = users.map(user=>user.username)
                 users = users.map(user=>user.id)
+                this.users = users
+                this.setState({
+                    rightLabels : this.countByUser(users,dataset),
+                    wrongLabels : this.countByUser(users,dataset,1)
+                })
                 const HorizontalBarData = {
                     datasets: [{
-                        data: this.countByUser(users,dataset),
+                        data: this.state.rightLabels,
+                        backgroundColor: "#98fb98",
+                        borderColor: "#0bcb0b",
+                        borderWidth : 2,
+                        label : 'Right annotation'
+                    },{
+                        data : this.state.wrongLabels,
                         backgroundColor: "rgba(206, 0, 0, 0.4)",
                         borderColor: "rgba(206, 0, 0, 1)",
                         borderWidth : 2,
-                        label : 'Users'
+                        label : 'Wrong annotation'
                     }],
                     labels: usernames
                     }
@@ -123,12 +148,41 @@ class Statistics extends Component {
                loading: false
             })
      }
+     handleCsvExport = (e) =>{
+        const {datasetSize,labeledDocs,labelsNumber,usersNumber,labelsCount,rightLabels,wrongLabels} = this.state
+        const csvData = [
+                ['Project' , 'aaa'] ,
+                ['Total documents', datasetSize],
+                ['Total labels' , labelsNumber],
+                ['Total users', usersNumber],
+                ['Labeled documents', labeledDocs],
+                [ 'Unlabeled documents', datasetSize - labeledDocs]
+        ]
+        this.setState({
+            csvData
+        })
+     }
      render(){
            const {datasetSize,labelsNumber,usersNumber} = this.state
+           console.log(this.state.csvData)
            return(
                 <div>
                     {this.state.loading?<Spinner content="charts"></Spinner>:
                                        <div>
+                                           <Row className=" ml-sm-2 mt-sm-3">
+                                               <CSVLink
+                                                    data={this.state.csvData}
+                                                    filename={this.projectId+'.csv'}
+                                                    className="hidden"
+                                                    target="_blank" 
+                                                    asyncOnClick={true}
+                                                    onClick={(event, done) => {
+                                                        this.handleCsvExport();
+                                                        done();
+                                                     }}>       
+                                                    <Button color="success" >Get report file</Button>
+                                                </CSVLink> 
+                                           </Row>
                                            <Row className="mt-sm-3">
                                                <Col xs="16" sm="8" lg="4">
                                                  <Card className="text-white bg-primary">
@@ -195,18 +249,16 @@ class Statistics extends Component {
                                                 <CardBody>
                                                     <HorizontalBar data ={this.state.HorizontalBarData}
                                                         options={ {
-                                                            responsive : true,
+                                                            responsive :true,
                                                             maintainAspectRatio: false,
                                                             scales: {
-                                                                xAxes: [
-                                                                        {
-                                                                            ticks: {
-                                                                            min: 0,
-                                                                            max: datasetSize
-                                                                            }
-                                                                        }
-                                                                    ]
-                                                                }
+                                                                xAxes: [{
+                                                                  stacked: true
+                                                                }],
+                                                                yAxes: [{
+                                                                  stacked: true
+                                                                }]
+                                                              }
                                                         }}
                                                        
                                                        
