@@ -45,6 +45,7 @@ class DatasetGateway {
     const documents = await this.DocumentModel.aggregate([{ $match: { project_id: ObjectId(project_id)} },
       { $addFields: {
         labels: '$labels.content',
+        history: '$history.content',
         },
       },
       {
@@ -55,11 +56,51 @@ class DatasetGateway {
             as: "userInfo"
         }
       },
-      {$unwind:"$userInfo"},
+      {
+        $lookup: {
+            from : "users",
+            localField: "admin",
+            foreignField: "_id",
+            as: "adminInfo"
+        }
+      },
+      
+      {
+        $unwind: {
+          path: "$userInfo",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $unwind: {
+          path: "$adminInfo",
+          preserveNullAndEmptyArrays: true
+        }
+      },
       { $project: { 
         content: true,
         _id: false,
         user: "$userInfo.username",
+        admin:"$adminInfo.username",
+        history: {
+          $reduce: {
+            input: '$history',
+            initialValue: '',
+            in: {
+              $concat: [
+                '$$value',
+                {
+                  $cond: {
+                    if: { $eq: ['$$value', ''] },
+                    then: ' ',
+                    else: ', ',
+                  },
+                },
+                '$$this',
+              ],
+            },
+          }
+        },
         labels: {
           $reduce: {
             input: '$labels',
@@ -78,6 +119,7 @@ class DatasetGateway {
               ],
             },
           },
+        
         } } }])
     return documents.map(this.documentMapper.toEntity)
   }

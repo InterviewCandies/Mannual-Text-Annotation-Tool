@@ -116,6 +116,7 @@ export const annotate = (id,labels) =>{
      const data = {
           labels:labels,
           user_id : (decoder.role)? undefined : decoder.id,
+          admin_id : (decoder.role)? decoder.id : undefined,
           status : decoder.role
      }
      return axios.post('http://localhost:4000/textAnnotation/dataset/annotate/'+id,data)
@@ -127,19 +128,7 @@ export const annotate = (id,labels) =>{
      })
 
 }
-export const verifyDocument = (id,status) =>{
-     const data = {
-          status:status
-     }
-     return axios.post('http://localhost:4000/textAnnotation/dataset/verify/'+id,data)
-     .then((res)=>{
-          return res.data
-     })
-     .catch(err=>{
-          return false
-     })
 
-}
 
 
 export const deleteDocument = (id) =>{

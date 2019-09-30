@@ -48,6 +48,7 @@ class ExportData extends Component{
             csvLoading : true
        })
         let result = await exportData(this.props.match.params.id,'csv')
+        console.log(result)
         if(result.response) {
             if(result.response.status==400) toast.error('Error: '+result.response.data.message)
         }

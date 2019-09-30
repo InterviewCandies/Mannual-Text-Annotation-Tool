@@ -15,12 +15,19 @@ const document = new Schema({
     type: Number,
     default: 0,
   },
+  history: {
+    type: Array,
+    default: [],
+  },
   labels: {
     type: Array,
     default: [],
   },
   user: {
     type: ObjectId,
+  },
+  admin: {
+     type: ObjectId
   },
   created_at: {
     type: String,

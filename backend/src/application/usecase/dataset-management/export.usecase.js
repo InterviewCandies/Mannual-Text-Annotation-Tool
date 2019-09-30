@@ -1,13 +1,12 @@
 const fs = require('fs')
 const util = require('util');
-const config = require('config')
 class ExportDataUseCase {
   constructor({ datasetGateway }) {
     this.datasetGateway = datasetGateway;
   }
 
   toCSV(data){
-    const header = ['content','labels','user']
+    const header = ['content','history','labels','user','admin']
     const replacer = (key, value) => value == null? '' : value 
     let csv = data.map(row => header.map(fieldName => {  
             let labels= JSON.stringify(row[fieldName], replacer) 
@@ -37,8 +36,8 @@ class ExportDataUseCase {
       const writeFile = util.promisify(fs.writeFile);
       await writeFile(`files/${project_id}.json`,json)
     }
-    const url = config.get('Server.IP')+`${project_id}.${fileType}`
-    return {url};
+
+    return {url: `http://localhost:4000/files/${project_id}.${fileType}`};
   }
 }
 

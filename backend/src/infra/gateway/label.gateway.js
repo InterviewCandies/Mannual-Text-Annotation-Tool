@@ -20,8 +20,11 @@ class LabelGateway {
 
   async delete(entity) {
     const result = await this.LabelModel.deleteOne({ _id: entity.id });
-    const id = entity.id.toString()
-    if (result.deletedCount) await this.DocumentModel.updateMany({}, { $pull: { labels: { id } } })
+    const content = entity.content
+    if (result.deletedCount) {
+
+      await this.DocumentModel.updateMany({}, {$pull: { labels: { content } } } )
+    }
     // eslint-disable-next-line eqeqeq
     return result.deletedCount == 1;
   }

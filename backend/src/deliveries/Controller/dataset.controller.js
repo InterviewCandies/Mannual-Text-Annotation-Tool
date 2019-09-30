@@ -134,8 +134,8 @@ class DatasetController {
 
   async annotate(req, res) {
     const { id } = req.params
-    const { labels, user_id, status} = req.body
-    const result = await this.annotateDocument.execute(id, labels, user_id, status)
+    const { labels, user_id, admin_id, status} = req.body
+    const result = await this.annotateDocument.execute(id, labels, user_id, admin_id, status)
     try {
       if (!result) throw new Error('Your annotation will not be saved because document has been labeled before')
       res.status(200).json(result);

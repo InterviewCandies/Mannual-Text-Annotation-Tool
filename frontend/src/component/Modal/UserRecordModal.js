@@ -23,7 +23,6 @@ class UserRecordModal extends Component{
                                       maxDocs={this.props.maxDocs}></UserDatasetTable>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="success" onClick={this.onClick}>Save</Button>{' '}
                     <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                 </ModalFooter>
             </Modal>
