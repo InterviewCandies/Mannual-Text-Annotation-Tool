@@ -82,25 +82,6 @@ class DatasetGateway {
         _id: false,
         user: "$userInfo.username",
         admin:"$adminInfo.username",
-        history: {
-          $reduce: {
-            input: '$history',
-            initialValue: '',
-            in: {
-              $concat: [
-                '$$value',
-                {
-                  $cond: {
-                    if: { $eq: ['$$value', ''] },
-                    then: ' ',
-                    else: ', ',
-                  },
-                },
-                '$$this',
-              ],
-            },
-          }
-        },
         labels: {
           $reduce: {
             input: '$labels',
@@ -120,7 +101,29 @@ class DatasetGateway {
             },
           },
         
-        } } }])
+        }, 
+        history: {
+          $reduce: {
+            input: '$history',
+            initialValue: '',
+            in: {
+              $concat: [
+                '$$value',
+                {
+                  $cond: {
+                    if: { $eq: ['$$value', ''] },
+                    then: ' ',
+                    else: ', ',
+                  },
+                },
+                '$$this',
+              ],
+            },
+          }
+        },
+        
+        
+      } }])
     return documents.map(this.documentMapper.toEntity)
   }
 
