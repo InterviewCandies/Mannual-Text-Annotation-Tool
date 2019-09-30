@@ -157,16 +157,17 @@ class Statistics extends Component {
                 ['Total documents', datasetSize],
                 ['Total labels' , labelsNumber],
                 ['Total users', usersNumber],
+                [''],
                 ['Documents'],
                 ['Labeled documents', labeledDocs],
                 [ 'Unlabeled documents', datasetSize - labeledDocs]
         ]
-
+        csvData.push([''])
         if(this.labels.length) csvData.push(['Labels'])
         for(let i =0; i< this.labels.length; i++) 
             csvData.push([this.labels[i],labelsCount[i]])
-
-        if(this.users.length) csvData.push(['Users'])
+        csvData.push([''])
+        if(this.users.length) csvData.push(['Users','Valid annotation','Invalid annotation'])
         for(let i =0; i< this.users.length; i++) 
             csvData.push([ this.users[i],rightLabels[i],wrongLabels[i]])
         this.setState({
