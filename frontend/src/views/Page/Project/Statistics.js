@@ -32,6 +32,7 @@ class Statistics extends Component {
                 loading : true
           }
           this.projectId = localStorage.getItem('projectId')
+          this.projectName = ''
           this.csvLink = React.createRef();
           this.labels=[]
           this.users =[]
@@ -115,9 +116,10 @@ class Statistics extends Component {
             let project = await get(this.projectId)
             if(!project.response){
                 let users = project.users
+                this.projectName = project.project_name
                 const usernames = users.map(user=>user.username)
                 users = users.map(user=>user.id)
-                this.users = users
+                this.users = usernames
                 this.setState({
                     rightLabels : this.countByUser(users,dataset),
                     wrongLabels : this.countByUser(users,dataset,1)
@@ -151,36 +153,45 @@ class Statistics extends Component {
      handleCsvExport = (e) =>{
         const {datasetSize,labeledDocs,labelsNumber,usersNumber,labelsCount,rightLabels,wrongLabels} = this.state
         const csvData = [
-                ['Project' , 'aaa'] ,
+                ['Project' , this.projectName] ,
                 ['Total documents', datasetSize],
                 ['Total labels' , labelsNumber],
                 ['Total users', usersNumber],
+                ['Documents'],
                 ['Labeled documents', labeledDocs],
                 [ 'Unlabeled documents', datasetSize - labeledDocs]
         ]
+
+        if(this.labels.length) csvData.push(['Labels'])
+        for(let i =0; i< this.labels.length; i++) 
+            csvData.push([this.labels[i],labelsCount[i]])
+
+        if(this.users.length) csvData.push(['Users'])
+        for(let i =0; i< this.users.length; i++) 
+            csvData.push([ this.users[i],rightLabels[i],wrongLabels[i]])
         this.setState({
             csvData
         })
      }
      render(){
            const {datasetSize,labelsNumber,usersNumber} = this.state
-           console.log(this.state.csvData)
            return(
                 <div>
                     {this.state.loading?<Spinner content="charts"></Spinner>:
                                        <div>
-                                           <Row className=" ml-sm-2 mt-sm-3">
+                                           <Row className=" mr-sm-2 mt-sm-3 justify-content-end">
                                                <CSVLink
                                                     data={this.state.csvData}
                                                     filename={this.projectId+'.csv'}
                                                     className="hidden"
                                                     target="_blank" 
                                                     asyncOnClick={true}
+                                                    style={{textDecoration: 'none'}}
                                                     onClick={(event, done) => {
                                                         this.handleCsvExport();
                                                         done();
                                                      }}>       
-                                                    <Button color="success" >Get report file</Button>
+                                                    <div><i className="fa fa-download"></i>  <strong>Download report</strong></div>
                                                 </CSVLink> 
                                            </Row>
                                            <Row className="mt-sm-3">

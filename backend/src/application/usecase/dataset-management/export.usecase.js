@@ -1,5 +1,6 @@
 const fs = require('fs')
 const util = require('util');
+const config = require('config')
 class ExportDataUseCase {
   constructor({ datasetGateway }) {
     this.datasetGateway = datasetGateway;
@@ -36,8 +37,8 @@ class ExportDataUseCase {
       const writeFile = util.promisify(fs.writeFile);
       await writeFile(`files/${project_id}.json`,json)
     }
-
-    return {url: `http://localhost:4000/files/${project_id}.${fileType}`};
+    const url = config.get('Server.IP')+`${project_id}.${fileType}`
+    return {url};
   }
 }
 

@@ -70,8 +70,6 @@ class DatasetController {
   async getDocsByUserId(req,res){
     const project_id = req.params.id
     const {userId,maxDocs} = req.body
-    console.log(userId) 
-    console.log(maxDocs)
     const result = await this.getDocumentByUserId.execute(project_id,userId,maxDocs);
     try {
       res.status(200).json(result);
