@@ -91,6 +91,7 @@ container.register({
   listProject: awilix.asClass(ProjectManagement.ListProject),
   _addUser: awilix.asClass(ProjectManagement.AddUser),
   getProject: awilix.asClass(ProjectManagement.Get),
+  statistics: awilix.asClass(ProjectManagement.Statistics),
   _removeUser: awilix.asClass(ProjectManagement.RemoveUser),
   _userProjectList: awilix.asClass(ProjectManagement.UserProjectList),
 })

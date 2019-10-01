@@ -83,6 +83,16 @@ export const get= (id) =>{
 }
 
 
+export const getStatistics = (id) =>{
+  
+    return  axios.post('http://localhost:4000/textAnnotation/project/statistics/'+id)
+            .then((res)=>{
+                    return res.data;
+            })
+            .catch(error=>{
+                return false;
+    })
+}
 
 
 export const removeUser= (user_id,project_id) =>{

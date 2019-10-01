@@ -1,11 +1,12 @@
 module.exports = class ProjectController {
   constructor({ listProject, createProject, deleteProject, editProject, getProject,
-    _addUser, _removeUser, _userProjectList, }) {
+    _addUser, _removeUser, _userProjectList, statistics}) {
     this.listProject = listProject
     this.createProject = createProject
     this.deleteProject = deleteProject
     this.editProject = editProject
     this.getProject = getProject
+    this.statistics = statistics
     // eslint-disable-next-line no-underscore-dangle
     this._addUser = _addUser
     // eslint-disable-next-line no-underscore-dangle
@@ -22,6 +23,7 @@ module.exports = class ProjectController {
     this.addUser = this.addUser.bind(this)
     this.removeUser = this.removeUser.bind(this)
     this.userProjectList = this.userProjectList.bind(this)
+    this.getStatistics = this.getStatistics.bind(this)
   }
 
   async list(req, res) {
@@ -75,6 +77,16 @@ module.exports = class ProjectController {
       res.status(200).json(result);
     } catch (error) {
       res.status(400).json(error);
+    }
+  }
+
+  async getStatistics(req,res) {
+    const { id } = req.params
+    const result = await this.statistics.execute(id)
+    try {
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
     }
   }
 

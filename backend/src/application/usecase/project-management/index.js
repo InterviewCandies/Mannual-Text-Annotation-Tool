@@ -7,4 +7,5 @@ module.exports = {
   RemoveUser: require('./removeUser.usecase'),
   Get: require('./get.usecase'),
   UserProjectList: require('./user-project-list.usercase'),
+  Statistics : require('./statistics.usecase')
 }

@@ -1,6 +1,5 @@
 import React,{Component} from 'react' 
 import {Doughnut,Bar, HorizontalBar} from 'react-chartjs-2'
-import { getAllDocument } from '../../../functions/dataset.function'
 import Spinner from '../../../component/Spinner/Spinner'
 import  {CSVDownload,CSVLink} from 'react-csv'
 import {
@@ -12,7 +11,7 @@ import {
     Button
 } from 'reactstrap'
 import { listLabel } from '../../../functions/label.function'
-import {  get } from '../../../functions/project.function'
+import {  get, getStatistics } from '../../../functions/project.function'
 import { getUser } from '../../../functions/user.function'
 class Statistics extends Component {
      constructor(props){
@@ -38,45 +37,32 @@ class Statistics extends Component {
           this.users =[]
        
      }
-     countByLabel(labels,dataset=[]){
-        let a=[]
-        for(let i=0;i<labels.length;i++) a[ labels[i] ]=0
-
-        for(let i =0;i<dataset.length;i++)
-            dataset[i].labels.map(label=> a[label.content]+=1)
-        let b=[]
-
-        for(let i=0;i<labels.length;i++) b.push(a[ labels[i]])
-        
-        return b
-     }
-     countByUser(users,dataset=[],mistakes=0){
-        let a=[]
-        for(let i=0;i<users.length;i++) a[ users[i] ]=0
-
-        for(let i =0;i<dataset.length;i++)
-        if(dataset[i].status == mistakes) a[ dataset[i].user]+=1
-        let b=[]
-
-        for(let i=0;i<users.length;i++) b.push(a[ users[i]])
-        
-        return b
-     }
      
      async componentDidMount(){
             
-           const result = await getAllDocument(this.projectId)
+           const result = await getStatistics(this.projectId)
            if(!result.response){
-            const dataset = result.dataset 
-            this.setState({ 
-                    datasetSize  : result.size,
-                    labeledDocs : result.labeled
-                })
+             const {project,
+             datasetSize,
+             labeledDocs,
+             labelsCount,
+             rightLabels,
+             wrongLabels} = result 
+             let {users,labels} = result
+             this.setState({
+                 datasetSize,
+                 labeledDocs,
+                 labelsCount,
+                 labelsNumber : labels.length,
+                 usersNumber : users.length,
+                 rightLabels,
+                 wrongLabels
+             })
             //Pie chart 
             const pieData ={
                     datasets: [
                         {
-                        data: [result.labeled,result.size-result.labeled],
+                        data: [labeledDocs,datasetSize - labeledDocs],
                         borderColor: ['rgba(75, 192, 192, 1)', 'rgba(192, 0, 0, 1)'],
                         backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(192, 0, 0, 0.2)']                        }
                      ],
@@ -90,14 +76,10 @@ class Statistics extends Component {
             })
            
            // Bar chart 
-           let labels = await listLabel(this.projectId)
            if(!labels.response){
             labels = labels.map(label => label.content)
             this.labels = labels
-            this.setState({
-                    labelsNumber : labels.length,
-                    labelsCount : this.countByLabel(labels,dataset)
-            })
+            
             const barData = {
                 datasets: [{
                     data: this.state.labelsCount,
@@ -113,17 +95,11 @@ class Statistics extends Component {
             })
            }
            //Horizontal data 
-            let project = await get(this.projectId)
-            if(!project.response){
-                let users = project.users
                 this.projectName = project.project_name
                 const usernames = users.map(user=>user.username)
                 users = users.map(user=>user.id)
                 this.users = usernames
-                this.setState({
-                    rightLabels : this.countByUser(users,dataset),
-                    wrongLabels : this.countByUser(users,dataset,1)
-                })
+               
                 const HorizontalBarData = {
                     datasets: [{
                         data: this.state.rightLabels,
@@ -142,9 +118,7 @@ class Statistics extends Component {
                     }
                     this.setState({
                         HorizontalBarData,
-                        usersNumber : users.length
                     })
-            }
            }
            this.setState({ 
                loading: false

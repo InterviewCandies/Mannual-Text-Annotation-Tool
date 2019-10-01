@@ -71,18 +71,6 @@ class ProjectGateway {
   }
 
 
-  async userProjectSearch(username, page, perPage, searchKey) {
-    const projects = await this.ProjectModel.find(
-    
-    )
-      .skip((perPage * page) - perPage)
-      .limit(perPage)
-    const size = projects.length
-    return { size,
-      projects: projects.map(this.projectMapper.toEntity),
-    };
-  }
-
 
   async userProjectList(username, page, perPage, sortKey, trend,searchKey) {
     const query = {
