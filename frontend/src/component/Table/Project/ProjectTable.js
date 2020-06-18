@@ -15,10 +15,10 @@ class ProjectTable extends Component {
         this.state ={
             projects : [],
             filteredProjects: [],
-            size:0,
+            size: 0,
             query:'',
-            trend:1,
-            sortKey:'project_name',
+            trend:-1,
+            sortKey:'updated_at',
             searchKey:'',
             createProject:false,
             projectsPerPage : 10,
@@ -30,22 +30,22 @@ class ProjectTable extends Component {
   
     async componentDidMount(){
         const {currentPage,projectsPerPage,sortKey,trend,searchKey} = this.state
-        let  result = await  list(currentPage,projectsPerPage,sortKey,trend,searchKey)
+        let  result = await list(currentPage,projectsPerPage,sortKey,trend,searchKey)
         
         const {projects,size} = result
         this.setState({
             filteredProjects : projects,
-            size:size?size:0,
+            size: size ? size : 0,
             loading : true
         })
        
         
     }
     
-    onChange=async()=>{
-        const {currentPage,projectsPerPage,sortKey,trend,searchKey}  = this.state
+    onChange = async() => {
+        const { currentPage,projectsPerPage,sortKey,trend,searchKey }  = this.state
         let  result = await  list(currentPage,projectsPerPage,sortKey,trend,searchKey)
-        const {projects,size} = result
+        const { projects,size } = result
         this.setState({
             size : size?size:0
         })
@@ -55,39 +55,27 @@ class ProjectTable extends Component {
         
        
     }
-    onDropDownChange =async (e)=>{
+    onDropDownChange = async (e)=>{
         await this.setState({
             projectsPerPage : Number(e.target.value),
             currentPage :1
         })
-        this.onChange()
+        this.onChange();
     }
 
-    onCreateProject = async()=>{
-        this.setState({
-            createProject : !this.state.createProject
-        })
+    onCreateProject = async() => {
+        this.setState(prevState => ({
+            createProject : !prevState.createProject
+        }));
     }   
-   
-    onSort=async (sortKey,value)=>{
-         await this.setState({
-               trend : value,
-               sortKey:sortKey  
-         })
-        this.onChange()
-    }
-   
-    onSearchChange=async (e)=>{
-        const query = e.target.value
-        if(this.timeout) clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
-            this.setState({
-                searchKey : query,
-                currentPage : 1
-            },()=>{
-             this.onChange()
-            })
-        }, 300);
+
+    onSearchChange = async (e) => {
+        const query = e.target.value;
+        await this.setState({
+            searchKey : query,
+            currentPage : 1
+        });
+        this.onChange();
     }
 
    
@@ -95,21 +83,20 @@ class ProjectTable extends Component {
     
     onPaginationClick = async(e)=>{
         await this.setState({
-            currentPage :e
+            currentPage : e
         })
-        this.onChange()
+        this.onChange();
     }
 
 
     //Presenting Projects 
     displayProjects = (currentsProjects)=>{
             currentsProjects = currentsProjects || []
-            return currentsProjects.map( (project,i)=>{
+            return currentsProjects.map((project,i) => {
             return  <ProjectData data={project} 
                                  key={i} 
                                  action={this.onChange} 
-                                 users={project.users} 
-                                 >
+                                 users={project.users}>
                     </ProjectData>
         })
          
@@ -117,16 +104,16 @@ class ProjectTable extends Component {
     }
     render(){
         //for Pagination
-        const {size,filteredProjects,projectsPerPage,currentPage} = this.state
-        const pageNumbers = []
+        const {size,filteredProjects,projectsPerPage,currentPage} = this.state;
+        const pageNumbers = [];
         for(let i=1;i<=Math.ceil(size/projectsPerPage);i++)
             pageNumbers.push(i);
 
         //for display Project
          //Show project based on pagination
-         const indexOfLastProject = currentPage*projectsPerPage
-         const indexOfFirstProject =indexOfLastProject-projectsPerPage
-         let currentsProjects = filteredProjects
+         const indexOfLastProject = currentPage*projectsPerPage;
+         const indexOfFirstProject = indexOfLastProject-projectsPerPage;
+         let currentsProjects = filteredProjects;
         return(
              <div>
                  {this.state.loading?  
@@ -135,7 +122,7 @@ class ProjectTable extends Component {
                     
                     <div className="d-flex flex-row justify-content-between my-sm-2">
                         <div className=" form-group form-inline">
-                            <label  className="mr-sm-2">Show </label>
+                            <label  className="mr-sm-2">Show</label>
                             <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownChange} >
                                 <option value="10" selected>10</option>
                                 <option value="20">20</option>
@@ -150,50 +137,25 @@ class ProjectTable extends Component {
                         </div>
                         
                         <div className="form-group form-inline">
-                            <label className="mr-sm-2">Search:</label>
-                            <input className="form-control mr-sm-2" type="text" onChange={this.onSearchChange}></input>
+                            <input className="form-control mr-sm-2" 
+                                   type="text" 
+                                   onChange={this.onSearchChange}
+                                   placeholder="Search project"></input>
                         </div>
                     </div>
                     <table className="table table-striped table-bordered text-center">
                         <thead>
-                            <th >
-                                Name
-                                <div className="float-right" >
-                                   <i className="fa fa-arrow-up mb-sm-0 p-sm-0" onClick={this.onSort.bind(this,"project_name",1)}></i>
-                                   <i className="fa fa-arrow-down mt-sm-0 p-sm-0" onClick={this.onSort.bind(this,"project_name",-1)}></i>
-                                </div>
-                            </th>
-                            <th >
-                                Description
-                                <div className="float-right">
-                                    <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"project_description",1)}></i>
-                                    <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"project_description",-1)} ></i>
-                                </div>
-                            </th>
+                            <th>Name</th>
+                            <th>Description</th>
                             <th>User</th>
-                            <th >
-                                Created at
-                                <div className="float-right">
-                                    <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"created_at",1)}></i>
-                                    <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"created_at",-1)} ></i>
-                                </div>
-                            </th>
-                            <th >
-                                Updated at
-                                <div className="float-right">
-                                    <i className="fa fa-arrow-up" onClick={this.onSort.bind(this,"updated_at",1)}></i>
-                                    <i className="fa fa-arrow-down" onClick={this.onSort.bind(this,"updated_at",-1)} ></i>
-                                </div>
-                            </th>
-                            <th >Actions</th>
-                            
+                            <th>Created at</th>
+                            <th>Last modified</th>
+                            <th>Actions</th>
                         </thead>
                         <tbody>
-                        {this.displayProjects(currentsProjects)}
+                            {this.displayProjects(currentsProjects)}
                         </tbody>
-                    </table>
-    
-                    
+                    </table>                 
                     <div className="d-flex flex-row justify-content-between">
                         <p >
                             {`Show ${Math.min(indexOfFirstProject+1,size) } to ${Math.min(indexOfLastProject,size)} of ${size} entries`}

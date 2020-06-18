@@ -21,9 +21,7 @@ class UserDashboard extends Component {
 
     return (
       <div className="animated fadeIn">
-      
-       <UserProjectTable userId={this.id} username={this.username}></UserProjectTable>
-
+        <UserProjectTable userId={this.id} username={this.username}></UserProjectTable>
       </div>
     );
   }

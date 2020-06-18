@@ -27,25 +27,25 @@ class ProjectLayout extends Component {
   loading = () => <Spinner></Spinner>
   constructor(props){
      super(props);
-     localStorage.setItem('projectId',this.props.match.params.id);
+     localStorage.setItem('projectId', this.props.match.params.id);
      this.navigation={
         items: [
          
           {
             name: 'Dataset',
-            url: `/project/${localStorage.getItem('projectId')}/dataset`,
+            url: `/project/${this.props.match.params.id}/dataset`,
             icon: 'icon-layers',
             
           },
           {
             name: 'Labels',
-            url: `/project/${localStorage.getItem('projectId')}/labels`,
+            url: `/project/${this.props.match.params.id}/labels`,
             icon: 'icon-puzzle',
             
           },
           {
             name: 'Statistics',
-            url: `/project/${localStorage.getItem('projectId')}/statistics`,
+            url: `/project/${this.props.match.params.id}/statistics`,
             icon: 'icon-chart',
             
           }

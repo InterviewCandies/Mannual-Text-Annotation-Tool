@@ -10,11 +10,9 @@ class Dataset extends Component{
           }
       }
       async componentDidMount(){
-           const project = await get(this.props.match.params.id)
-           const users = project.users
-           this.setState({
-               users
-           })
+           const project = await get(this.props.match.params.id);
+           const users = project.users;
+           this.setState({ users });
       }
       render(){
           return(

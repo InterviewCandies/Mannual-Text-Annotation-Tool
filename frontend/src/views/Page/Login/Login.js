@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
-import { Alert, Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-import {login} from '../../../functions/user.function'
+import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
+import { login } from '../../../functions/user.function'
 class Login extends Component {
   constructor(props){
     super(props);
     this.state={
-      id: '',
       username: '',
       password:'',
-      role:-1,
-      
     }
-    this.onChangeUsername = this.onChangeUsername.bind(this);
-    this.onChangePassword = this.onChangePassword.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
   }
   onChangeUsername(e){
        this.setState({
@@ -32,7 +26,6 @@ class Login extends Component {
         username: this.state.username,
         password: this.state.password
     }
-     
     const result = await login(newLogin);
     if(result.username){   
           this.props.history.push('/');
@@ -55,10 +48,7 @@ class Login extends Component {
               <CardGroup>
                 <Card className="p-4">
                   <CardBody>
-                    <p  id="error" style={{color:'red',display:'none'}}>
-                         Invalid username or password
-                    </p>
-                    <Form onSubmit={this.onSubmit}>
+                    <Form onSubmit={(e) => this.onSubmit(e)}>
                       <h1>Login</h1>
                       <p className="text-muted">Sign In to your account</p>
                       <InputGroup className="mb-3">
@@ -71,7 +61,7 @@ class Login extends Component {
                                placeholder="Username" 
                                autoComplete="username" 
                                value={this.state.username}
-                               onChange={this.onChangeUsername}/>
+                               onChange={(e) => this.onChangeUsername(e)}/>
                       </InputGroup>
                       <InputGroup className="mb-4">
                         <InputGroupAddon addonType="prepend">
@@ -83,14 +73,14 @@ class Login extends Component {
                         placeholder="Password" 
                         autoComplete="current-password"
                         value={this.state.password}
-                        onChange={this.onChangePassword}/>
+                        onChange={(e) => this.onChangePassword(e)}/>
                       </InputGroup>
+                      <p  id="error" style={{color:'red',display:'none'}}>
+                        Invalid username or password
+                      </p>
                       <Row>
                         <Col xs="6">
                           <Button color="primary" className="px-4" >Login</Button>
-                        </Col>
-                        <Col xs="6" className="text-right">
-                          <Button color="link" className="px-0">Forgot password?</Button>
                         </Col>
                       </Row>
                     </Form>

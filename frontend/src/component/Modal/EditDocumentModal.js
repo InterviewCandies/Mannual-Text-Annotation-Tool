@@ -7,7 +7,7 @@ import {
    ModalHeader
 } from 'reactstrap'
 import { editDocument } from '../../functions/dataset.function';
-import {ToastContainer,toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 class EditDocumentModal extends Component{
     constructor(props){
@@ -16,10 +16,10 @@ class EditDocumentModal extends Component{
             id: this.props.data.id,
             content: this.props.data.content
         }
-        this.onToggle = this.props.toggle
+        this.onToggle = this.props.toggle;
     }
     componentDidUpdate(oldProps){
-        const props = this.props
+        const props = this.props;
          if(oldProps.data != props.data) {
               this.setState({
                  id: props.data.id,
@@ -28,22 +28,22 @@ class EditDocumentModal extends Component{
          }
     }
 
-    onChangeContent=(e)=>{
+    onChangeContent= (e) => {
         this.setState({
             content : e.target.value
         })
     
     }
   
-    onSubmit = async (e)=>{
-        e.preventDefault()
-        const result=await editDocument(this.state.id,this.state.content)
+    onSubmit = async (e) => {
+        e.preventDefault();
+        const result = await editDocument(this.state.id,this.state.content);
 
-        if(result) toast.success('Document has been updated')
-        else  toast.error('Error: Failed to edit this document')
+        if(result) toast.success('Document has been updated');
+        else  toast.error('Error: Failed to edit this document');
 
-        this.onToggle()
-        this.props.action()   
+        this.onToggle();
+        this.props.action();   
     }
        render(){
            return(
@@ -75,4 +75,4 @@ class EditDocumentModal extends Component{
        }
 }
 
-export default EditDocumentModal
+export default EditDocumentModal;

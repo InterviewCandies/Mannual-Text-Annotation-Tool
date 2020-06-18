@@ -15,50 +15,48 @@ class RemoveLabelModal extends Component{
             label : '',
             labels:this.props.labels
         }
-       this.toggle = this.props.toggle  
+       this.toggle = this.props.toggle;
     }
-    onChange=(e)=>{
+    onChange= (e) => {
          this.setState({
              label : e.target.value
          })
     }
-    onClick =async (e)=>{
-        await removeLabel(this.state.label)
-        this.props.action()
-        this.toggle()
+    onClick = async(e) => {
+        await removeLabel(this.state.label);
+        this.props.action();
+        this.toggle();
     }
     
     async componentDidUpdate(oldProps){
-        const props = this.props
-        if(oldProps.labels!=props.labels) {
+        const props = this.props;
+        if(oldProps.labels != props.labels) {
            this.setState({
              id : props.data.id,
               labels : props.labels
            })
         }
-      
     }
-    
-       render(){
-           return(
-                <Modal isOpen={this.props.trigger} toggle={this.toggle}
-                    className={'modal-danger ' + this.props.className}>
-                <ModalHeader toggle={this.toggle}>Remove label</ModalHeader>
-                <ModalBody>
-                    <select class="custom-select" onChange={this.onChange}>
-                    <option selected>Choose...</option>
-                      {this.state.labels.map((label)=><option value={label.id}>{label.content}</option>)}
-                    </select>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="danger" onClick={this.onClick}>Delete</Button>{' '}
-                    <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-                  </ModalFooter>
-               
-               </Modal>
+    render(){
+        return(
+            <Modal isOpen={this.props.trigger} toggle={this.toggle}
+                className={'modal-danger ' + this.props.className}>
+            <ModalHeader toggle={this.toggle}>Remove label</ModalHeader>
+            <ModalBody>
+                <select class="custom-select" onChange={this.onChange}>
+                <option selected>Choose...</option>
+                    {this.state.labels.map((label)=><option value={label.id}>{label.content}</option>)}
+                </select>
+            </ModalBody>
+            <ModalFooter>
+                <Button color="danger" onClick={this.onClick}>Delete</Button>{' '}
+                <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                </ModalFooter>
+            
+            </Modal>
 
-           )
-       }
+        )
+    }
 }
 
 export default RemoveLabelModal

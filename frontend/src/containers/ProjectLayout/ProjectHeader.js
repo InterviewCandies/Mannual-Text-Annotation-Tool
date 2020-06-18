@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Nav, NavItem } from 'reactstrap';
 import PropTypes from 'prop-types';
 import jwt_decode from 'jwt-decode'
-import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
+import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/logo2016.png'
 import sygnet from '../../assets/img/brand/sygnet.svg'
 

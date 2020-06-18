@@ -10,7 +10,7 @@ import UserDatasetTable from '../Table/DatasetByUser/UserDatasetTable'
 class UserRecordModal extends Component{
     constructor(props){
         super(props)
-        this.toggle = this.props.toggle
+        this.toggle = this.props.toggle;
     }
     render(){
         return (

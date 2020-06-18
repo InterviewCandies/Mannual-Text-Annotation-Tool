@@ -10,11 +10,8 @@ import {
 import { listLabel } from '../../functions/label.function';
 import { annotate } from '../../functions/dataset.function';
 class LabelCard  extends Component{
-    constructor(props){
-      super(props)
-    }
-    onClick=(e)=>{
-         e.preventDefault();
+    onClick = (e) => {
+        e.preventDefault();
         this.props.action(e,this.props.label)
     }
     render(){
@@ -43,50 +40,50 @@ class EditAnnotationModal extends Component{
         this.projectId = localStorage.getItem('projectId')
         this.onToggle = this.props.toggle
     }
-    async componentDidMount(){
+    async componentDidMount() {
         this.setState({
             projectLabels : await listLabel(this.projectId) ,
       })
      
     }
-    componentDidUpdate(oldProps){
+    componentDidUpdate(oldProps) {
         const props = this.props
-        if(oldProps.data!=props.data) {
+        if(oldProps.data != props.data) {
            this.setState({
             id : props.data.id,
             labels : props.data.labels
            })
         }
     }
-    onRemoveLabel =(e,label) =>{
+    onRemoveLabel = (e,label) =>{
         let {labels} = this.state
         let i= labels.indexOf(label)
-        if(i!=-1) labels.splice(i,1);
+        if(i !== -1) labels.splice(i,1);
         this.setState({
            labels: labels
-        })
+        });
    
      }
 
-     onLabelClick =(e,label)=>{
-        let {labels} = this.state
-        const i = labels.find((l)=>l.content==label.content)
-        if(!i)  labels.push(label)
+     onLabelClick =(e,label) => {
+        let { labels } = this.state;
+        const i = labels.find((l)=>l.content == label.content);
+        if(!i)  labels.push(label);
    
         this.setState({
              labels: labels
         })
      }
    
-    onSubmit = async (e)=>{
-        const {id,labels} = this.state
-        const result=await annotate(id,labels)
-        this.onToggle()
+    onSubmit = async () => {
+        const { id,labels } = this.state
+        await annotate(id,labels)
+        this.onToggle();
     }
        render(){
-           let {projectLabels,labels} = this.state
-           projectLabels = projectLabels || []
-           labels = labels || []
+           let { projectLabels,labels } = this.state;
+           projectLabels = projectLabels || [];
+           labels = labels || [];
            return(
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-success ' + this.props.className}>

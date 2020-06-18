@@ -18,17 +18,15 @@ class DatasetData extends Component{
         }
            
     }
-   
- 
-    onEdit=(e)=>{
-        this.setState({
-            edit : !this.state.edit
-        })
+    onEdit = () => {
+        this.setState(preState => ({
+            edit : !preState.edit
+        }));
     }
-    onDelete=(e)=>{
-        this.setState({
-            delete: !this.state.delete
-        })
+    onDelete = () => {
+        this.setState(prevState => ({
+            delete: !prevState.delete
+        }))
     }
    
     //String truncate
@@ -45,11 +43,10 @@ class DatasetData extends Component{
         return str.join(' ');
       }
     render(){
-        const {content,labels,status,created_at,updated_at} = this.props.data
+        const {content,created_at,updated_at} = this.props.data
         return(
             <tr>
                 <td>{ this.stringTruncate(content,50) }</td>
-               
                 <td>{ created_at }</td>
                 <td>{ updated_at }</td>
                 <td>

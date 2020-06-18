@@ -7,7 +7,6 @@ import {
    ModalFooter,
    ModalHeader
 } from 'reactstrap'
-import { verifyDocument } from '../../functions/dataset.function';
 import EditAnnotationModal from './EditAnnotationModal';
 const LabelCard =props=>(
     <ButtonGroup className="mr-sm-2 mb-sm-2">
@@ -32,7 +31,7 @@ class VerifyDocumentModal extends Component{
     }
     componentDidUpdate(oldProps){
         const props = this.props
-        if( oldProps.data!= props.data) {
+        if( oldProps.data != props.data) {
            this.setState({
             id : this.props.data.id,
             labels: this.props.data.labels,
@@ -40,14 +39,14 @@ class VerifyDocumentModal extends Component{
         }
     }
 
-    onEdit=(e)=>{
-         this.setState({
-             edit : !this.state.edit
-         })
+    onEdit= () => {
+         this.setState(prevState => ({
+             edit : !prevState.edit
+         }));
     }
   
        render(){
-           const {labels} =this.state
+           const { labels } = this.state;
            return(
                 <Modal isOpen={this.props.trigger} toggle={this.onToggle}
                     className={'modal-success ' + this.props.className}>
@@ -68,19 +67,19 @@ class VerifyDocumentModal extends Component{
                            style={{textDecoration : "none"}}>
                             <i className="fa fa-cog"></i> Add/Remove labels
                         </a>
-                        <EditAnnotationModal    trigger={this.state.edit}
-                                                toggle={this.onEdit}
-                                                data={this.props.data}
-                                                ></EditAnnotationModal>
+                        <EditAnnotationModal   trigger={this.state.edit}
+                                               toggle={this.onEdit}
+                                               data={this.props.data}>
+                        </EditAnnotationModal>
                      </div>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="secondary" onClick={this.onToggle}>Cancel</Button>
-                  </ModalFooter>
+                </ModalFooter>
                </Modal>
 
            )
        }
 }
 
-export default VerifyDocumentModal 
+export default VerifyDocumentModal;

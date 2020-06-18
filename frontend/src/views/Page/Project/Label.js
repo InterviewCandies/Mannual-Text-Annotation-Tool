@@ -6,25 +6,26 @@ import {
     Button,
     ButtonGroup,
 } from 'reactstrap'
-import {ToastContainer,toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { createLabel, listLabel } from '../../../functions/label.function';
 import EditLabelModal from '../../../component/Modal/EditLabelModal';
 
 class LabelTag extends Component{
       constructor(props){
-          super(props)
-         this.state={
-             edit:false
-         }
+        super(props)
+        this.state={
+            edit:false
+        }
       }
-      onEdit=(e)=>{
-          this.setState({
-              edit : !this.state.edit
-          })
+      onEdit= () => {
+          this.setState(prevState => ({
+              edit : !prevState.edit
+          }))
       }
+
       render(){
-          const {backgroundColor,textColor,id,content,shortcut,project_id} =this.props
+          const { backgroundColor,textColor,id,content,shortcut,project_id } = this.props;
           const label ={ 
                 id : id,
                 project_id:project_id,
@@ -64,47 +65,59 @@ class Label extends Component{
             labels: []
        }
     }
-    onChangeContent=(e)=>{
+    async componentDidMount() {
+        this.setState({
+            labels : await listLabel(this.props.match.params.id)
+        });
+    }
+
+    onChange = async(e) => {
+        this.setState({
+            labels : await listLabel(this.props.match.params.id) 
+        });
+    }
+
+    onChangeContent = (e) => {
         this.setState({
             content: e.target.value
         })
     }
-    onChangeShortcut=(e)=>{
+    onChangeShortcut = (e) => {
         this.setState({
            shortcut : e.target.value
         })
     }
-    onChangeBackgroundColor=(e)=>{
+    onChangeBackgroundColor = (e) => {
         this.setState({
             backgroundColor : e.target.value
         })
     }
-    onChangeTextColor=(e)=>{
+    onChangeTextColor = (e) => {
         this.setState({
            textColor : e.target.value
         })
     }
    
-    onSubmit = async (e)=>{
-        e.preventDefault()
-        const {content,shortcut,backgroundColor,textColor} = this.state
-        if(content =='') {
-              toast.warn('Warning: Label\'s content is required')
-              return
+    onSubmit = async(e) => {
+        e.preventDefault();
+        const { content, shortcut, backgroundColor, textColor } = this.state;
+        if(content === '') {
+              toast.warn('Warning: Label\'s content is required');
+              return;
 
         }
-        await createLabel(this.props.match.params.id,content,shortcut,backgroundColor,textColor)
+        await createLabel(this.props.match.params.id,content,shortcut,backgroundColor,textColor);
         this.setState({
             content:'',
             shortcut:'',
             backgroundColor: '#FFFFFF',
             textColor: '#000000'
         })
-        this.onChange()
+        this.onChange();
         
     }
-    onReset = async(e) =>{
-        e.preventDefault()
+    onReset = async(e) => {
+        e.preventDefault();
         this.setState({
             content:'',
             shortcut:'',
@@ -112,16 +125,7 @@ class Label extends Component{
             textColor: '#000000'
         })
     }
-    async componentDidMount(){
-            this.setState({
-                labels : await listLabel(this.props.match.params.id) 
-            })
-    }
-    onChange=async(e)=>{
-        this.setState({
-            labels : await listLabel(this.props.match.params.id) 
-        })
-    }
+  
     render(){
         return(
             <div>
@@ -149,9 +153,10 @@ class Label extends Component{
                 <form onSubmit={this.onSubmit}>
 
                         <div class="form-group row">
-                            <label  for="content" class="col-sm-2 col-form-label"><strong>Preview:</strong></label>
+                            <label  for="content" class="col-sm-3 col-form-label"><strong>Preview:</strong></label>
                              <div className="col-sm-5">
-                                <LabelTag content={this.state.content} 
+                                <LabelTag   content={this.state.content} 
+                                            id={this.state.content}
                                             shortcut={this.state.shortcut}
                                             backgroundColor={this.state.backgroundColor}
                                             textColor={this.state.textColor}
@@ -159,10 +164,9 @@ class Label extends Component{
                             </div>
                         
                         </div>
-                
-                        
+                 
                         <div class="form-group row">
-                            <label  for="content" class="col-sm-2 col-form-label"><strong>Content:</strong></label>
+                            <label  for="content" class="col-sm-3 col-form-label"><strong>Content:</strong></label>
                             <div class="col-sm-8">
                                 <input type="text" 
                                         className="form-control" 
@@ -172,23 +176,23 @@ class Label extends Component{
                             </div>
                         </div>
                         <div class="form-group row">
-                        <label  for="shortcut" class="col-sm-2 col-form-label"><strong>Shortcut:</strong></label>
-                            <div class="input-group col-sm-2">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="shortcut">@</span>
-                                </div>
-                                    <input type="text" class="form-control" value={this.state.shortcut} onChange={this.onChangeShortcut}/>
+                        <label  for="shortcut" class="col-sm-3 col-form-label"><strong>Shortcut:</strong></label>
+                        <div class="input-group col-sm-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="shortcut">@</span>
                             </div>
+                                <input type="text" class="form-control" value={this.state.shortcut} onChange={this.onChangeShortcut}/>
+                        </div>
                         </div>
                         <div class="form-group row">
-                        <label  for="color" class="col-sm-2 col-form-label" ><strong>Background:</strong></label>
-                        <div class="col-sm-10">
+                        <label  for="color" class="col-sm-3 col-form-label" ><strong>Background:</strong></label>
+                        <div class="col-sm-9">
                                 <input type="color" value={this.state.backgroundColor} className="form-control col-sm-5" onChange={this.onChangeBackgroundColor}></input>
                             </div>
                         </div>
                         <div class="form-group row">
-                        <label  for="color" class="col-sm-2 col-form-label"><strong>Text color:</strong></label>
-                        <div class="col-sm-10">
+                        <label  for="color" class="col-sm-3 col-form-label"><strong>Text color:</strong></label>
+                        <div class="col-sm-9">
                                 <input type="color"  value={this.state.textColor} className="form-control col-sm-5" onChange={this.onChangeTextColor}></input>
                             </div>
                         </div>   

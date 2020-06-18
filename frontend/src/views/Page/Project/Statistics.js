@@ -1,18 +1,15 @@
 import React,{Component} from 'react' 
 import {Doughnut,Bar, HorizontalBar} from 'react-chartjs-2'
 import Spinner from '../../../component/Spinner/Spinner'
-import  {CSVDownload,CSVLink} from 'react-csv'
+import  { CSVLink } from 'react-csv'
 import {
     CardBody,
     Card,
     CardHeader,
     Row,
     Col,
-    Button
 } from 'reactstrap'
-import { listLabel } from '../../../functions/label.function'
-import {  get, getStatistics } from '../../../functions/project.function'
-import { getUser } from '../../../functions/user.function'
+import { getStatistics } from '../../../functions/project.function'
 class Statistics extends Component {
      constructor(props){
           super(props)
@@ -30,11 +27,11 @@ class Statistics extends Component {
                 wrongLabels : [],
                 loading : true
           }
-          this.projectId = localStorage.getItem('projectId')
-          this.projectName = ''
+          this.projectId = localStorage.getItem('projectId');
+          this.projectName = '';
           this.csvLink = React.createRef();
-          this.labels=[]
-          this.users =[]
+          this.labels = [];
+          this.users = [];
        
      }
      
@@ -42,13 +39,15 @@ class Statistics extends Component {
             
            const result = await getStatistics(this.projectId)
            if(!result.response){
-             const {project,
-             datasetSize,
-             labeledDocs,
-             labelsCount,
-             rightLabels,
-             wrongLabels} = result 
-             let {users,labels} = result
+             const { 
+                project,
+                datasetSize,
+                labeledDocs,
+                labelsCount,
+                rightLabels,
+                wrongLabels
+             } = result; 
+             let { users, labels } = result;
              this.setState({
                  datasetSize,
                  labeledDocs,
@@ -57,7 +56,7 @@ class Statistics extends Component {
                  usersNumber : users.length,
                  rightLabels,
                  wrongLabels
-             })
+             });
             //Pie chart 
             const pieData ={
                     datasets: [
@@ -73,7 +72,7 @@ class Statistics extends Component {
             }
             this.setState({
                 pieData
-            })
+            });
            
            // Bar chart 
            if(!labels.response){
@@ -106,7 +105,7 @@ class Statistics extends Component {
                         backgroundColor: "#98fb98",
                         borderColor: "#0bcb0b",
                         borderWidth : 2,
-                        label : 'Right annotation'
+                        label : 'Correct annotation'
                     },{
                         data : this.state.wrongLabels,
                         backgroundColor: "rgba(206, 0, 0, 0.4)",
@@ -122,9 +121,9 @@ class Statistics extends Component {
            }
            this.setState({ 
                loading: false
-            })
+            });
      }
-     handleCsvExport = (e) =>{
+     handleCsvExport = () =>{
         const {datasetSize,labeledDocs,labelsNumber,usersNumber,labelsCount,rightLabels,wrongLabels} = this.state
         const csvData = [
                 ['Project' , this.projectName] ,
@@ -143,7 +142,7 @@ class Statistics extends Component {
         csvData.push([''])
         if(this.users.length) csvData.push(['Users','Valid annotation','Invalid annotation'])
         for(let i =0; i< this.users.length; i++) 
-            csvData.push([ this.users[i],rightLabels[i],wrongLabels[i]])
+            csvData.push([ this.users[i], rightLabels[i], wrongLabels[i]])
         this.setState({
             csvData
         })
@@ -245,9 +244,7 @@ class Statistics extends Component {
                                                                   stacked: true
                                                                 }]
                                                               }
-                                                        }}
-                                                       
-                                                       
+                                                        }}                                                    
                                                       >
                                                     </HorizontalBar>
                                                 </CardBody>

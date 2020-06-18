@@ -16,29 +16,27 @@ class UserData extends Component{
          }
     }
     componentDidUpdate(oldProps){
-        const props =this.props
+        const props = this.props
             if(oldProps.user != props.user )
             this.setState({
                 user : props.user
-               
             })
      
     }
   
-    onEdit =(e)=>{
-        this.setState({
-             edit : !this.state.edit
-        })
+    onEdit = () => {
+        this.setState(prevState => ({
+             edit : !prevState.edit
+        }));
     }
-    onDelete =(e)=>{
-        this.setState({
-              delete : !this.state.delete
-        })
+    onDelete = () => {
+        this.setState(prevState => ({
+              delete : !prevState.delete
+        }))
     }
     render(){
-        const {username,role,created_at,updated_at} = this.state.user
+        const { username,role,created_at,updated_at } = this.state.user;
         return (
-
            <tr>
                <td>{username}</td>
                <td>{role?'admin':'user'}</td>

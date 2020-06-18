@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { Route, Switch, Redirect} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
 import {
@@ -26,7 +26,7 @@ class DocumentLayout extends Component {
     e.preventDefault()
     localStorage.removeItem('userToken');
     this.props.history.push('/login')
-    document.onkeydown=document.onkeyup=function(){ return true}
+    document.onkeydown = document.onkeyup = function(){ return true; }
   }
  
   

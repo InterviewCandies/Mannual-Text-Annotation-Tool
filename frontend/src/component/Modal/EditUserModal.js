@@ -6,8 +6,8 @@ import {
    ModalFooter,
    ModalHeader
 } from 'reactstrap'
-import { createUser, editUser } from '../../functions/user.function';
-import {ToastContainer,toast} from 'react-toastify'
+import { editUser } from '../../functions/user.function';
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 class EditUserModal extends Component{
     constructor(props){
@@ -18,12 +18,12 @@ class EditUserModal extends Component{
              password : this.props.data.password,
              role: this.props.data.role
         }
-        this.onToggle = this.props.toggle
+        this.onToggle = this.props.toggle;
     }
  
     componentDidUpdate(oldProps){
-        const props = this.props
-        if(oldProps.data!=props.data) {
+        const props = this.props;
+        if(oldProps.data != props.data) {
            this.setState({
             id : props.data.id,
             username : props.data.username,
@@ -33,107 +33,101 @@ class EditUserModal extends Component{
         }
     }
 
-    onChangeUsername=(e)=>{
+    onChangeUsername= (e) => {
         this.setState({
             username : e.target.value
         })
        
     }
-    onChangePassword=(e)=>{
+    onChangePassword= (e) => {
         this.setState({
             password : e.target.value
         })
       
     }
   
-    onChangeRole=(e)=>{
-        this.setState({
-             role : !this.state.role
-        })
+    onChangeRole= () => {
+        this.setState(prevState => ({
+             role : !prevState.role
+        }));
     }
-    onSubmit = async (e)=>{
-        e.preventDefault()
-        const {id,username,password,role} = this.state
-        if(username =='') {
-              toast.error('Error: Username is required')
-              return
+    onSubmit = async(e) => {
+        e.preventDefault();
+        const { id,username,password,role } = this.state;
+        if(username === '') {
+              toast.error('Error: Username is required');
+              return;
         }
-        if(password =='') {
-            toast.error('Error: Password is required')
-            return
+        if(password === '') {
+            toast.error('Error: Password is required');
+            return;
        }
-        const result =await editUser(id,username,password,role)
+        const result = await editUser(id,username,password,role);
         if(result.message) {
-             toast.warn('Warning '+ result.message)
+             toast.warn('Warning '+ result.message);
              this.setState( {
                 id : this.props.data.id,
                 username :  this.props.data.username,
                 password : this.props.data.password,
                 role: this.props.data.role
              })
-             return
+             return;
         }
-        toast.success('User profile has been updated')
-       
-          
-        this.onToggle()
-        this.props.action()
+        toast.success('User profile has been updated');
+        this.onToggle();
+        this.props.action();
     }
-       render(){
-           return(
-                <Modal isOpen={this.props.trigger} toggle={this.onToggle}
-                    className={'modal-info ' + this.props.className}>
-                <ModalHeader toggle={this.onToggle}>Edit profile</ModalHeader>
-                <ModalBody>
-                  <form>
-                        <div class="form-group row">
-                            <label  for="username" class="col-sm-2 col-form-label">Username:</label>
-                            <div class="col-sm-10">
-                                <input type="text" 
-                                        className="form-control" 
-                                        id="username" 
-                                        value={this.state.username}
-                                        onChange={this.onChangeUsername}/>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="password" class="col-sm-2 col-form-label">Password:</label>
-                            <div class="col-sm-10">
-                            <input type="password" 
+    render(){
+        return(
+            <Modal isOpen={this.props.trigger} toggle={this.onToggle}
+                className={'modal-info ' + this.props.className}>
+            <ModalHeader toggle={this.onToggle}>Edit profile</ModalHeader>
+            <ModalBody>
+                <form>
+                    <div class="form-group row">
+                        <label  for="username" class="col-sm-2 col-form-label">Username:</label>
+                        <div class="col-sm-10">
+                            <input type="text" 
                                     className="form-control" 
-                                    id="password" 
-                                    value={this.state.password}
-                                    onChange={this.onChangePassword}/>
-                            </div>
+                                    id="username" 
+                                    value={this.state.username}
+                                    onChange={this.onChangeUsername}/>
                         </div>
-                        
-                        <div class="form-group row">
-                        <div class="form-check ml-sm-3">
-                            <input class="form-check-input" 
-                                   type="checkbox" value="admin" 
-                                   id="check" 
-                                   checked={this.state.role}
-                                   onClick={this.onChangeRole}/>
-                                <label class="form-check-label" for="check">
-                                    Set as adminstrator
-                                </label>
-                            </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="password" class="col-sm-2 col-form-label">Password:</label>
+                        <div class="col-sm-10">
+                        <input type="password" 
+                                className="form-control" 
+                                id="password" 
+                                value={this.state.password}
+                                onChange={this.onChangePassword}/>
                         </div>
-
-                      
-                       
+                    </div>
                     
-                    </form>
-                   
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="info" onClick={this.onSubmit}>Update</Button>{' '}
-                    <Button color="secondary" onClick={this.onToggle}>Cancel</Button>
-                  </ModalFooter>
-               </Modal>
+                    <div class="form-group row">
+                    <div class="form-check ml-sm-3">
+                        <input class="form-check-input" 
+                                type="checkbox" value="admin" 
+                                id="check" 
+                                checked={this.state.role}
+                                onClick={this.onChangeRole}/>
+                            <label class="form-check-label" for="check">
+                                Set as adminstrator
+                            </label>
+                        </div>
+                    </div>
+                </form>
+                
+            </ModalBody>
+            <ModalFooter>
+                <Button color="info" onClick={this.onSubmit}>Update</Button>{' '}
+                <Button color="secondary" onClick={this.onToggle}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
 
-           )
-       }
+        )
+    }
 }
 
-export default EditUserModal
+export default EditUserModal;

@@ -9,7 +9,7 @@ import {
 } from 'reactstrap'
 import { addUser } from '../../functions/project.function';
 import { userList } from '../../functions/user.function';
-import {ToastContainer,toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 class AddUserModal extends Component{
     constructor(props){
@@ -21,17 +21,16 @@ class AddUserModal extends Component{
         }
        this.toggle = this.props.toggle  
     }
-   onClick =async (e)=>{
-       
+   onClick = async(e) => {
         const result =await addUser(this.state.user.value,this.state.id)
         this.setState({ user:{}})
         if(result.response) {
-            if(result.response.status==400) toast.error('Error: '+ result.response.data.message)
+            if(result.response.status === 400) toast.error('Error: '+ result.response.data.message)
             
         }
         else toast.success('User has been added to this project')
         this.toggle()
-        this.props.action()
+        this.props.action();
     }
     async componentDidMount(){
          let result= await userList(0,0,'username',1)
@@ -47,18 +46,18 @@ class AddUserModal extends Component{
     }
     componentDidUpdate(oldProps){
         const props = this.props
-        if(oldProps.data.id!=props.data.id) {
+        if(oldProps.data.id != props.data.id) {
            this.setState({
             id : props.data.id,
            })
         }
     }
-    onToggle=(e)=>{
+    onToggle = e => {
         e.stopPropagation();
         this.toggle()
     }
-    onhandleChange=user =>{
-        this.setState({user})
+    onhandleChange = user => {
+        this.setState({user});
     }
     render(){
         const options = this.state.users

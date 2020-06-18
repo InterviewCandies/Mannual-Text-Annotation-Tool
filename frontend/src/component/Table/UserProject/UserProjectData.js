@@ -2,7 +2,6 @@ import React,{Component} from 'react'
 import {Link} from 'react-router-dom'
 import {
     Button,
-   
 } from 'reactstrap'
 
 class UserProjectData extends Component{
@@ -14,17 +13,16 @@ class UserProjectData extends Component{
     }
    
     componentDidUpdate(oldProps){
-        const props =this.props
+        const props = this.props
             if(oldProps.data != props.data )
             this.setState({
                 users : props.users
-               
             })
      
     }
     onDisplayUser(){
-        if(this.state.users.length==0) return <p>(No user)</p>
-        return this.state.users.map((user,i)=><div className="mr-auto">{i!=0?',':''}{user.username}</div>)
+        if(this.state.users.length === 0) return <p>(No user)</p>
+        return this.state.users.map((user,i)=><div className="mr-auto"> {i !==0 ? ',' : '' } { user.username }</div>);
     }
    
     render(){

@@ -18,13 +18,12 @@ class ProjectData extends Component{
                 deleteProject:false,
                 addUser : false,
                 removeUser: false,
-                editProject : false
             }
     }
    
     //Listen to changes
    componentDidUpdate(oldProps){
-        const props =this.props
+        const props = this.props
             if(oldProps.data != props.data )
             this.setState({
                 users : props.users,
@@ -34,42 +33,36 @@ class ProjectData extends Component{
 
     // Actions 
     onDisplayUser(){
-        if(this.state.users.length==0) return <p>(No user)</p>
-        return this.state.users.map((user,i)=><p style={{display:'inline'}}>{i!=0?',':''}{user.username}</p>)
+        if(this.state.users.length === 0) return <p> (No user) </p>
+        return this.state.users.map((user,i)=><p style={{display:'inline'}}>{i != 0 ? ',' : ''}{ user.username }</p>)
+    }   
+    onEditProject = () => {
+        this.setState(prevState => ({
+            editProject : !prevState.editProject
+        }));
     }
-   
-    
-    onEditProject = (e)=>{
-        this.setState({
-            editProject : !this.state.editProject
-        })
+    onDeleteProject = () => {
+        this.setState(prevState => ({
+            deleteProject : !prevState.deleteProject
+        }));
     }
-    onDeleteProject = (e)=>{
-        this.setState({
-            deleteProject : !this.state.deleteProject
-        })
+    onAddUser = () => { 
+        this.setState(prevState => ({
+            addUser : !prevState.addUser
+        }));
     }
-    onAddUser = (e) =>{
-       
-        this.setState({
-            addUser : !this.state.addUser
-        })
-    }
-    onRemoveUser = (e) =>{
-      
-        this.setState({
-            removeUser: ! this.state.removeUser
-        })
+    onRemoveUser = () => {
+        this.setState(prevState => ({
+            removeUser: !prevState.removeUser
+        }));
     }
     
-   
-   
     render(){
         return(
             <tr>
                 <td><Link to={`/project/${this.props.data.id}/import`} >{this.props.data.project_name}</Link></td>
-                <td>{this.props.data.project_description}</td>
-                <td>{this.onDisplayUser()}</td>
+                <td>{  this.props.data.project_description }</td>
+                <td>{  this.onDisplayUser() }</td>
                 <td>{  this.props.data.created_at }</td>
                 <td>{  this.props.data.updated_at }</td>
                 <td >
@@ -94,12 +87,10 @@ class ProjectData extends Component{
                        
                         <Button onClick={this.onEditProject} color="primary">
                             <i className="fa fa-edit"></i>
-                          
                             <EditProjectModal trigger={this.state.editProject} 
                                                toggle={this.onEditProject}
                                                data={this.props.data}
-                                               action={this.props.action}>
-                                               
+                                               action={this.props.action}>                        
                             </EditProjectModal>
                         </Button>
                         <Button onClick={this.onDeleteProject} color="danger">
@@ -108,7 +99,6 @@ class ProjectData extends Component{
                                                  toggle={this.onDeleteProject}
                                                  data={this.props.data}
                                                  action={this.props.action}>
-
                             </DeleteProjectModal>
                         </Button>
                     </ButtonGroup>

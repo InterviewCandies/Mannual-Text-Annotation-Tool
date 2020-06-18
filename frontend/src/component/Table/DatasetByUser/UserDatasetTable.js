@@ -25,9 +25,9 @@ class UserDatasetTable extends Component {
             loading : false,
             verify : false
         }
-        this.projectId = this.props.projectId
-        this.userId = this.props.userId
-        this.timeout = 0
+        this.projectId = this.props.projectId;
+        this.userId = this.props.userId;
+        this.timeout = 0;
     }
    
     

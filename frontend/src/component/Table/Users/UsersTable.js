@@ -22,79 +22,69 @@ class UsersTable extends Component {
        loading : true
     }
   }
-  async componentDidMount(){
-      const {currentPage,usersPerPage,sortKey,trend,searchKey}= this.state
-      const result =await  userList(currentPage,usersPerPage,sortKey,trend,searchKey)
+  async componentDidMount() {
+      const { currentPage,usersPerPage,sortKey,trend,searchKey }= this.state;
+      const result = await userList(currentPage,usersPerPage,sortKey,trend,searchKey);
       if(result.size)
         this.setState({
           users: result.users,
           size  : result.size,
-        })
+      });
       this.setState({
            loading : false
-      })
+      });
   }
-  onChange =async (e) =>{
-    const {currentPage,usersPerPage,sortKey,trend,searchKey}= this.state
-   const result =await  userList(currentPage,usersPerPage,sortKey,trend,searchKey)
+  onChange = async(e) => {
+    const { currentPage,usersPerPage,sortKey,trend,searchKey }= this.state;
+   const result = await  userList(currentPage,usersPerPage,sortKey,trend,searchKey);
     this.setState({
       users: result.users,
       size  : result.size
-    })
+    });
   }
-  onCreateUser = async (e) =>{
-    this.setState({
-       createUser : !this.state.createUser
-    })
+  onCreateUser = async(e) => {
+    this.setState((prevState) => ({
+       createUser : !prevState.createUser
+    }))
   }
-  onDropDownChange = async(e)=>{
+  onDropDownChange = async(e) => {
     await this.setState({
         usersPerPage : Number(e.target.value),
         currentPage : 1
     })
     await this.onChange(e)
    }
-  onPaginationClick =async (e)=>{
+  onPaginationClick = async(e) => {
     await this.setState({
         currentPage : e
     })
     await this.onChange(e)
   }
-  onSearchChange=async (e)=>{
-    const query = e.target.value
-    if(this.timeout) clearTimeout(this.timeout);
-    this.timeout = setTimeout(() => {
-        this.setState({
-            searchKey : query,
-            currentPage : 1
-        },()=>{
-         this.onChange()
-        })
-    }, 300);
-  }
-  onSort=async (sortKey,value)=>{
+  onSearchChange= async(e) => {
+    const query = e.target.value;
     await this.setState({
-          trend : value,
-          sortKey:sortKey  
-    })
-   this.onChange()
-   }
+      searchKey : query,
+      currentPage : 1
+    });
+    this.onChange();
+  }
+
   displayUser() {
-      let {users} = this.state
-      users = users || []
-      return users.map((user)=><UserData user={user} action={this.onChange}></UserData>)
+      let {users} = this.state;
+      users = users || [];
+      return users.map((user)=><UserData user={user} action={this.onChange}></UserData>);
   }
 
   render() {
-    const {currentPage,usersPerPage,size} =this.state
-    const pageNumbers = []
+    const { currentPage,usersPerPage,size } = this.state;
+    const pageNumbers = [];
     for(let i=1;i<=Math.ceil(size/usersPerPage);i++)
         pageNumbers.push(i);
 
     //for display Project
      //Show project based on pagination
-     const indexOfLastUser = currentPage*usersPerPage
-     const indexOfFirstUser =indexOfLastUser-usersPerPage
+     const indexOfLastUser = currentPage*usersPerPage;
+     const indexOfFirstUser = indexOfLastUser-usersPerPage;
     return (
       <div className="animated fadeIn">
             {(!this.state.loading)?
@@ -102,7 +92,7 @@ class UsersTable extends Component {
               <CardBody>
               <div className="d-flex flex-row justify-content-between my-sm-2">
                         <div className=" form-group form-inline">
-                            <label  className="mr-sm-2">Show </label>
+                            <label  className="mr-sm-2">Show</label>
                             <select class="custom-select mr-sm-2" id="dropdown" onChange={this.onDropDownChange} >
                                 <option value="10" selected>10</option>
                                 <option value="20">20</option>
@@ -118,38 +108,19 @@ class UsersTable extends Component {
                         </div>
                         
                         <div className="form-group form-inline">
-                            <label className="mr-sm-2">Search:</label>
-                            <input className="form-control mr-sm-2" type="text" onChange={this.onSearchChange}></input>
+                            <input className="form-control mr-sm-2" 
+                            type="text" 
+                            onChange={this.onSearchChange}
+                            placeholder="Search user"></input>
                         </div>
                     </div>
                   <table className="table table-striped table-bordered text-center">
                   <thead>
                     <tr>
-                   
-                      <th scope="col">Username
-                        <div className="float-right" >
-                          <i className="fa fa-arrow-up mb-sm-0 p-sm-0" onClick={this.onSort.bind(this,"username",1)}></i>
-                          <i className="fa fa-arrow-down mt-sm-0 p-sm-0" onClick={this.onSort.bind(this,"username",-1)}></i>
-                        </div>
-                      </th>
-                      <th scope="col">Role
-                        <div className="float-right" >
-                          <i className="fa fa-arrow-up mb-sm-0 p-sm-0" onClick={this.onSort.bind(this,"role",1)}></i>
-                          <i className="fa fa-arrow-down mt-sm-0 p-sm-0" onClick={this.onSort.bind(this,"role",-1)}></i>
-                        </div>
-                      </th>
-                      <th scope="col">Created at
-                        <div className="float-right" >
-                          <i className="fa fa-arrow-up mb-sm-0 p-sm-0" onClick={this.onSort.bind(this,"created_at",1)}></i>
-                          <i className="fa fa-arrow-down mt-sm-0 p-sm-0" onClick={this.onSort.bind(this,"created_at",-1)}></i>
-                        </div>
-                      </th>
-                      <th scope="col">Updated at
-                        <div className="float-right" >
-                          <i className="fa fa-arrow-up mb-sm-0 p-sm-0" onClick={this.onSort.bind(this,"updated_at",1)}></i>
-                          <i className="fa fa-arrow-down mt-sm-0 p-sm-0" onClick={this.onSort.bind(this,"updated_at",-1)}></i>
-                        </div>
-                      </th>
+                      <th scope="col">Username</th>
+                      <th scope="col">Role</th>
+                      <th scope="col">Created at</th>
+                      <th scope="col">Last modified</th>
                       <th scope="col">Actions</th>
                     </tr>
                   </thead>
@@ -157,10 +128,9 @@ class UsersTable extends Component {
                     {this.displayUser()}
                   </tbody>
                 </table>
-                  
                 <div className="d-flex flex-row justify-content-between">
                         <p >
-                            {`Show ${Math.min(indexOfFirstUser+1,size) } to ${Math.min(indexOfLastUser,size)} of ${size} entries`}
+                            {`Show ${Math.min(indexOfFirstUser+1, size) } to ${Math.min(indexOfLastUser, size)} of ${size} entries`}
                         </p>
                         <CustomPagination  pages={pageNumbers.length}
                                             currentPage={currentPage}

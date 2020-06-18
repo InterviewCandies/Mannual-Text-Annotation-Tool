@@ -41,7 +41,7 @@ class App extends Component {
                             if(!token) 
                                 return (<Redirect to="/login" ></Redirect>)
                             const decoder = jwt_decode(token);
-                            if(decoder.role==0) return <UserLayout {...props} />
+                            if(decoder.role == 0) return <UserLayout {...props} />
                             return <AdminLayout {...props} ></AdminLayout>
                          }
                       } />

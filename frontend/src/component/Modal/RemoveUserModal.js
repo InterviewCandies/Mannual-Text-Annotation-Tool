@@ -6,8 +6,8 @@ import {
    ModalFooter,
    ModalHeader
 } from 'reactstrap'
-import { deleteProject, listUser, removeUser } from '../../functions/project.function';
-import {ToastContainer,toast} from 'react-toastify'
+import { removeUser } from '../../functions/project.function';
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 class RemoveUserModal extends Component{
     constructor(props){
@@ -17,26 +17,26 @@ class RemoveUserModal extends Component{
             user : '',
             users:this.props.users
         }
-       this.toggle = this.props.toggle  
+       this.toggle = this.props.toggle;
     }
-    onChange=(e)=>{
+    onChange = (e) => {
          this.setState({
              user : e.target.value
          })
        
     }
-    onClick =async (e)=>{
-        const result =await removeUser(this.state.user,this.state.id)
-        if(result) toast.success('User has been removed from this project')
-        else toast.warn('Error: Failed to remove user')
-        this.toggle()
-        this.props.action()
+    onClick = async() => {
+        const result = await removeUser(this.state.user,this.state.id);
+        if(result) toast.success('User has been removed from this project');
+        else toast.warn('Error: Failed to remove user');
+        this.toggle();
+        this.props.action();
      
     }
     
-    async componentDidUpdate(oldProps){
-        const props = this.props
-        if(oldProps.data!=props.data || oldProps.users != props.users) {
+    async componentDidUpdate(oldProps) {
+        const props = this.props;
+        if(oldProps.data != props.data || oldProps.users != props.users) {
            this.setState({
              id : props.data.id,
              users : props.users

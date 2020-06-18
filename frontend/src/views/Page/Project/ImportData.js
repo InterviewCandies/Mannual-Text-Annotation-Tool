@@ -42,17 +42,16 @@ class ImportData extends Component{
             document.body.removeChild(link);
           
       }
-    onUpload=async (e)=>{
-        const {fileList} = this.state
+    onUpload = async(e)=>{
+        const { fileList } = this.state
         this.setState({
               loading : true
         })
-        if(fileList.length!=0) {
-            const result =await sendFile(fileList[0],this.props.match.params.id)
+        if(fileList.length !== 0) {
+            const result = await sendFile(fileList[0], this.props.match.params.id)
            
             if(result.response) {
-                if(result.response.status==400) toast.error('Error: '+result.response.data.message)
-                
+                if(result.response.status === 400) toast.error('Error: '+ result.response.data.message)
             }
             else { 
                 toast.success('Success: File has been submited')
@@ -63,11 +62,9 @@ class ImportData extends Component{
                    })
                     this.props.history.push(`/project/${this.props.match.params.id}/dataset`)
                 }
-               
             }
-           
         }
-        else  toast.error('Error: No file selected')
+        else toast.error('Error: No file selected');
         this.setState({
             loading :false
        })

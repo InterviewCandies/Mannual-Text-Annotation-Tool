@@ -12,14 +12,11 @@ import { listLabel } from '../../functions/label.function';
 import { get } from '../../functions/project.function';
 import Spinner from '../../component/Spinner/Spinner';
 import NoRecord from '../Page/NoRecord/NoRecord';
-import {ToastContainer,toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
 class LabelCard  extends Component{
-  constructor(props){
-    super(props)
-  }
-  onClick=(e)=>{
+  onClick = (e) => {
        e.preventDefault();
        this.props.action(e,this.props.label)
   }
@@ -37,7 +34,7 @@ class LabelCard  extends Component{
   
 }
 
-let map={}
+let map= {};
 
 class UserDocument extends Component {
   constructor(props) {
@@ -52,9 +49,9 @@ class UserDocument extends Component {
           loading : false
     }
     this.projectId = localStorage.getItem('projectId')
-    document.onkeydown=document.onkeyup=this.onKeyPress
+    document.onkeydown = document.onkeyup = this.onKeyPress;
   }
-  async componentDidMount(){
+  async componentDidMount() {
           this.setState({
             labels : await listLabel(this.projectId) 
         })
@@ -67,7 +64,7 @@ class UserDocument extends Component {
                labeled : result.labeled
         })
        
-        if(result.labeled!=result.size){
+        if(result.labeled != result.size){
              this.setState({
                    doc: result.dataset[0],
                    labelList: result.dataset[0].labels,
@@ -77,20 +74,21 @@ class UserDocument extends Component {
            loading:true
        })
   }
-  onClick =async (e)=>{
+  onClick =async () => {
        
-        const {id} = this.state.doc
-        if (!id) return 
+        const { id } = this.state.doc;
+        if (!id) return ;
         let result =await annotate(id,this.state.labelList) 
         if(result.response) {
-          if(result.response.status==400) toast.warn('Warning: ' +result.response.data.message)
+          if(result.response.status === 400) toast.warn('Warning: ' +result.response.data.message)
         }
         
         document.getElementById('spinner').style.display='flex'
         document.getElementById('card').style.display='none'
         document.getElementById('next').style.visibility='hidden'
 
-        result = await getDocument(this.projectId)
+        result = await getDocument(this.projectId);
+
         document.getElementById('spinner').style.display='none'
         document.getElementById('card').style.display='flex'
         document.getElementById('next').style.visibility='visible'
@@ -100,68 +98,68 @@ class UserDocument extends Component {
           labeled : result.labeled
         })
        
-        if(result.labeled!=result.size){
+        if(result.labeled != result.size){
              this.setState({
                    doc: result.dataset[0],
                    labelList : result.dataset[0].labels,
              })
         } 
-        else this.setState({ labelList: [], doc:{} })
+        else this.setState({ labelList: [], doc:{} });
   }
-  onLabelClick =(e,label)=>{
+  onLabelClick =(e , label)=>{
      let {labelList} = this.state
-     const i = labelList.find((l)=>l.content==label.content)
+     const i = labelList.find((l)=> l.content == label.content)
      if(!i)  labelList.push(label)
-
      this.setState({
           labelList: labelList
-     })
+     });
   }
-  onChange=(e)=>{
-      e.preventDefault()
-      let shortcut =e.target.value
-      let {labelList} = this.state
+  onChange= (e) => {
+      e.preventDefault();
+      let shortcut =e.target.value;
+      let { labelList } = this.state;
     
-      let label = this.state.labels.find(label=> label.shortcut==shortcut)
-      const i =label? labelList.find((l)=>l.content==label.content):undefined
-      if(label && !i ) labelList.push(label)
+      let label = this.state.labels.find(label=> label.shortcut === shortcut)
+      const i =label? labelList.find((l) => l.content == label.content):undefined;
+      if(label && !i ) labelList.push(label);
       this.setState({
            labelList : labelList,
            shortcut:shortcut
-      })
+      });
   }
   
   onRemoveLabel =(e,label) =>{
-     let {labelList} = this.state
-     let i= labelList.indexOf(label)
-     if(i!=-1) labelList.splice(i,1);
+     let {labelList} = this.state;
+     let i = labelList.indexOf(label);
+     if(i !== -1) labelList.splice(i, 1);
      this.setState({
         labelList: labelList
-     })
-
+     });
   }
     onKeyPress = (e)=>{
       e = e || window.event; 
-      map[e.keyCode] = e.type == 'keydown';
+      map[e.keyCode] = e.type === 'keydown';
       if(map[39]|| map[13]) {
         e.target.value=1
         this.onClick(e)
       }
       else {
-            const {labels} =this.state
-              for(let i=0;i<labels.length;i++) {
-                let s=labels[i].shortcut
-                let code =true
-                for(let j=0;j<s.length;j++,code++)
+            const { labels } =this.state;
+              for(let i= 0;i<labels.length;i++) {
+                let s = labels[i].shortcut;
+                let code = true;
+                for(let j=0; j<s.length; j++, code++)
                     if( !map[ s.toUpperCase().charCodeAt(j) ] ) {
-                          code=false;
+                          code = false;
                         break;
                     }
-                if(code ) {e.target.value=s; this.onChange(e);} 
+                if(code && s) { 
+                  e.target.value = s; 
+                  this.onChange(e);
+                } 
             }
         }
     }     
-  
   
 
   render() {
@@ -179,7 +177,7 @@ class UserDocument extends Component {
                     <div>{`Labeled documents: ${labeled}/${size}`}</div>
                   </div>  
                   </Container>
-             { (labeled !=size)?
+             { (labeled !== size)?
                  <div> 
                   <div id="spinner" style={{display:'none'}}>
                       <Spinner content='document'></Spinner>
