@@ -24,7 +24,7 @@ class DocumentHeader extends Component {
     return (
       <React.Fragment id="navbar">
         <AppNavbarBrand href ={"#"}
-          full={{ src: logo, width: 120, height: 25, alt: 'YouNet Media Logo' }}
+          full={{ src: logo, width: 150, height: 50, alt: 'YouNet Media Logo' }}
           minimized={{ src: sygnet, width: 30, height: 30, alt: 'YouNet Media Logo' }}
         />
         <Nav className="d-md-down-none" navbar >
