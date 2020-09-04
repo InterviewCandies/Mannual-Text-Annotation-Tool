@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const Users = new Schema({
+const User = new Schema({
   username: {
     type: String,
     required: true,
@@ -26,4 +26,4 @@ const Users = new Schema({
 
 }, { collation: { locale: 'en' } });
 
-module.exports = mongoose.model('Users', Users);
+module.exports = mongoose.model('User', User);

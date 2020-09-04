@@ -6,6 +6,6 @@
         "IP" : "http://localhost:4000/files/"
     },
     "Db": {
-        "connectedString" : "mongodb+srv://Thang:voquocthang@text-annotation-g9uqn.mongodb.net/TextAnnotation?retryWrites=true&w=majority"
+        "connectedString" : "mongodb+srv://vsg:voquocthang@manual-text-annotation.bij2n.mongodb.net/TextAnnotation?retryWrites=true&w=majority"
     }
 } 

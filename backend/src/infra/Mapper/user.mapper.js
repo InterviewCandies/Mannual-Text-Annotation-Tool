@@ -27,6 +27,6 @@ module.exports = class UserMapper {
 
   async isMatched(password, data) {
     const result = await this.passwordHasher.isMatched(password, data.password)
-    return result
+    return result;
   }
 }
