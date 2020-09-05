@@ -35,7 +35,7 @@ class DatasetGateway {
 
 
   async importData(project_id, dataset) {
-    const dbItem= dataset.map(content=> { return {project_id : project_id ,content : content} })  
+    const dbItem = dataset.map(content => { return {project_id , content} })  
     const document = await this.DocumentModel.insertMany(dbItem)
     return document.map(this.documentMapper.toEntity)
   }
