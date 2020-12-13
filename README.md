@@ -1,5 +1,8 @@
 # Manual-Text-Annotation
 Inspired by https://github.com/chakki-works/doccano, this app is an attempt to build a useful tool that supports human annotation for sentiment analytics in the MERN (MongoDB-Express-Reactjs-Nodejs) stack way. 
+## Demo 
+https://wonderful-spence-9f5830.netlify.app/#/projects
+
 ## Details
 ### Projects
 ![Admin view](https://i.ibb.co/JcGg8fn/user-list.png)
